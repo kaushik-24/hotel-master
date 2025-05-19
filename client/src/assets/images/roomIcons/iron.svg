@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 12px;
+      }
+    </style>
+  </defs>
+  <g id="Iron_Board" data-name="Iron Board">
+    <polyline class="cls-1" points="114.08 465.33 149.56 465.33 397.92 287.93"/>
+    <polyline class="cls-1" points="397.92 465.33 362.44 465.33 163.75 323.41"/>
+    <path class="cls-1" d="m117.63,287.93h-35.48c-19.59,0-35.48-15.88-35.48-35.48s15.88-35.48,35.48-35.48h347.7c19.59,0,35.48,15.88,35.48,35.48s-15.88,35.48-35.48,35.48h-212.87"/>
+    <path class="cls-1" d="m323.41,216.97v-70.86c0-39.96,19.97-77.27,53.22-99.44h0c33.25,22.17,53.22,59.48,53.22,99.44v70.86"/>
+    <path class="cls-1" d="m216.97,216.97h-99.34c-19.59,0-35.48-15.88-35.48-35.48h0c0-19.59,15.88-35.48,35.48-35.48h99.34c19.59,0,35.48,15.88,35.48,35.48h0c0,19.59-15.88,35.48-35.48,35.48Z"/>
+    <polyline class="cls-1" points="216.97 216.97 216.97 323.41 117.63 323.41 117.63 216.97"/>
+  </g>
+</svg>
