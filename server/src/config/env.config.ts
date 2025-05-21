@@ -5,7 +5,7 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 export class DotenvConfig {
     static NODE_ENV = process.env.NODE_ENV;
-    static PORT = +process.env.PORT!;
+    static PORT = Number(process.env.PORT) || 3000;
 
     // *Database Configurations
     static DATABASE_HOST = process.env.DATABASE_HOST;
