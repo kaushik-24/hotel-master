@@ -3,7 +3,7 @@ import { ArrayNotEmpty, IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional,
 
 export class CreateBookingDTO {
     @IsNotEmpty()
-    @Length(5, 30)
+    @Length(2, 30)
     name!: string;
 
     @IsNotEmpty()

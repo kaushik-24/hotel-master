@@ -16,7 +16,7 @@ const OtherLinksAdmin = () => {
     useEffect(() => {
         const fetchPages = async () => {
             try {
-                const response = await axiosInstance.get("/page");
+                const response = await axiosInstance.get("/api/page");
                 const pagesData = Array.isArray(response.data) ? response.data : response.data.data;
                 const fetchedPages = pagesData.map((page: { _id: string, name: string }) => ({
                     _id: page._id,
@@ -45,7 +45,7 @@ const OtherLinksAdmin = () => {
     const handleDeleteRow = async () => {
         if (!pageToDelete || !pageToDelete._id) return;
         try {
-            await axiosInstance.delete(`/page/${pageToDelete._id}`);
+            await axiosInstance.delete(`/api/page/${pageToDelete._id}`);
             setRows(rows.filter((row) => row._id !== pageToDelete._id));
         } catch (error) {
             console.error("Error deleting page:", error);

@@ -16,7 +16,7 @@ const RoomLinksAdmin = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await axiosInstance.get("/room");
+                const response = await axiosInstance.get("/api/room");
                 const roomsData = Array.isArray(response.data) ? response.data : response.data.data;
                 const fetchedRooms = roomsData.map((room: { _id: string, name: string }) => ({
                     _id: room._id,
@@ -45,7 +45,7 @@ const RoomLinksAdmin = () => {
     const handleDeleteRow = async () => {
         if (!roomToDelete || !roomToDelete._id) return;
         try {
-            await axiosInstance.delete(`/room/${roomToDelete._id}`);
+            await axiosInstance.delete(`/api/room/${roomToDelete._id}`);
             setRows(rows.filter((row) => row._id !== roomToDelete._id));
         } catch (error) {
             console.error("Error deleting room:", error);

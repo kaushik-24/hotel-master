@@ -19,7 +19,7 @@ const CreateRoom = () => {
         const fetchRoomData = async () => {
             if (roomId) {
                 try {
-                    const response = await axiosInstance.get(`api/v1/room/${roomId}`);
+                    const response = await axiosInstance.get(`/api/room/${roomId}`);
                     console.log("Fetched room data:", response.data); // Log the entire response
 
                     // Update form values with fetched room data
@@ -39,10 +39,10 @@ const CreateRoom = () => {
         try {
             if (roomId) {
                 // Update existing room
-                await axiosInstance.put(`/room/${roomId}`, data);
+                await axiosInstance.put(`/api/room/${roomId}`, data);
             } else {
                 // Create new room
-                await axiosInstance.post("api/v1/room", data);
+                await axiosInstance.post("/api/room", data);
             }
             // Handle success, redirect or display success message
             console.log("Room submitted successfully");

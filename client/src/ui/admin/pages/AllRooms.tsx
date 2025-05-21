@@ -15,7 +15,7 @@ const AllRooms = () => {
         // Fetch rooms from the backend
         const fetchRooms = async () => {
             try {
-                const response = await axiosInstance.get("api/v1/room");
+                const response = await axiosInstance.get("/api/room");
                 const roomData = response.data?.data; // Access the nested `data` field
                 if (Array.isArray(roomData)) {
                     setRooms(roomData); // Set rooms from the `data` array
@@ -33,7 +33,7 @@ const AllRooms = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await axiosInstance.delete(`/room/${id}`);
+            await axiosInstance.delete(`/api/room/${id}`);
             setRooms(rooms.filter((room) => room._id !== id));
         } catch (error) {
             console.error("Error deleting room:", error);

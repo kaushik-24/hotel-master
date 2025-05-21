@@ -17,6 +17,9 @@ export class DotenvConfig {
     //ADMIN SEED PASSWORD
     static ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
+    //add the custom admin path
+    static ADMIN_PATH = process.env.ADMIN_PATH;
+
     // DEBUG_MODE
     static DEBUG_MODE = process.env.DEBUG_MODE;
 

@@ -23,7 +23,7 @@ const SiteInfoSection = () => {
     useEffect(() => {
         const fetchSiteInfo = async () => {
             try {
-                const response = await axiosInstance.get("/siteInfo");
+                const response = await axiosInstance.get("/api/siteInfo");
 
                 if (response.data) {
                     const siteInfo = response.data.data;
@@ -59,7 +59,7 @@ const SiteInfoSection = () => {
                 phoneNumbers: phoneNumbers.map(phone => phone.number) // Ensure it's an array of strings
             };
 
-            const response = await axiosInstance.put("/siteInfo", payload, {
+            const response = await axiosInstance.put("/api/siteInfo", payload, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },

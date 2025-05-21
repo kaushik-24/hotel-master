@@ -19,7 +19,7 @@ const CreatePage = () => {
         const fetchPageData = async () => {
             if (pageId) {
                 try {
-                    const response = await axiosInstance.get(`/page/${pageId}`);
+                    const response = await axiosInstance.get(`/api/page/${pageId}`);
                     console.log("Fetched page data:", response.data); // Log the entire response
 
                     // Update form values with fetched page data
@@ -39,10 +39,10 @@ const CreatePage = () => {
         try {
             if (pageId) {
                 // Update existing page
-                await axiosInstance.put(`/page/${pageId}`, data);
+                await axiosInstance.put(`/api/page/${pageId}`, data);
             } else {
                 // Create new page
-                await axiosInstance.post("/page", data);
+                await axiosInstance.post("/api/page", data);
             }
             // Handle success, redirect or display success message
             console.log("Page submitted successfully");

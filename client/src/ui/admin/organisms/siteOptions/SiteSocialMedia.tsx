@@ -23,7 +23,7 @@ const SiteSocialMedia = () => {
     useEffect(() => {
         const fetchSocialMedia = async () => {
             try {
-                const response = await axiosInstance.get("/social");
+                const response = await axiosInstance.get("/api/social");
 
                 // Populate form fields with the fetched data
                 if (response.data) {
@@ -53,7 +53,7 @@ const SiteSocialMedia = () => {
                 throw new Error("Access token is missing");
             }
 
-            const response = await axiosInstance.put("/social", data, {
+            const response = await axiosInstance.put("/api/social", data, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
@@ -128,8 +128,8 @@ const SiteSocialMedia = () => {
                     </div>
                 </div>
 
-                <div className="bg-white flex justify-center items-center h-20 p-5 rounded-md shadow-md w-fit">
-                    <button type="submit" className="p-2 bg-[#6b3aa3] rounded-md text-white font-poppins text-[0.875rem]">
+                <div className="flex justify-center items-center h-20 p-5 w-fit">
+                    <button type="submit" className="p-2 bg-[#6b3aa3] border border-[#6b3aa3] rounded-md text-white font-poppins text-[0.875rem] hover:bg-[#ffffff] hover:text-black">
                         Update
                     </button>
                 </div>

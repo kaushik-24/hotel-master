@@ -39,7 +39,7 @@ const UserTable = () => {
             try {
                 const accessToken = sessionStorage.getItem("accessTokenHotelVenus");
 
-                const response = await axiosInstance.get(`/admin`, {
+                const response = await axiosInstance.get(`/api/admin`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
@@ -64,7 +64,7 @@ const UserTable = () => {
         try {
             console.log('Deleting user with ID:', id); // Debugging line
             const accessToken = sessionStorage.getItem("accessTokenHotelVenus");
-            await axiosInstance.delete(`/admin/${id}`, {
+            await axiosInstance.delete(`/api/admin/${id}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 }

@@ -46,7 +46,7 @@ const ManageBooking = () => {
             setLoading(true);
             setError(null);
             try {
-                const response = await axiosInstance.get(`/booking`, {
+                const response = await axiosInstance.get(`/api/booking`, {
                     params: {
                         page: pagination.currentPage,
                         perpage: rowsPerPage,
@@ -98,7 +98,7 @@ const ManageBooking = () => {
     // Handle Delete Operation
     const handleDelete = async (id: string) => {
         try {
-            await axiosInstance.delete(`/booking/${id}`);
+            await axiosInstance.delete(`/api/booking/${id}`);
             setBookingList(prevList => prevList.filter(booking => booking._id !== id));
 
             toast.show({ title: "Success", content: "Deleted successfully", duration: 2000, type: 'success' });

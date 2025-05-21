@@ -15,7 +15,7 @@ const OtherPages = () => {
         // Fetch pages from the backend
         const fetchPages = async () => {
             try {
-                const response = await axiosInstance.get("/page");
+                const response = await axiosInstance.get("/api/page");
                 const pageData = response.data?.data; // Access the nested `data` field
                 if (Array.isArray(pageData)) {
                     setPages(pageData); // Set pages from the `data` array

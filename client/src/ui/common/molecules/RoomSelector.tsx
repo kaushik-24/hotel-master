@@ -1,14 +1,15 @@
 import { rooms } from "@data/rooms";
-import { IBooking } from "@interface/booking.interface";
+import { BookingFormData } from "@interface/booking.interface";
 import { UseFormRegister } from "react-hook-form";
 
 interface RoomSelectorProps {
-    register: UseFormRegister<IBooking>;
+    register: UseFormRegister<BookingFormData>;
 }
 
 const RoomSelector: React.FC<RoomSelectorProps> = ({ register }) => {
     return (
-        <div className="grid grid-cols-4 gap-2">
+        <>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
             {rooms.map((room) => (
                 <div key={room.id} className="flex items-center ">
                     <input
@@ -19,12 +20,12 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ register }) => {
                         className="mr-2"
                     />
                   <div className="grid-rows-4">
-                    <img src={room.roomImage} className="w-80 h-full object-cover" />
                     <label htmlFor={room.name} className="text-[#5b3423]">{room.name}</label>
                   </div>
                 </div>
             ))}
         </div>
+        </>
     );
 };
 

@@ -42,7 +42,7 @@ const SiteOptions = () => {
 
             </div>
 
-            <div className="bg-white flex-1 h-20 p-5 rounded-md shadow-md w-full ">
+            <div className="flex-1 h-20 p-5 rounded-md w-full ">
                 <button className="p-2 bg-[#6b3aa3] rounded-md text-white font-poppins text-[0.875rem]  ">Update</button>
             </div>
         </div>

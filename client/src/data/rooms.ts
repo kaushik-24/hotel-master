@@ -6,6 +6,7 @@ export const rooms = [
         id: 1,
         roomImage: image?.delux,
         name: "Deluxe Room",
+        price: 1000,
         description: "Our Deluxe rooms are a seamless amalgamation of Tibetan art and modern comfort.",
         features: [
             "Wifi",
@@ -27,6 +28,7 @@ export const rooms = [
         id: 2,
         roomImage: image?.executive,
         name: "Executive Room",
+        price: 2000,
         description: "Our Executive rooms are fit for all, whether you are a business traveler or a wanderer at heart.",
         features: [
             "Wifi",
@@ -48,6 +50,7 @@ export const rooms = [
         id: 3,
         roomImage: image?.gampoSuit,
         name: "Songtsan Gampo Suit",
+        price: 2500,
         description: "The suite celebrates the ancient grandeur of Tibet with a stylish, modern twist.",
         features: [
             "Wifi",
@@ -71,6 +74,7 @@ export const rooms = [
         id: 4,
         roomImage: image?.bhrikutiSuit,
         name: "Bhrikuti Suite",
+        price: 3000,
         description: "Inspired by Princess Bhrikuti, the suite features the best of Newa culture, masterfully fused with contemporary amenities.",
         features: [
             "Wifi",
@@ -92,6 +96,7 @@ export const rooms = [
         id: 5,
         roomImage: image?.wenchengSuitTwo,
         name: "Wencheng Suite",
+        price: 5000,
         description: "A tribute to the legendary Princess Wencheng, the suite captures the essence of ancient Tibetan and Chinese royalty.",
         features: [
             "Wifi",
