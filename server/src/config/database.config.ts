@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const uri = process.env.DATABASE_HOST || 'mongodb://localhost:5173'; // MongoDB URI
+const uri = process.env.DATABASE_HOST || ''; // MongoDB URI
 const dbName = process.env.DB_NAME || 'hoteldb'; // Database name
 
 export const connectDB = async () => {

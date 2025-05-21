@@ -7,7 +7,7 @@ import Print from "./utils/print";
 function listen() {
     const PORT = DotenvConfig.PORT;
     const httpServer = createServer(app);
-    httpServer.listen(PORT);
+    httpServer.listen(PORT, "0.0.0.0");
     Print.info(`🚀 Server is listening on port ${PORT}`);
 }
 
