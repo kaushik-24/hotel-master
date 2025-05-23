@@ -3,7 +3,7 @@ import encryptDecrypt from "function/encryptDecrypt";
 
 const axiosInstance: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_APP_BASE_URL ,
-    timeout: import.meta.env.TIME_OUT || '5000',
+    timeout: import.meta.env.TIME_OUT,
 });
 
 const token = encryptDecrypt.decrypt(localStorage.getItem('accessTokenHotelVenus') as string) || encryptDecrypt.decrypt(sessionStorage.getItem('accessTokenHotelVenus') as string)
