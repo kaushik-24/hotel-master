@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import encryptDecrypt from "function/encryptDecrypt";
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_APP_BASE_URL || 'http://localhost:3000',
+    baseURL: import.meta.env.VITE_APP_BASE_URL ,
     timeout: import.meta.env.TIME_OUT || '5000',
 });
 
