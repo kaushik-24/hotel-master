@@ -1,4 +1,9 @@
 export interface IRoom {
     name: string,
-    slug: string
+    price: Number,
+    slug: string,
+    description: string,
+    features: string[],
+    roomImage: string, 
+    readMore: string,
 }

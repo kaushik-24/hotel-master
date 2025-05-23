@@ -14,7 +14,23 @@ const roomSchema = new Schema<IRoom>(
             type: String,
             required: true,
             unique: true,
+    },
+        price: {
+            type: Number,
+            required: true,
+            unique: true,
         },
+        description: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        features: {
+            type: [String],
+            required: true,
+            unique: false,
+    },
+        
     }, { timestamps: true }
 );
 

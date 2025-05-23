@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 interface Room {
     _id: string;
     name: string;
-    slug: string;
+    price: number;
+    description: string;
+    features: string[];
 }
 
 const AllRooms = () => {
@@ -50,7 +52,9 @@ const AllRooms = () => {
                 <thead>
                     <tr>
                         <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Slug</th>
+                        <th className="border px-4 py-2">Price</th>
+                         <th className="border px-4 py-2">Description</th>
+                         <th className="border px-4 py-2">Features</th>
                         <th className="border px-4 py-2">Actions</th>
                     </tr>
                 </thead>
@@ -59,7 +63,9 @@ const AllRooms = () => {
                         rooms.map((room) => (
                             <tr key={room._id}>
                                 <td className="border px-4 py-2">{room.name}</td>
-                                <td className="border px-4 py-2">{room.slug}</td>
+                                <td className="border px-4 py-2">{room.price}</td>
+                                <td className="border px-4 py-2">{room.description}</td>
+                                <td className="border px-4 py-2">{room.features}</td>
                                 <td className="border px-4 py-2 flex space-x-4">
                                     <Link to={`/admin/rooms/edit/${room._id}`} className="btn-edit">Edit</Link>
                                     <button onClick={() => handleDelete(room._id)} className="btn-delete">Delete</button>

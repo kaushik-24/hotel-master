@@ -7,7 +7,9 @@ import { useParams } from "react-router-dom";
 
 interface RoomData {
     name: string;
-    slug: string;
+    price: number;
+    description: string;
+    features: string;
     // Add other fields as needed
 }
 
@@ -24,7 +26,9 @@ const CreateRoom = () => {
 
                     // Update form values with fetched room data
                     setValue('name', response.data.data.name || ''); // Set default value if undefined
-                    setValue('slug', response.data.data.slug || ''); // Set default value if undefined
+                    setValue('price', response.data.data.price || ''); // Set default value if undefined
+                    setValue('description', response.data.data.description || ''); // Set default value if undefined
+                    setValue('features', response.data.data.features || ''); // Set default value if undefined
                     // Include other fields here and set default values
                 } catch (error) {
                     console.error("Error fetching room data:", error);
@@ -66,13 +70,35 @@ const CreateRoom = () => {
                     />
                 </div>
 
-                {/* Room Slug */}
+                {/* Room price */}
                 <div className="mb-4">
-                    <Label name="slug" label="Room Slug" />
+                    <Label name="price" label="Room price" />
                     <InputField
-                        name="slug"
+                        name="price"
+                        type="number"
+                        placeholder="Enter room price"
+                        register={register} // Use register for input binding
+                    />
+                </div>
+                
+                {/* Room description */}
+                <div className="mb-4">
+                    <Label name="description" label="Room description" />
+                    <InputField
+                        name="description"
                         type="text"
-                        placeholder="Enter room slug"
+                        placeholder="Enter room description"
+                        register={register} // Use register for input binding
+                    />
+                </div>
+ 
+                {/* Room features*/}
+                <div className="mb-4">
+                    <Label name="features" label="Room features" />
+                    <InputField
+                        name="features"
+                        type="text"
+                        placeholder="Enter room features"
                         register={register} // Use register for input binding
                     />
                 </div>
