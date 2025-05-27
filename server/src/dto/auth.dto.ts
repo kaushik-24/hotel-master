@@ -6,7 +6,7 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/; // At least one upp
 
 export class CreateUserDTO {
     @IsNotEmpty()
-    @Length(5, 30)
+    @Length(2, 30)
     name!: string;
 
     @IsNotEmpty()

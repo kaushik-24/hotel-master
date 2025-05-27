@@ -32,16 +32,19 @@ class RoomService {
 
     async createRoom(data: { name: string, price: number, description: string, features: string }) {
         try {
-            const featuresArray = data.features.split(' ')
+            
+            const featuresArray = data.features.split(',')
                 .map(feature => feature.trim())
                 .filter(feature => feature !== '');
             const slug = data.name.toLowerCase()
                 .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
                 .replace(/\s+/g, '-') // Replace spaces with hyphens
                 .trim();
+            console.error('data.features:', data.features);
+            console.log('typeof data.features:', typeof data.features);
+            console.log('split result:', data.features.split(',')); 
 
-            const existingRoom = await Room.findOne({ $or: [{ name: data.name },{ slug: slug}, { price: data.price },
-            {description: data.description}, ] });
+            const existingRoom = await Room.findOne({ $or: [{ name: data.name },{ slug: slug}, { price: data.price }, {description: data.description} ] });
 
             if (existingRoom) {
                 throw HttpException.badRequest("Room name or slug already exists");

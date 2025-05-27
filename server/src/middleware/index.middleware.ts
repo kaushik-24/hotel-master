@@ -52,11 +52,6 @@ const middleware = (app: Application) => {
     // Apply admin route with proper middleware
     app.use(`/api/${ADMIN_PATH}`, isAuthenticated, isAdmin, adminRouter);
     
-    // Block the standard admin path with a 404 to hide its existence
-    app.use('/admin', (req: Request, res: Response) => {
-        res.status(StatusCodes.NOT_FOUND).json({ message: 'Resource not found' });
-    });
-
     // Error handling middleware
     app.use(errorHandler);
     

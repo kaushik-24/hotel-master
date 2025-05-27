@@ -7,6 +7,8 @@ import ping from "./ping.route";
 import room from './room.route';
 import siteInfo from "./siteInfo.route";
 import social from './socialMedia.route';
+import count from './count.route';
+
 interface Route {
     path: string;
     route: Router;
@@ -45,6 +47,10 @@ const routes: Route[] = [
     {
         path: "/page",
         route: otherPage
+    },
+    {
+        path: "/dashboardstats",
+        route: count
     }
 
 ];

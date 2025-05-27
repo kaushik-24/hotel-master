@@ -8,7 +8,7 @@ class AuthController {
     async createUser(req: Request, res: Response) {
         const { name, email, phoneNumber, password } = req.body;
 
-        if (!name || name.length < 5) {
+        if (!name || name.length < 2) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 success: false,
                 message: "Name must be at least 5 characters long",

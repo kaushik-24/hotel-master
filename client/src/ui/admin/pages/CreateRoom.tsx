@@ -1,7 +1,7 @@
 import axiosInstance from "@services/instance";
 import InputField from "@ui/common/atoms/InputField";
 import Label from "@ui/common/atoms/Label";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
@@ -9,14 +9,28 @@ interface RoomData {
     name: string;
     price: number;
     description: string;
-    features: string;
+    features: [string];
+    roomImage: string;
     // Add other fields as needed
 }
 
 const CreateRoom = () => {
     const { roomId } = useParams(); // Get the roomId from the URL
     const { register, handleSubmit, setValue } = useForm<RoomData>();
-
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+   {/*} 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      setSelectedFile(file);
+      setValue("roomImage", file); // Temporarily store the File; adjust based on backend needs
+    } else {
+      alert("Please select a valid image file.");
+    }
+  };{*/}
     useEffect(() => {
         const fetchRoomData = async () => {
             if (roomId) {
@@ -38,6 +52,12 @@ const CreateRoom = () => {
 
         fetchRoomData();
     }, [roomId, setValue]); // Ensure this only runs when roomId changes
+    
+    useEffect(() => {
+    return () => {
+      if (imagePreview) URL.revokeObjectURL(imagePreview); // Clean up preview URL
+    };
+  }, [imagePreview]);
 
     const onSubmit = async (data: RoomData) => {
         try {
@@ -102,6 +122,26 @@ const CreateRoom = () => {
                         register={register} // Use register for input binding
                     />
                 </div>
+        
+                {/* Photo Upload 
+        <div className="mb-4">
+          <Label name="roomImage" label="Room Image" />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#6b3aa3] file:text-white hover:file:bg-[#5a2e8a]"
+          />
+          {imagePreview && (
+            <div className="mt-4">
+              <img
+                src={imagePreview}
+                alt="Room Preview"
+                className="w-48 h-32 object-cover rounded-md"
+              />
+            </div>
+          )}
+        </div> */}
 
                 {/* Submit Button */}
                 <button type="submit" className="p-2 bg-[#6b3aa3] rounded-md text-white font-poppins">

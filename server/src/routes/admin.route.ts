@@ -48,5 +48,4 @@ router.delete(
     isAdmin,
     catchAsync(adminController.delete)
 ); // Delete admin by ID
-
 export default router;

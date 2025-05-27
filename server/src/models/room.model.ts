@@ -8,7 +8,7 @@ const roomSchema = new Schema<IRoom>(
         name: {
             type: String,
             required: true,
-            unique: true,
+            unique: false,
         },
         slug: {
             type: String,
@@ -18,12 +18,12 @@ const roomSchema = new Schema<IRoom>(
         price: {
             type: Number,
             required: true,
-            unique: true,
+            unique: false,
         },
         description: {
             type: String,
             required: true,
-            unique: true,
+            unique: false,
         },
         features: {
             type: [String],

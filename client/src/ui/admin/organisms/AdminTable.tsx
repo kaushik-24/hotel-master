@@ -39,7 +39,7 @@ const UserTable = () => {
             try {
                 const accessToken = sessionStorage.getItem("accessTokenHotelVenus");
 
-                const response = await axiosInstance.get(`/api/admin`, {
+                const response = await axiosInstance.get(`/api/${import.meta.env.VITE_ADMIN_PATH}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },

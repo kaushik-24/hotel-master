@@ -65,7 +65,7 @@ const AllRooms = () => {
                                 <td className="border px-4 py-2">{room.name}</td>
                                 <td className="border px-4 py-2">{room.price}</td>
                                 <td className="border px-4 py-2">{room.description}</td>
-                                <td className="border px-4 py-2">{room.features}</td>
+                                <td className="border px-4 py-2">{room.features.join(', ')}</td>
                                 <td className="border px-4 py-2 flex space-x-4">
                                     <Link to={`/admin/rooms/edit/${room._id}`} className="btn-edit">Edit</Link>
                                     <button onClick={() => handleDelete(room._id)} className="btn-delete">Delete</button>

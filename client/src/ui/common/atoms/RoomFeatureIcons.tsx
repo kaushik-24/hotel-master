@@ -6,7 +6,7 @@ const RoomFeatureIcons = ({ feature }: { feature: string }) => {
 
     // Render the image if found; otherwise, render a default icon or placeholder
     return (
-        <img src={imageSrc} alt={feature} className="w-5 h-5 mr-2" />
+        <img src={imageSrc} className="w-5 h-5 mr-2" />
     );
 };
 
