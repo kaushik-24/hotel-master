@@ -20,7 +20,7 @@ const roomSchema = new Schema<IRoom>(
             required: true,
             unique: false,
         },
-        description: {
+        shortdesc: {
             type: String,
             required: true,
             unique: false,
@@ -30,6 +30,11 @@ const roomSchema = new Schema<IRoom>(
             required: true,
             unique: false,
     },
+        totalrooms: {
+            type: Number,
+            required: true,
+            unique: false,
+        },
         
     }, { timestamps: true }
 );

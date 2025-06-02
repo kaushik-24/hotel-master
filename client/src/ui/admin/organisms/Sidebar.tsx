@@ -39,22 +39,24 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                             key={item.id}
                             className={`mb-4 relative group`}  // 'group' used to apply hover effects when minimized
                         >
+                             
                             <div
                                 title={item.title}
-                                className="hover:bg-[#f7f8fc] flex items-center gap-x-2 px-4 py-2 cursor-pointer"
+                                className="hover:text-[#019cec] flex items-center gap-x-2 px-4 py-2 cursor-pointer"
                                 onClick={() => item.subItems ? toggleSubItems(item.id) : null}
                             >
                                 <Link to={item.route} className="flex items-center w-full">
-                                    <p className="mr-2 text-[#56595a] h-4 w-4">
+
+                                    <p className="mr-2 h-4 w-4 ">
                                         {adminSidebarIcon[item.label]}
                                     </p>
                                     {isOpen && (
-                                        <span className="text-[#56595a]">
+                                        <span className="">
                                             {item.label}
                                         </span>
                                     )}
                                 </Link>
-                            </div>
+                                </div>
 
                             {/* Sublist handling */}
                             {item.subItems && (
@@ -62,16 +64,14 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                                     {/* Show sublist below the parent when sidebar is open */}
                                     {isOpen && activeItem === item.id && (
 
-                                        <ul className="ml-6 mt-2 text-sm text-[#56595a]"> {/* Smaller text for sublist */}
+                                        <ul className="ml-6 mt-2 text-sm text-[#56595a] "> {/* Smaller text for sublist */}
                                             {/* <p>{item.label}</p> */}
                                             {item.subItems.map(subItem => (
-                                                <li key={subItem.id} className="mb-2">
-                                                    <Link to={subItem.route} className="flex items-center">
-                                                        <span className="text-[#56595a]">
+                                                <Link to={subItem.route} className="flex items-center hover:text-[#019cec]">
+                                                <li key={subItem.id} className="mb-2  ">
                                                             {subItem.label}
-                                                        </span>
-                                                    </Link>
                                                 </li>
+                                                </Link>
                                             ))}
                                         </ul>
                                     )}
@@ -94,7 +94,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                     ))}
                     <li
                         onClick={openModal}
-                        className="flex gap-x-2 mb-4 hover:bg-[#f7f8fc] px-4 py-2 text-[#56595a] hover:cursor-pointer"
+                        className="flex gap-x-2 mb-4 px-4 py-2 hover:text-[#019cec] hover:cursor-pointer"
                     >
                         <span>
                             <IoLogOutOutline size={22} />

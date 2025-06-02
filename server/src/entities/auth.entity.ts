@@ -1,6 +1,7 @@
 import { Column, Entity, OneToOne } from 'typeorm';
 import { ROLE } from '../constant/enum'; // Assuming ROLE is the updated enum
 import Base from '../entities/base.entity';
+import { AuthDetails } from './details.entity';
 
 @Entity('auth')
 export class Auth extends Base {

@@ -1,21 +1,14 @@
 import axiosInstance from "@services/instance";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "@ui/common/organisms/toast/ToastManage";
-import axios from "axios";
-import { MdOutlineBedroomParent } from "react-icons/md";
+import { MdOutlineBedroomParent, MdOutlineBook, MdOutlineCheckCircle, MdOutlineWeb } from "react-icons/md";
+import { DashboardStatsResponse, RoomsResponse, Stats } from "@interface/dashboardstats.interface" 
 
-interface DashboardStatsResponse {
-    status: boolean;
-    data: {
-        rooms: number;
-        bookings: number;
-    };
-    message: string;
-}
 const AdminDashboard = () => {
+    //total numbers of rooms, booking and pages
     const fetchStats = () => axiosInstance
     .get("/api/dashboardstats")
     .then((res) => res.data);
+    ;
 
     const { data, isLoading, error } = useQuery<DashboardStatsResponse>({
       queryKey: ['dashboardStats'],
@@ -24,47 +17,90 @@ const AdminDashboard = () => {
       retry: 1, // Reduce retries for Render spin-down
      
 });
+
   if (isLoading) return <div>Loading...</div>;
 
-  const stats = error
+  const stats: Stats = error
         ? {
               rooms: 0, 
               bookings: 0,
-              pages: 3,
+              pages: 0,
+              roomsList: [], 
           }
         : {
               rooms: data?.data?.rooms ?? 0,
               bookings: data?.data?.bookings ?? 0,
-              pages: 3,
+              pages: data?.data?.pages ?? 0,
+              roomsList: data?.data?.roomsList as { name: string; totalrooms: number }[] ?? [],
+              
           };
-    return (
-        <div className=" flex flex-col md:flex-row gap-y-8 md:gap-x-8 justify-between ">
+    //fetching room informations
+    
+         return (
+            <>
+              <div className="min-h-screen bg-gray-100 p-6 font-sans">
+      {/* Header */}
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Hotel Dashboard</h1>
+        <p className="text-gray-600">Overview of hotel metrics and room details</p>
+      </header>
 
-            <div className="w-full flex gap-x-10 justify-center items-center bg-[#ffffff] px-7 py-8 border-2 border-[#e4e4f4] shadow-xl rounded-sm ">
-                <div className="">
-                    <p className="font-poppins text-sm">Total Rooms</p>
-                    <p className="font-poppins font-medium text-5xl "> {stats.rooms}</p>
-                </div>
-                <MdOutlineBedroomParent size={40} />
-            </div>
-
-            <div className="w-full flex gap-x-10 justify-center items-center bg-[#ffffff] px-7 py-8 border-2 border-[#e4e4f4] shadow-xl rounded-sm ">
-                <div className="">
-                    <p className="font-poppins text-sm">Total Bookings</p>
-                    <p className="font-poppins font-medium text-5xl ">{stats.bookings}</p>
-                </div>
-                <MdOutlineBedroomParent size={40} />
-            </div>
-
-            <div className="w-full flex gap-x-10 justify-center items-center bg-[#ffffff] px-7 py-8 border-2 border-[#e4e4f4] shadow-xl rounded-sm ">
-                <div className="">
-                    <p className="font-poppins text-sm">Total Pages</p>
-                    <p className="font-poppins font-medium text-5xl ">3</p>
-                </div>
-                <MdOutlineBedroomParent size={40} />
-            </div>
+      {/* Aggregate Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-500">Total Room Types</p>
+            <p className="text-3xl font-semibold text-gray-800">{stats.rooms}</p>
+          </div>
+          <MdOutlineBedroomParent className="text-4xl text-blue-500" />
         </div>
-    )
+
+        <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-500">Total Bookings</p>
+            <p className="text-3xl font-semibold text-gray-800">{stats.bookings}</p>
+          </div>
+          <MdOutlineBook className="text-4xl text-green-500" />
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-500">Total Pages</p>
+            <p className="text-3xl font-semibold text-gray-800">{stats.pages}</p>
+          </div>
+          <MdOutlineWeb className="text-4xl text-purple-500" />
+        </div>
+      </div>
+
+      {/* Room Details Section */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Room Details</h2>
+        {stats.roomsList.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {stats.roomsList.map((room) => (
+              <div
+                key={room.name}
+                className="bg-gray-50 p-4 rounded-md border border-gray-200 flex items-center justify-between hover:bg-gray-100 transition"
+              >
+                <div>
+                  <p className="text-sm text-gray-500">Total Rooms for {room.name}</p>
+                  <p className="text-2xl font-semibold text-gray-800">{room.totalrooms}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Rooms Booked </p>
+                  <p className="text-2xl font-semibold text-gray-800">{room.totalrooms}</p>
+                </div>
+                <MdOutlineBedroomParent className="text-3xl text-blue-500" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center text-gray-500">No Rooms Available</div>
+        )}
+      </div>
+    </div>
+            </>
+            )
 }
 
 export default AdminDashboard

@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 interface Room {
     _id: string;
     name: string;
+    totalrooms: number;
     price: number;
-    description: string;
+    shortdesc: string;
     features: string[];
 }
 
@@ -53,8 +54,9 @@ const AllRooms = () => {
                     <tr>
                         <th className="border px-4 py-2">Name</th>
                         <th className="border px-4 py-2">Price</th>
-                         <th className="border px-4 py-2">Description</th>
-                         <th className="border px-4 py-2">Features</th>
+                        <th className="border px-4 py-2">Total Rooms</th>
+                        <th className="border px-4 py-2">Short Description</th>
+                        <th className="border px-4 py-2">Features</th>
                         <th className="border px-4 py-2">Actions</th>
                     </tr>
                 </thead>
@@ -64,7 +66,8 @@ const AllRooms = () => {
                             <tr key={room._id}>
                                 <td className="border px-4 py-2">{room.name}</td>
                                 <td className="border px-4 py-2">{room.price}</td>
-                                <td className="border px-4 py-2">{room.description}</td>
+                                <td className="border px-4 py-2">{room.totalrooms}</td>
+                                <td className="border px-4 py-2">{room.shortdesc}</td>
                                 <td className="border px-4 py-2">{room.features.join(', ')}</td>
                                 <td className="border px-4 py-2 flex space-x-4">
                                     <Link to={`/admin/rooms/edit/${room._id}`} className="btn-edit">Edit</Link>

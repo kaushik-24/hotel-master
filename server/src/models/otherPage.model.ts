@@ -18,7 +18,7 @@ const otherpageSchema = new Schema<IOtherPage>(
     }, { timestamps: true }
 );
 
-const Room = mongoose.model<IOtherPage>("Other Page", otherpageSchema);
+const Page = mongoose.model<IOtherPage>("Other Page", otherpageSchema);
 
-export default Room;
+export default Page;
 

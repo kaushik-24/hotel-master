@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from "../constant/statusCode";
 import Booking from "../models/booking.model";
 import Room from "../models/room.model";
+import Page from "../models/otherPage.model";
 
 class CountController{
  // New method for dashboard stats
@@ -10,10 +11,23 @@ class CountController{
     try {
       const bookingsCount = await Booking.countDocuments();
       const roomsCount = await Room.countDocuments();
-      //const pagesCount = await Page.countDocuments(); // Or e.g., pagesCount = 5 if static
+      const pagesCount = await Page.countDocuments(); 
+      const rooms = await Room.find().select('name totalrooms'); // Fetch all rooms
+
+      const { slug } = req.query;
+      let roomDetails = null;
+      if (slug && typeof slug === 'string') {
+        roomDetails = await Room.findOne({ slug }).select('name totalrooms');
+      }
+
       res.status(StatusCodes.SUCCESS || 200).json({
         status: true,
-        data: { bookings: bookingsCount, rooms: roomsCount, },
+        data: { 
+          bookings: bookingsCount, 
+          rooms: roomsCount, 
+          pages: pagesCount,
+          roomsList: rooms,
+        },
         message: Message.fetched,
       });
     } catch (error: any) {

@@ -1,5 +1,6 @@
 // src/services/admin.services.ts
 
+import { UpdateAdminDTO } from '../dto/admin.dto';
 import { ROLE } from '../constant/enum';
 import { Message } from '../constant/messages';
 import { IUser } from '../interface/user.interface';
@@ -23,33 +24,34 @@ class AdminService {
      * @returns Paginated result containing admin data and total count.
      */
     async getAllUsers(limit: number, offset: number, search: string): Promise<IPaginatedResult> {
-        try {
-            const query: any = {};
-
-            if (search) {
-                // Adjust the search field according to the user schema
-                query.name = { $regex: search, $options: 'i' };
-            }
-
-            const data = await User.find(query).skip(offset).limit(limit).exec();
-            const total = await User.countDocuments(query).exec();
-
-            return { data, total };
-        } catch (error: any) {
-            throw HttpException.badRequest(error.message);
+    try {
+        const query: any = {};
+        if (search) {
+            query.name = { $regex: search, $options: 'i' };
         }
+        const data = await User.find(query).skip(offset).limit(limit).exec();
+        const total = await User.countDocuments(query).exec();
+        return {
+            data: data.map(user => ({
+                ...user.toJSON(),
+                _id: user._id.toString(),
+            })),
+            total,
+        };
+    } catch (error: any) {
+        throw HttpException.badRequest(error.message);
     }
-
+}
     /**
      * Retrieve a single admin by ID.
      * @param id Admin's unique identifier.
      * @returns Admin user data.
      */
     async getById(id: string): Promise<IUser> {
-        const admin = await User.findOne({ _id: id, role: ROLE.ADMIN }).select('-password').exec();
-        if (!admin) throw HttpException.notFound(Message.notFound);
-        return admin;
-    }
+    const admin = await User.findOne({ _id: id, role: ROLE.ADMIN }).select('-password').exec();
+    if (!admin) throw HttpException.notFound(Message.notFound);
+    return admin; // No need for manual toJSON() or _id conversion
+}
 
     /**
      * Create a new admin.
@@ -88,23 +90,23 @@ class AdminService {
      * @param data Admin update data.
      * @returns Success message.
      */
-    // async update(data: UpdateAdminDTO): Promise<string> {
-    //     // Find the admin by ID and role
-    //     const admin = await User.findOne({ _id: data.id, role: ROLE.ADMIN }).exec();
+    async update(data: UpdateAdminDTO): Promise<string> {
+    // Find the admin by ID and role
+    const admin = await User.findOne({ _id: data.id, role: ROLE.ADMIN }).exec();
 
-    //     if (!admin) throw HttpException.notFound(Message.notFound);
+    if (!admin) throw HttpException.notFound(Message.notFound);
 
-    //     // Update fields if provided
-    //     if (data.name) admin.name = data.name;
-    //     if (data.phoneNumber) admin.phoneNumber = data.phoneNumber;
-    //     if (data.password) {
-    //         admin.password = await this.bcryptService.hash(data.password);
-    //     }
-    //     // Optionally handle role changes if necessary
+    // Update fields if provided
+    if (data.name) admin.name = data.name;
+    if (data.phoneNumber) admin.phoneNumber = data.phoneNumber;
+    if (data.password) {
+    admin.password = await this.bcryptService.hash(data.password);
+    }
+    // Optionally handle role changes if necessary
 
-    //     await admin.save();
-    //     return Message.updated;
-    // }
+    await admin.save();
+    return Message.updated;
+    }
 
     /**
      * Delete an admin by ID.

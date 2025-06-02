@@ -30,7 +30,7 @@ class RoomService {
     }
 
 
-    async createRoom(data: { name: string, price: number, description: string, features: string }) {
+    async createRoom(data: { name: string, price: number, totalrooms: number, shortdesc: string, features: string }) {
         try {
             
             const featuresArray = data.features.split(',')
@@ -44,7 +44,7 @@ class RoomService {
             console.log('typeof data.features:', typeof data.features);
             console.log('split result:', data.features.split(',')); 
 
-            const existingRoom = await Room.findOne({ $or: [{ name: data.name },{ slug: slug}, { price: data.price }, {description: data.description} ] });
+            const existingRoom = await Room.findOne({ $or: [{ name: data.name },{ slug: slug}, { price: data.price }, {shortdesc: data.shortdesc} ] });
 
             if (existingRoom) {
                 throw HttpException.badRequest("Room name or slug already exists");
@@ -62,7 +62,7 @@ class RoomService {
      * @param data Updated room data.
      * @returns Updated room data.
      */
-    async editRoom(id: string, data: { name?: string, price?: number, description?: string, features?: string }) {
+    async editRoom(id: string, data: { name?: string, price?: number, shortdesc?: string, features?: string }) {
         try {
             const updatedRoom = await Room.findByIdAndUpdate(id, data, { new: true });
             if (!updatedRoom) {

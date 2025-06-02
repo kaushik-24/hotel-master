@@ -10,7 +10,7 @@ interface Room {
     name: string;
     roomImage: string;
     price: number;
-    description: string;
+    shortdesc: string;
     features: string[];
 }
 
@@ -91,7 +91,7 @@ const RoomsCarousel: React.FC = () => {
                 <div className="flex-1 md:ml-20 mt-4">
                     <h2 className="text-[42px] text-[#4f2f1f] font-nanum">{currentRoom.name}</h2>
                     <p className="max-w-[285px] font-poppins text-[17px] mb-5">
-                        {roomsdb.length > 0 ? currentRoom.description : rooms[safeActiveIndex]?.description}
+                        {roomsdb.length > 0 ? currentRoom.shortdesc: rooms[safeActiveIndex]?.shortdesc}
                     </p>
                     <ul className="grid grid-cols-2 max-w-[300px] gap-y-3 mb-3">
                         {currentRoom.features?.slice(0, 4).map((feature, idx) => (
@@ -101,7 +101,7 @@ const RoomsCarousel: React.FC = () => {
                             </li>
                         )) || []}
                     </ul>
-                    <Link to={roomsdb.length > 0 ? `/room/${currentRoom._id}` : rooms[safeActiveIndex]?.readMore || '#'}>
+                    <Link to={roomsdb.length > 0 ? `/room/${currentRoom.name}` : rooms[safeActiveIndex]?.readMore || '#'}>
                         <button
                             className="uppercase font-poppins tracking-widest border-2 border-[#5b3423] text-[12px] text-[#5b3423] px-3 py-3 
                             hover:bg-[#5b3423] hover:text-[#ffeedc]"

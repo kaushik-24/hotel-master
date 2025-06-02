@@ -29,8 +29,8 @@ const routes: Route[] = [
         route: booking
     },
     {
-        path: '/admin',
-        route: admin // Add the admin route
+        path: '/admins',
+        route: admin 
     },
     {
         path: '/social',

@@ -1,4 +1,5 @@
 
+import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import CreatePage from "@ui/admin/pages/CreatePage"
@@ -123,11 +124,12 @@ const router = createBrowserRouter([
       { path: 'pages', element: <OtherPages /> }, // Reusing the CreateRoom component for editing
 
       { path: 'pages/create', element: <CreatePage /> },
-      { path: 'pages/create', element: <CreatePage /> },
       { path: 'pages/edit/:pageId', element: <CreatePage /> }, // Reusing the CreateRoom component for editing
 
 
       { path: 'users', element: <ManageAdmin /> },
+      { path: 'users/create', element: <CreateAdmin /> },
+      { path: 'users/edit/:id', element: <CreateAdmin /> },
       { path: 'profile', element: <UserProfile /> },
       { path: 'manage-booking', element: <ManageBooking /> },
     ]

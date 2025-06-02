@@ -32,6 +32,14 @@ const userSchema = new Schema<IUser>(
     },
     {
         timestamps: true,  // Auto add createdAt and updatedAt fields
+        toJSON: {
+            transform: (doc, ret) => {
+                ret._id = ret._id.toString();
+                delete ret.__v; //remove version key
+                delete ret.passsword; //ensure password is not sent
+                return ret;
+            },
+        },
     }
 );
 

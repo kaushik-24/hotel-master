@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import AdminController from "../controllers/admin.controller";
-import { CreateAdminDTO } from "../dto/admin.dto";
+import { CreateAdminDTO, UpdateAdminDTO } from "../dto/admin.dto";
 import { isAuthenticated } from "../middleware/auth.middleware"; // Ensure user is authenticated
 import RequestValidator from "../middleware/Request.Validator";
 import { isAdmin } from "../middleware/role.middleware"; // Ensure user has admin privileges
@@ -16,14 +16,14 @@ router.get(
     '/',
     isAuthenticated,
     isAdmin,
-    catchAsync((req, res) => adminController.getAllUsers(req, res)) // Fix: Pass req and res here
+    catchAsync((req, res, ) => adminController.getAllUsers(req, res, )) // Fix: Pass req and res here
 ); // Get all admins
 
 router.get(
     '/:id',
     isAuthenticated,
     isAdmin,
-    catchAsync(adminController.getOne)
+    adminController.getOne
 ); // Get one admin by ID
 
 router.post(
@@ -31,21 +31,21 @@ router.post(
     isAuthenticated,
     isAdmin,
     RequestValidator.validate(CreateAdminDTO),
-    catchAsync(adminController.create)
+    adminController.create
 ); // Create an admin
 
-// router.put(
-//     '/:id',
-//     isAuthenticated,
-//     isAdmin,
-//     RequestValidator.validate(UpdateAdminDTO),
-//     catchAsync(adminController.update)
-// ); // Update admin
+router.put(
+'/:id',
+isAuthenticated,
+isAdmin,
+RequestValidator.validate(UpdateAdminDTO),
+adminController.update
+); // Update admin
 
 router.delete(
     '/:id',
     isAuthenticated,
     isAdmin,
-    catchAsync(adminController.delete)
+    adminController.delete
 ); // Delete admin by ID
 export default router;

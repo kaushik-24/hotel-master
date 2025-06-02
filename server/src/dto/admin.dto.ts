@@ -33,6 +33,9 @@ export class UpdateAdminDTO {
     @IsNotEmpty()
     @IsString()
     name: string = '';
+    
+    @IsString()
+    password: string = '';
 
     @IsNotEmpty()
     @IsString()
@@ -43,13 +46,3 @@ export class UpdateAdminDTO {
     role: ROLE = ROLE.USER;
 }
 
-// DTO for updating admin password
-export class UpdatePasswordDTO {
-    @IsNotEmpty()
-    @IsString()
-    oldPassword: string = '';
-
-    @IsNotEmpty()
-    @IsString()
-    newPassword: string = '';
-}
