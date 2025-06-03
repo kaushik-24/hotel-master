@@ -3,7 +3,7 @@ import BookingInquiries from "../organisms/BookingInquiries"
 import Footer from "../organisms/Footer"
 import RoomNavbar from "../organisms/RoomNavbar"
 
-const RoomTemplate = () => {
+const PageTemplate = () => {
     return (
         <div>
             <RoomNavbar />
@@ -13,11 +13,10 @@ const RoomTemplate = () => {
 
 
             <BookingInquiries />
-            <Footer />
             {/* <BookNow /> */}
 
         </div>
     )
 }
 
-export default RoomTemplate
+export default PageTemplate

@@ -4,6 +4,7 @@ import OtherPageController from "../controllers/otherPage.controller";
 const router = express.Router();
 
 router.get("/", OtherPageController.getAllPages);
+router.get("/slug/:slug", OtherPageController.getPageBySlug)
 router.get("/:id", OtherPageController.getPageById);
 router.post("/", OtherPageController.createPage);
 router.patch("/:id", OtherPageController.editPage);

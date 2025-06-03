@@ -25,6 +25,16 @@ const roomSchema = new Schema<IRoom>(
             required: true,
             unique: false,
         },
+         heading: {
+            type: String,
+            required: true,
+            unique: false,
+        },
+         longdesc: {
+            type: String,
+            required: true,
+            unique: false,
+        },
         features: {
             type: [String],
             required: true,
@@ -35,6 +45,7 @@ const roomSchema = new Schema<IRoom>(
             required: true,
             unique: false,
         },
+        roomImage: { type: String},
         
     }, { timestamps: true }
 );

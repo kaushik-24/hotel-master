@@ -3,15 +3,18 @@ import InputField from "@ui/common/atoms/InputField";
 import Label from "@ui/common/atoms/Label";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface PageData {
     name: string;
     slug: string;
+    template: "room" | "other";
     // Add other fields as needed for the page
 }
 
 const CreatePage = () => {
+
+    const Navigate = useNavigate();
     const { pageId } = useParams(); // Get the pageId from the URL if editing
     const { register, handleSubmit, setValue } = useForm<PageData>();
 
@@ -24,7 +27,7 @@ const CreatePage = () => {
 
                     // Update form values with fetched page data
                     setValue('name', response.data.data.name || ''); // Set default value if undefined
-                    setValue('slug', response.data.data.slug || ''); // Set default value if undefined
+                    setValue('template', response.data.data.template || '');
                     // Include other fields here and set default values
                 } catch (error) {
                     console.error("Error fetching page data:", error);
@@ -45,6 +48,8 @@ const CreatePage = () => {
                 await axiosInstance.post("/api/page", data);
             }
             // Handle success, redirect or display success message
+      //    
+            Navigate('/admin/pages', { replace: true });
             console.log("Page submitted successfully");
         } catch (error) {
             console.error("Error submitting page data:", error);
@@ -66,16 +71,8 @@ const CreatePage = () => {
                     />
                 </div>
 
-                {/* Page Slug */}
-                <div className="mb-4">
-                    <Label name="slug" label="Page Slug" />
-                    <InputField
-                        name="slug"
-                        type="text"
-                        placeholder="Enter page slug"
-                        register={register} // Use register for input binding
-                    />
-                </div>
+                
+             
 
                 {/* Submit Button */}
                 <button type="submit" className="p-2 bg-[#6b3aa3] rounded-md text-white font-poppins">

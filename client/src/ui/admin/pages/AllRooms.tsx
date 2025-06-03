@@ -1,9 +1,11 @@
 import axiosInstance from "@services/instance";
 import { useEffect, useState } from "react";
+import { FaEdit, FaExternalLinkAlt, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 interface Room {
     _id: string;
+    slug: string;
     name: string;
     totalrooms: number;
     price: number;
@@ -70,8 +72,17 @@ const AllRooms = () => {
                                 <td className="border px-4 py-2">{room.shortdesc}</td>
                                 <td className="border px-4 py-2">{room.features.join(', ')}</td>
                                 <td className="border px-4 py-2 flex space-x-4">
-                                    <Link to={`/admin/rooms/edit/${room._id}`} className="btn-edit">Edit</Link>
-                                    <button onClick={() => handleDelete(room._id)} className="btn-delete">Delete</button>
+                                    <Link to={`/admin/rooms/edit/${room._id}`} className="btn-edit text-blue-600 hover:text-blue-800">
+                                      <FaEdit />
+                                    </Link>
+                                    <button onClick={() => handleDelete(room._id)} className="btn-delete text-red-600 hover:text-red-800">
+                                      <FaTrash />
+                                    </button>
+                                    <Link to={`/rooms/${room.slug}`} 
+                                    className="text-blue-600 hover:text-blue-800"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    > <FaExternalLinkAlt /></Link>
                                 </td>
                             </tr>
                         ))

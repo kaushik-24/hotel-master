@@ -7,4 +7,6 @@ export interface IRoom {
     features: string[],
     roomImage: string, 
     readMore: string,
+    heading: string,
+    longdesc: string,
 }

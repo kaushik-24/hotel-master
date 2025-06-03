@@ -1,10 +1,5 @@
-import { useState } from "react";
-// import AdminTable from "";
 import AdminTable from "../organisms/AdminTable";
-import CreateAdmin from "../organisms/CreateAdmin";
-import { Link } from "react-router-dom";
 const ManageAdmin = () => {
-    const [showAdmin, setShowAdmin] = useState<boolean>(true);
     return (
         <div className=" w-full  h-full rounded-md p-4 bg-slate-100 ">
             <div className="flex justify-between ">

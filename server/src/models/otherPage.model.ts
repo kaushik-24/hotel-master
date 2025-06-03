@@ -15,6 +15,12 @@ const otherpageSchema = new Schema<IOtherPage>(
             required: true,
             unique: true,
         },
+        template: {
+            type: String,
+            enum: ["room", "other"], // add more as needed
+            default: "other",
+            required: true,
+        },
     }, { timestamps: true }
 );
 

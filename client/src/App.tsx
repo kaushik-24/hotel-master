@@ -16,6 +16,8 @@ import Blogs from "@ui/landing/pages/Blogs"
 import Careers from "@ui/landing/pages/Careers"
 import Contact from "@ui/landing/pages/Contact"
 import Deluxe from "@ui/landing/pages/Deluxe"
+import DynamicPage from "@ui/landing/pages/DynamicPage"
+import DynamicRoomPage from "@ui/landing/pages/DynamicRoomPage"
 import Executive from "@ui/landing/pages/Executive"
 import GampoSuite from "@ui/landing/pages/GampoSuite"
 import Home from "@ui/landing/pages/Home"
@@ -25,6 +27,7 @@ import Reviews from "@ui/landing/pages/Reviews"
 import Sustainability from "@ui/landing/pages/Sustainability"
 import WenchengSuite from "@ui/landing/pages/WenchengSuite"
 import LandingPageTemplate from "@ui/landing/templates/LandingPageTemplate"
+import PageTemplate from "@ui/landing/templates/PageTemplate"
 import RoomTemplate from "@ui/landing/templates/RoomTemplate"
 import Login from "@ui/user/pages/auth/Login"
 import SignUp from "@ui/user/pages/auth/SignUp"
@@ -55,9 +58,9 @@ const router = createBrowserRouter([
     path: '/rooms',
     element: <>
       <ScrollToTop />
-      <RoomTemplate /></>,
+      <PageTemplate /></>,
     children: [
-
+      { path: "/rooms/:slug", element: <DynamicRoomPage /> },
       { path: '/rooms/deluxe', element: <Deluxe /> },
       { path: '/rooms/executive', element: <Executive /> },
       { path: '/rooms/songtsan-gampo', element: <GampoSuite /> },
@@ -73,9 +76,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <>
       <ScrollToTop />
-      <RoomTemplate /></>,
+      <PageTemplate /></>,
     children: [
       // { index: true, element: <AboutUs /> },
+      { path: "/:slug", element: <DynamicPage /> },
       { path: '/about-us', element: <AboutUs /> },
       { path: '/blogs', element: <Blogs /> },
       { path: '/media-gallery', element: <MediaGallery /> },

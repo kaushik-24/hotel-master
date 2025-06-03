@@ -76,6 +76,25 @@ class OtherPageController {
             });
         }
     }
+    async getPageBySlug(req: Request, res: Response) {
+    try {
+        const response = await otherPageService.getPageBySlug(req.params.slug);
+
+        res.status(StatusCodes.SUCCESS).json({
+            success: true,
+            message: Message.fetched,
+            data: response,
+        });
+    } catch (error: any) {
+        console.error("Error Fetching Page by Slug:", error);
+        res.status(error.statusCode || StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: error.message || "An error occurred while fetching the page.",
+            originalError: error.message,
+        });
+    }
+}
+
 
     async deletePage(req: Request, res: Response) {
         try {

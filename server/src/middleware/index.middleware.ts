@@ -10,6 +10,7 @@ import adminRouter from "../routes/admin.route";
 import { errorHandler } from "./errorHandler.middleware";
 import { isAuthenticated } from "./auth.middleware";
 import { isAdmin } from "./role.middleware";
+import path from "path";
 
 const middleware = (app: Application) => {
     // CORS configuration
@@ -40,7 +41,8 @@ const middleware = (app: Application) => {
             limit: "10mb",
         }),
     );
-
+// Serve static files from the uploads directory
+  app.use("/uploads", express.static(path.join(__dirname, "../../uploads"))); // Add this line
     // Logging
     app.use(morgan("common"));
 

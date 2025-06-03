@@ -1,4 +1,5 @@
 export interface IOtherPage {
-    name: string,
-    slug: string
+    name: string;
+    slug: string;
+    template: "room" | "other";
 }

@@ -3,15 +3,18 @@ import InputField from "@ui/common/atoms/InputField";
 import Label from "@ui/common/atoms/Label";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FiX } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface RoomData {
     name: string;
     price: number;
     shortdesc: string;
-    features: [string];
+    features: string;
     roomImage: string;
     totalrooms: number; 
+    heading: string;
+    longdesc: string;
     // Add other fields as needed
 }
 
@@ -22,18 +25,17 @@ const CreateRoom = () => {
     const { register, handleSubmit, setValue } = useForm<RoomData>();
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-   {/*} 
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
       setSelectedFile(file);
-      setValue("roomImage", file); // Temporarily store the File; adjust based on backend needs
     } else {
       alert("Please select a valid image file.");
     }
-  };{*/}
+  };
     useEffect(() => {
         const fetchRoomData = async () => {
             if (roomId) {
@@ -43,12 +45,18 @@ const CreateRoom = () => {
 
                     // Update form values with fetched room data
                     setValue('name', response.data.data.name || ''); // Set default value if undefined
-                    setValue('price', response.data.data.price || ''); // Set default value if undefined
-                    setValue('shortdesc', response.data.data.shortdesc || ''); // Set default value if undefined
-                    setValue('features', response.data.data.features || ''); // Set default value if undefined
-                    setValue('totalrooms', response.data.data.totalrooms || ''); // Set default value if undefined
-                    // Include other fields here and set default values
-                } catch (error) {
+                    setValue('price', response.data.data.price || ''); 
+                    setValue('shortdesc', response.data.data.shortdesc || '');                     
+                    setValue('features', response.data.data.features || '');                     
+                    setValue('totalrooms', response.data.data.totalrooms || '');                
+                    setValue('heading', response.data.data.heading || '');                
+                    setValue('longdesc', response.data.data.longdesc || '');                
+                    if (response.data.data.roomImage) {
+                        setImagePreview(`${import.meta.env.VITE_APP_BASE_URL}${response.data.data.roomImage}`); // Assuming roomImage is a URL
+                    }
+                        }
+
+                catch (error) {
                     console.error("Error fetching room data:", error);
                 }
             }
@@ -65,18 +73,32 @@ const CreateRoom = () => {
 
     const onSubmit = async (data: RoomData) => {
         try {
-            if (roomId) {
-                // Update existing room
-                await axiosInstance.put(`/api/room/${roomId}`, data);
-            } else {
-                // Create new room
-                await axiosInstance.post("/api/room", data);
-            }
-             navigate('/admin/rooms', { replace: true });
+      const formData = new FormData();
+      formData.append("name", data.name || "");
+    formData.append("price", data.price ? data.price.toString() : "0");
+    formData.append("shortdesc", data.shortdesc || "");
+    formData.append("features", data.features || "");
+    formData.append("totalrooms", data.totalrooms ? data.totalrooms.toString() : "0");
+    formData.append("heading", data.heading || "");
+    formData.append("longdesc", data.longdesc || "");
+      
+      if (selectedFile) {
+        formData.append("roomImage", selectedFile); // Append the image file
+      }
 
-            // Handle success, redirect or display success message
-            console.log("Room submitted successfully");
-        } catch (error) {
+      if (roomId) {
+        await axiosInstance.put(`/api/room/${roomId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        await axiosInstance.post("/api/room", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+      navigate("/admin/rooms", { replace: true });
+      console.log("Room submitted successfully");
+    } 
+            catch (error) {
             console.error("Error submitting room data:", error);
         }
     };
@@ -103,8 +125,8 @@ const CreateRoom = () => {
                         name="totalrooms"
                         type="number"
                         placeholder="Enter total number of rooms"
-                        register={register} // Use register for input binding
-                    />
+                        register={register} 
+                     />
                 </div>
 
 
@@ -115,7 +137,18 @@ const CreateRoom = () => {
                         name="price"
                         type="number"
                         placeholder="Enter room price"
-                        register={register} // Use register for input binding
+                        register={register}                    
+                    />
+                </div>
+                
+                 {/* Room Heading */}
+                <div className="mb-4">
+                    <Label name="heading" label="Room heading" />
+                    <InputField
+                        name="heading"
+                        type="text"
+                        placeholder="Enter room heading"
+                        register={register} 
                     />
                 </div>
                 
@@ -126,10 +159,21 @@ const CreateRoom = () => {
                         name="shortdesc"
                         type="text"
                         placeholder="Enter room short description"
-                        register={register} // Use register for input binding
+                        register={register} 
                     />
                 </div>
- 
+
+                {/* Room long description */}
+                <div className="mb-4">
+                    <Label name="longdesc" label="Room long description" />
+                    <InputField
+                        name="longdesc"
+                        type="text"
+                        placeholder="Enter room long description"
+                        register={register} 
+                    />
+                </div>
+
                 {/* Room features*/}
                 <div className="mb-4">
                     <Label name="features" label="Room features" />
@@ -137,11 +181,11 @@ const CreateRoom = () => {
                         name="features"
                         type="text"
                         placeholder="Enter room features"
-                        register={register} // Use register for input binding
+                        register={register}      
                     />
                 </div>
         
-                {/* Photo Upload 
+                {/* Photo Upload */} 
         <div className="mb-4">
           <Label name="roomImage" label="Room Image" />
           <input
@@ -151,20 +195,30 @@ const CreateRoom = () => {
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#6b3aa3] file:text-white hover:file:bg-[#5a2e8a]"
           />
           {imagePreview && (
-            <div className="mt-4">
+            <div className="mt-4 relative inline-block">
               <img
                 src={imagePreview}
                 alt="Room Preview"
                 className="w-48 h-32 object-cover rounded-md"
               />
+              <button
+      type="button"
+      onClick={() => {
+        setImagePreview(null);
+        setSelectedFile(null);
+      }}
+      className="absolute top-1 right-1 bg-red-600/80 text-white text-xs px-2 py-1 rounded hover:bg-red-700/90 shadow" aria-label="Remove image"
+    >
+     <FiX /> 
+    </button>
             </div>
           )}
-        </div> */}
-
+        </div> 
                 {/* Submit Button */}
-                <button type="submit" className="p-2 bg-[#6b3aa3] rounded-md text-white font-poppins">
+                <button type="submit" className="p-2 bg-[#019ece] rounded-md text-white font-poppins">
                     {roomId ? "Update Room" : "Create Room"}
                 </button>
+                <p className="mt-3">This will also create a page of this room.</p>
             </form>
         </div>
     );

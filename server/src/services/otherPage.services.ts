@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import OtherPage from "../models/otherPage.model";
 import HttpException from "../utils/HttpException.utils";
 
@@ -27,6 +28,10 @@ class OtherPageService {
     async createPage(data: { name: string, slug: string }) {
         try {
             const existingPage = await OtherPage.findOne({ $or: [{ name: data.name }, { slug: data.slug }] });
+            if (!data.slug) {
+            
+            data.slug = slugify(data.name, { lower: true, strict: true });
+            }
 
             if (existingPage) {
                 throw HttpException.badRequest("Page name or slug already exists");
@@ -50,6 +55,15 @@ class OtherPageService {
             throw HttpException.badRequest(error.message);
         }
     }
+    
+async getPageBySlug(slug: string) {
+    const page = await OtherPage.findOne({ slug })
+    if (!page) {
+        throw HttpException.notFound("Page not found")
+    }
+    return page.toObject()
+}
+
 
     async deletePage(id: string) {
         try {

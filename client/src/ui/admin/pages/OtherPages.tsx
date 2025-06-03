@@ -33,7 +33,7 @@ const OtherPages = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await axiosInstance.delete(`/page/${id}`);
+            await axiosInstance.delete(`/api/page/${id}`);
             setPages(pages.filter((page) => page._id !== id));
         } catch (error) {
             console.error("Error deleting page:", error);
