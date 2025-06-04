@@ -38,7 +38,7 @@ const Navbar = () => {
             <Link to={"/booking"}>
                 <button
                     className="hidden md:flex border-2 border-[#ffeedc] text-[#ffeedc] rounded-sm py-2 px-4 hover:bg-[#ffeedc] hover:text-black cursor-pointer">
-                    Book Now
+                    Book Now.
                 </button>
             </Link>
                 <button onClick={toggleMenu} className="text-[#ffeedc] cursor-pointer">

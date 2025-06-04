@@ -18,10 +18,7 @@ const RoomNavbar = () => {
         <nav className="bg-[#f6e6d6]  px-14 flex justify-between items-center z-100">
             <Logo textColor="text-[#5b3423]" />
             <div className="flex items-center gap-x-8">
-                <button
-                    className="hidden md:flex border-2 border-[#5b3423] text-[#5b3423] rounded-sm py-2 px-4 hover:bg-[#ffeedc] hover:text-black cursor-pointer">
-                    Book Now
-                </button>
+                
 
                 <button onClick={toggleMenu} className="text-[#5b3423] cursor-pointer">
                     {isMenuOpen ? null : <AiOutlineMenu size={18} />}
