@@ -8,14 +8,16 @@ const getAuthHeader = () => {
   const encryptedToken =
     localStorage.getItem('accessTokenHotelVenus') ||
     sessionStorage.getItem('accessTokenHotelVenus');
-
+    
   const token = encryptedToken ? encryptDecrypt.decrypt(encryptedToken) : null;
-
-  return {
+  
+  const headers = {
     headers: {
       Authorization: token ? `Bearer ${token}` : ''
     }
   };
+  
+  return headers;
 };
 
 export const fetchAdmins = async (
@@ -40,10 +42,18 @@ export const createAdmin = async (adminData: CreateAdminDTO): Promise<void> => {
 };
 
 export const updateAdmin = async (id: string, adminData: UpdateAdminDTO): Promise<void> => {
-  await axios.put(`${API_URL}/api/admins/${id}`, adminData, getAuthHeader());
+  
+  const url = `${API_URL}/api/admins/${id}`;
+  
+  const authHeader = getAuthHeader();
+  try {
+    const response = await axios.put(url, adminData, authHeader);
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
 };
 
 export const deleteAdmin = async (id: string): Promise<void> => {
   await axios.delete(`${API_URL}/api/admins/${id}`, getAuthHeader());
 };
-

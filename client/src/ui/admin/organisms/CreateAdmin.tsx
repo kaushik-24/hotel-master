@@ -44,15 +44,18 @@ const CreateAdmin: React.FC = () => {
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
+    if (!id) { // Only validate email for create
+        const createData = formData as CreateAdminDTO;
+        if (!createData.email.trim()) {
+            newErrors.email = 'Email is required';
+        } else if (!/^\S+@\S+\.\S+$/.test(createData.email)) {
+            newErrors.email = 'Invalid email format';
+        }
     }
     if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone is required';
     if (!id && !formData.password) newErrors.password = 'Password is required';
     return newErrors;
-  };
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -61,29 +64,36 @@ const CreateAdmin: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+  e.preventDefault();
+  
+  const validationErrors = validate();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
 
-    setIsSubmitting(true);
-    try {
-      if (id) {
-        await updateAdmin(id, formData as UpdateAdminDTO);
-      } else {
-        await createAdmin(formData as CreateAdminDTO);
-      }
-      navigate('/admin/users');
-    } catch (error) {
-      setFormError('Operation failed. Please try again.');
-      console.error('Operation failed:', error);
-    } finally {
-      setIsSubmitting(false);
+  setIsSubmitting(true);
+  try {
+    if (id) {
+      // Create payload that matches UpdateAdminDTO exactly
+      const updatePayload = {
+        name: formData.name,
+        phoneNumber: formData.phoneNumber,
+        // Only include password if it's not empty
+        ...(formData.password && { password: formData.password })
+      };
+      await updateAdmin(id, updatePayload);
+    } else {
+      await createAdmin(formData as CreateAdminDTO);
     }
-  };
+    navigate('/admin/users');
+  } catch (error) {
+    setFormError('Operation failed. Please try again.');
+    console.error('Operation failed:', error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   if (loading) {
     return (

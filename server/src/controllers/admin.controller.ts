@@ -6,6 +6,7 @@ import adminService from '../services/admin.services';
 import HttpException from '../utils/HttpException.utils';
 import { getPagination, getPagingData, validatePagination } from '../utils/pagination';
 import { JwtPayload } from '../types/jwtPayload';
+import { UpdateAdminDTO } from '../dto/admin.dto';
 
 class AdminController {
     async getAllUsers(req: Request, res: Response) {
@@ -36,36 +37,48 @@ class AdminController {
     }
 
     async create(req: Request, res: Response) {
+    try {
         const bodyRole = req.body?.role;
-
         if (bodyRole === ROLE.ADMIN) {
             throw HttpException.forbidden(Message.unAuthorized);
         }
-
         await adminService.create(req.body);
-
         res.status(StatusCodes.CREATED).json({
             status: true,
             message: Message.created,
         });
-    }
-
-    async update(req: Request, res: Response) {
-        const id = req.params.id;
-
-        if (req.body.id && req.body.id !== id) {
-            throw HttpException.badRequest("ID in body does not match ID in URL");
-        }
-
-        const updateData = { id, ...req.body };
-        await adminService.update(updateData);
-
-        res.status(StatusCodes.SUCCESS).json({
-            status: true,
-            message: Message.updated,
+    } catch (error: any) {
+        res.status(error.status || StatusCodes.BAD_REQUEST).json({
+            status: false,
+            message: error.message || 'Failed to create admin',
         });
     }
-
+}
+   async update(req: Request, res: Response) {
+    try {
+        console.log('Update request received:', {
+            params: req.params,
+            body: req.body,
+            user: req.user
+        });
+        
+        const { id } = req.params;
+        const data: UpdateAdminDTO = req.body;
+        
+        await adminService.update(id, data);
+        
+        res.status(200).json({ 
+            success: true, 
+            message: 'Admin updated successfully' 
+        });
+    } catch (error: any) {
+        console.error('Update error:', error);
+        res.status(error.status || 500).json({
+            success: false,
+            message: error.message || 'Update failed'
+        });
+    }
+}
     async delete(req: Request, res: Response) {
         const id = req.params.id;
         await adminService.delete(id, req.user as JwtPayload);

@@ -1,6 +1,6 @@
 // src/services/admin.services.ts
 
-import { UpdateAdminDTO } from '../dto/admin.dto';
+import { CreateAdminDTO, UpdateAdminDTO } from '../dto/admin.dto';
 import { ROLE } from '../constant/enum';
 import { Message } from '../constant/messages';
 import { IUser } from '../interface/user.interface';
@@ -58,55 +58,70 @@ class AdminService {
      * @param data Admin creation data.
      * @returns Success message.
      */
-    async create(data: IUser): Promise<string> {
-        try {
-            // Check if email already exists
-            const alreadyExist = await User.findOne({ email: data.email });
-            if (alreadyExist) throw HttpException.badRequest(`${data.email} email already exists`);
+    async create(data: CreateAdminDTO): Promise<string> {
+    try {
+        // Check for duplicate name, email, and phone number
+        const alreadyExists = await Promise.any([
+            User.findOne({ name: data.name.trim() }).exec().then(user => user && { field: 'name', value: data.name }),
+            User.findOne({ email: data.email.trim() }).exec().then(user => user && { field: 'email', value: data.email }),
+            User.findOne({ phoneNumber: data.phoneNumber.trim() }).exec().then(user => user && { field: 'phoneNumber', value: data.phoneNumber }),
+        ]).catch(() => null);
 
-            // Hash the password
-            const hashedPassword = await this.bcryptService.hash(data.password);
-
-            // Create admin data
-            const adminData = {
-                name: data.name,
-                email: data.email,
-                phoneNumber: data.phoneNumber,
-                password: hashedPassword,
-                role: ROLE.ADMIN,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            await User.create(adminData);
-            return Message.created;
-        } catch (err: any) {
-            throw HttpException.badRequest(err.message);
+        if (alreadyExists) {
+            throw HttpException.badRequest(`${alreadyExists.field} '${alreadyExists.value}' already exists`);
         }
+
+        // Hash the password
+        const hashedPassword = await this.bcryptService.hash(data.password);
+
+        // Create admin
+        const adminData = {
+            name: data.name.trim(),
+            email: data.email.trim(),
+            phoneNumber: data.phoneNumber.trim(),
+            password: hashedPassword,
+            role: ROLE.ADMIN,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        await User.create(adminData);
+        return Message.created;
+    } catch (error: any) {
+        if (error.code === 11000) { // MongoDB duplicate key error
+            const field = Object.keys(error.keyValue)[0];
+            throw HttpException.badRequest(`${field} '${error.keyValue[field]}' already exists`);
+        }
+        throw HttpException.badRequest(error.message || 'Failed to create admin');
     }
+}
 
     /**
      * Update an existing admin's information.
      * @param data Admin update data.
      * @returns Success message.
      */
-    async update(data: UpdateAdminDTO): Promise<string> {
-    // Find the admin by ID and role
-    const admin = await User.findOne({ _id: data.id, role: ROLE.ADMIN }).exec();
-
+    async update(id: string, data: UpdateAdminDTO): Promise<string> {
+    const admin = await User.findById(id).exec();
     if (!admin) throw HttpException.notFound(Message.notFound);
-
-    // Update fields if provided
+    
     if (data.name) admin.name = data.name;
     if (data.phoneNumber) admin.phoneNumber = data.phoneNumber;
     if (data.password) {
-    admin.password = await this.bcryptService.hash(data.password);
+        admin.password = await this.bcryptService.hash(data.password);
     }
-    // Optionally handle role changes if necessary
-
-    await admin.save();
-    return Message.updated;
+    
+    try {
+        await admin.save();
+        return Message.updated;
+    } catch (error: any) {
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            throw HttpException.badRequest(`${field} '${error.keyValue[field]}' already exists`);
+        }
+        throw HttpException.badRequest(error.message || 'Failed to update admin');
     }
+}
 
     /**
      * Delete an admin by ID.

@@ -23,18 +23,7 @@ const middleware = (app: Application) => {
     );
 
     // User agent and API key check
-    app.use((req: Request, res: Response, next: NextFunction) => {
-        const userAgent = req.headers['user-agent'] ?? '';
-        const apiKey = req.headers['apikey'];
-
-        if (userAgent && userAgent.includes('Mozilla')) {
-            return next();
-        } 
-        if (apiKey === DotenvConfig.API_KEY) return next();
-        
-        return res.status(StatusCodes.FORBIDDEN).send('Forbidden');
-    });
-
+  
     // Body parser
     app.use(
         express.json({
@@ -43,18 +32,14 @@ const middleware = (app: Application) => {
     );
 // Serve static files from the uploads directory
   app.use("/uploads", express.static(path.join(__dirname, "../../uploads"))); // Add this line
+
     // Logging
     app.use(morgan("common"));
 
     // API routes
     app.use("/api", router);
 
-    // Custom admin path (using environment variable)
-    //const ADMIN_PATH = DotenvConfig.ADMIN_PATH; 
-    
-    // Apply admin route with proper middleware
-    app.use(`/api/admins`, isAuthenticated, isAdmin, adminRouter);
-       
+          
     // Catch-all route for non-existent routes
     app.use('*', (req: Request, res: Response) => {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'Resource not found' });

@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ROLE } from '../constant/enum';
 
 // DTO for creating a new admin
@@ -26,23 +26,21 @@ export class CreateAdminDTO {
 
 // DTO for updating an existing admin
 export class UpdateAdminDTO {
-    @IsNotEmpty()
-    @IsUUID()
-    id: string = '';
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    name: string = '';
-    
+    name?: string;
+   
+    @IsOptional()
     @IsString()
-    password: string = '';
+    password?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    phoneNumber: string = '';
+    phoneNumber?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsEnum(ROLE, { message: 'Invalid role' })
-    role: ROLE = ROLE.USER;
+    role?: ROLE;
 }
 
