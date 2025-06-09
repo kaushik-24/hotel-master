@@ -1,30 +1,43 @@
 import mongoose, { Schema } from "mongoose";
-import { IOtherPage } from "../interface/otherPage.interface";
+import { IPage } from "../interface/otherPage.interface";
 
 
 
-const otherpageSchema = new Schema<IOtherPage>(
+const pageSchema = new Schema<IPage>(
     {
         name: {
             type: String,
             required: true,
-            unique: true,
+            unique: false,
         },
         slug: {
             type: String,
             required: true,
             unique: true,
-        },
-        template: {
+    },
+                shortdesc: {
             type: String,
-            enum: ["room", "other"], // add more as needed
-            default: "other",
-            required: true,
+            required: false,
+            unique: false,
         },
+         heading: {
+            type: String,
+            required: false,
+            unique: false,
+        },
+         longdesc: {
+            type: String,
+            required: false,
+            unique: false,
+        },
+       
+        pageImage: { type: String},
+        
     }, { timestamps: true }
 );
 
-const Page = mongoose.model<IOtherPage>("Other Page", otherpageSchema);
+const Page = mongoose.model<IPage>("Page", pageSchema);
 
 export default Page;
+
 

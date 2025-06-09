@@ -18,6 +18,12 @@ const bookingSchema = new Schema<IBooking>({
             required: false, // Made optional
         },
     ],
+    roomNames: [
+        {
+            type: String,
+            required: false, // Optional to match rooms
+        },
+    ],
     checkInDate: {
         type: Date,
         required: false,

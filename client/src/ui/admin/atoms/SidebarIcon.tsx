@@ -18,6 +18,5 @@ export const adminSidebarIcon: { [key: string]: JSX.Element } = {
     "Manage Booking": <MdOutlineBedroomParent />,
     "Services": <IoEarth />,
     "Inquiry": <CiMail />,
-    "User Profile": <FaUserPlus />,
     "Settings": <IoSettings />
 };

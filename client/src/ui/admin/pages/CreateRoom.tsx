@@ -85,6 +85,7 @@ const CreateRoom = () => {
       if (selectedFile) {
         formData.append("roomImage", selectedFile); // Append the image file
       }
+      console.log("Submitted name:", data.name);
 
       if (roomId) {
         await axiosInstance.put(`/api/room/${roomId}`, formData, {

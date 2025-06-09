@@ -7,6 +7,7 @@ export interface GetBookingList {
     name: string;
     numberOfRoom: number;
     rooms: string[];
+    roomNames: string[];
     checkInDate: string;
     checkOutDate: string;
 }
@@ -16,6 +17,7 @@ export interface BookingFormData {
     name: string;
     numberOfRoom: number;
     rooms: string[];
+    roomNames: string[];
     checkInDate: string;
     checkOutDate: string;
 }

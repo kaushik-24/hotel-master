@@ -42,6 +42,7 @@ class BookingController {
                 name: dto.name,
                 numberOfRoom: dto.numberOfRoom,
                 rooms: dto.rooms,
+                roomNames: dto.roomNames,
                 checkInDate: checkInDate,
                 checkOutDate: checkOutDate,
             };

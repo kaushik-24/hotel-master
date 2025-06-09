@@ -1,6 +1,6 @@
 import axiosInstance from "@services/instance";
 import { useQuery } from "@tanstack/react-query";
-import { MdOutlineBedroomParent, MdOutlineBook, MdOutlineCheckCircle, MdOutlineWeb } from "react-icons/md";
+import { MdOutlineBedroomParent, MdOutlineBook, MdOutlineWeb } from "react-icons/md";
 import { DashboardStatsResponse, RoomsResponse, Stats } from "@interface/dashboardstats.interface" 
 
 const AdminDashboard = () => {

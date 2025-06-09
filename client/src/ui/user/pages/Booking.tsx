@@ -24,6 +24,7 @@ const BookingForm: React.FC = () => {
       name: "",
       numberOfRoom: 1,
       rooms: [],
+      roomNames:[],
       checkInDate: "",
       checkOutDate: "",
     },

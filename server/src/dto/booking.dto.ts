@@ -16,6 +16,12 @@ export class CreateBookingDTO {
     @ArrayNotEmpty({ message: "Rooms array cannot be empty" })
     @IsString({ each: true, message: "Each value in rooms must be a string" })
     rooms?: string[];
+    
+    @IsOptional()
+    @IsArray()
+    @ArrayNotEmpty({ message: "Rooms array cannot be empty" })
+    @IsString({ each: true, message: "Each value in rooms must be a string" })
+    roomNames?: string[];
 
     @IsOptional()
     @IsDateString({}, { message: "Invalid Check-In Date format" })
