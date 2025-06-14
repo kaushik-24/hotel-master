@@ -1,34 +1,29 @@
 
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
+import HeroSection from "@ui/admin/organisms/HeroSection"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
+import CmsHomePage from "@ui/admin/pages/cms/HomeConfigs"
 import CreatePage from "@ui/admin/pages/CreatePage"
 import CreateRooms from "@ui/admin/pages/CreateRooms"
 import CreateRoomType from "@ui/admin/pages/CreateRoomType"
 import ManageBooking from "@ui/admin/pages/ManageBooking"
 import ManageAdmin from "@ui/admin/pages/ManageUser"
-import OtherPages from "@ui/admin/pages/OtherPages"
 import RoomSettings from "@ui/admin/pages/RoomSettings"
 import SiteOptions from "@ui/admin/pages/SiteOptions"
 import UserProfile from "@ui/admin/pages/UserProfile"
 import PageNotFound from "@ui/common/pages/PageNotFound"
 import AboutUs from "@ui/landing/pages/AboutUs"
-import BhrikutiSuite from "@ui/landing/pages/BhrikutiSuite"
 import Blogs from "@ui/landing/pages/Blogs"
 import Careers from "@ui/landing/pages/Careers"
 import Contact from "@ui/landing/pages/Contact"
-import Deluxe from "@ui/landing/pages/Deluxe"
-import DynamicPage from "@ui/landing/pages/DynamicPage"
 import DynamicRoomPage from "@ui/landing/pages/DynamicRoomPage"
-import Executive from "@ui/landing/pages/Executive"
-import GampoSuite from "@ui/landing/pages/GampoSuite"
 import Home from "@ui/landing/pages/Home"
 import MediaGallery from "@ui/landing/pages/MediaGallery"
 import Policies from "@ui/landing/pages/Policies"
 import Reviews from "@ui/landing/pages/Reviews"
 import Sustainability from "@ui/landing/pages/Sustainability"
-import WenchengSuite from "@ui/landing/pages/WenchengSuite"
 import LandingPageTemplate from "@ui/landing/templates/LandingPageTemplate"
 import PageTemplate from "@ui/landing/templates/PageTemplate"
 import Login from "@ui/user/pages/auth/Login"
@@ -127,8 +122,14 @@ const router = createBrowserRouter([
       {
         path: '/admin/cms',
         children: [
-      { path: 'home', element: <OtherPages /> }, // Reusing the CreateRoom component for editing
+      { path: 'home', element: <CmsHomePage /> }, // Reusing the CreateRoom component for editing
       ]
+      },
+      {
+        path: '/admin/cms/home',
+        children: [
+          {path: 'hero-section', element: <HeroSection />}
+        ]
       },
       { path: 'pages/create', element: <CreatePage /> },
       { path: 'pages/edit/:pageId', element: <CreatePage /> }, // Reusing the CreateRoom component for editing

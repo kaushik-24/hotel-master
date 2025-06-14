@@ -9,6 +9,7 @@ import siteInfo from "./siteInfo.route";
 import social from './socialMedia.route';
 import count from './count.route';
 import facility from './facility.route';
+import hero from './hero.route';
 
 interface Route {
     path: string;
@@ -32,6 +33,10 @@ const routes: Route[] = [
     {
         path: '/admins',
         route: admin 
+    },
+    {
+        path: '/hero',
+        route: hero
     },
     {
         path: '/social',
