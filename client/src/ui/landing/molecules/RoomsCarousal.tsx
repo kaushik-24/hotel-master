@@ -24,7 +24,7 @@ const RoomsCarousel: React.FC = () => {
         const fetchRooms = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get("/api/room");
+                const response = await axiosInstance.get("/api/roomType");
                 const roomData = response.data?.data;
                 if (Array.isArray(roomData)) {
                     setRooms(roomData);

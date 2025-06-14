@@ -1,5 +1,5 @@
 import { Router } from "express";
-import RoomController from "../controllers/room.controller";
+import RoomTypeController from "../controllers/roomType.controller";
 import path from "path";
 import multer from "multer";
 
@@ -16,20 +16,20 @@ const upload = multer({ storage });
 
 const router = Router();
 // GET /api/rooms - Get all rooms
-router.get('/', RoomController.getAllRooms);
+router.get('/', RoomTypeController.getAllRoomsType);
 
-router.get('/slug/:slug', RoomController.getRoomBySlug);
+router.get('/slug/:slug', RoomTypeController.getRoomTypeBySlug);
 
-router.get('/:id', RoomController.getRoomById);
+router.get('/:id', RoomTypeController.getRoomTypeById);
 
 // POST /api/rooms - Create a new room
-router.post('/', upload.single("roomImage"), RoomController.createRoom);
+router.post('/', upload.single("roomImage"), RoomTypeController.createRoomType);
 
 // PUT /api/rooms/:id - Edit an existing room
-router.put('/:id', upload.single("roomImage"), RoomController.editRoom);
+router.put('/:id', upload.single("roomImage"), RoomTypeController.editRoomType);
 
 // DELETE /api/rooms/:id - Delete a room
-router.delete('/:id', RoomController.deleteRoom);
+router.delete('/:id', RoomTypeController.deleteRoomType);
 
 
 export default router;

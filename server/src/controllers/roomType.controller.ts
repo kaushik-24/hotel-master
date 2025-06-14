@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { Message } from "../constant/messages";
 import { StatusCodes } from "../constant/statusCode";
-import roomService from "../services/room.services";
+import roomTypeService from "../services/roomType.services";
 
-class RoomController {
+class RoomTypeController {
 
     /**
      * Create a new room.
@@ -11,46 +11,46 @@ class RoomController {
      * @param res Response object to send the result.
      */
 
-    async getAllRooms(req: Request, res: Response) {
+    async getAllRoomsType(req: Request, res: Response) {
         try {
-            const response = await roomService.getAllRooms();
+            const response = await roomTypeService.getAllRoomsType();
             res.status(StatusCodes.SUCCESS).json({
                 success: true,
                 message: Message.created,  // Assuming you have a generic success message
                 data: response
             });
         } catch (error: any) {
-            console.error("Error Fetching Rooms:", error);
+            console.error("Error Fetching Rooms Type:", error);
             res.status(error.statusCode || StatusCodes.BAD_REQUEST).json({
                 success: false,
-                message: error.message || "An error occurred while fetching the rooms.",
-                originalError: error.message || "An error occurred while fetching the rooms."
+                message: error.message || "An error occurred while fetching the rooms type.",
+                originalError: error.message || "An error occurred while fetching the rooms type."
             });
         }
     }
 
-    async getRoomById(req: Request, res: Response) {
+    async getRoomTypeById(req: Request, res: Response) {
         try {
-            const response = await roomService.getRoomById(req.params.id);
+            const response = await roomTypeService.getRoomTypeById(req.params.id);
             res.status(StatusCodes.SUCCESS).json({
                 success: true,
                 message: Message.fetched,  // Assuming you have a generic "found" message
                 data: response
             });
         } catch (error: any) {
-            console.error("Error Fetching Room by ID:", error);
+            console.error("Error Fetching Room type by ID:", error);
             res.status(error.statusCode || StatusCodes.BAD_REQUEST).json({
                 success: false,
-                message: error.message || "An error occurred while fetching the room.",
-                originalError: error.message || "An error occurred while fetching the room."
+                message: error.message || "An error occurred while fetching the room type.",
+                originalError: error.message || "An error occurred while fetching the room type."
             });
         }
     }
 
 
-    async createRoom(req: Request, res: Response) {
+    async createRoomType(req: Request, res: Response) {
         try {
-            const response = await roomService.createRoom(req.body, req.file);
+            const response = await roomTypeService.createRoomType(req.body, req.file);
             res.status(StatusCodes.CREATED).json({
                 success: true,
                 message: Message.created,
@@ -71,9 +71,9 @@ class RoomController {
      * @param req Request object containing room ID and update data.
      * @param res Response object to send the result.
      */
-    async editRoom(req: Request, res: Response) {
+    async editRoomType(req: Request, res: Response) {
         try {
-            const response = await roomService.editRoom(req.params.id, req.body, req.file);
+            const response = await roomTypeService.editRoomType(req.params.id, req.body, req.file);
             res.status(StatusCodes.SUCCESS).json({
                 success: true,
                 message: Message.updated,
@@ -88,9 +88,9 @@ class RoomController {
             });
         }
     }
-    async getRoomBySlug(req: Request, res: Response) {
+    async getRoomTypeBySlug(req: Request, res: Response) {
     try {
-        const response = await roomService.getRoomBySlug(req.params.slug);
+        const response = await roomTypeService.getRoomTypeBySlug(req.params.slug);
         res.status(StatusCodes.SUCCESS).json({
             success: true,
             message: Message.fetched,
@@ -112,9 +112,9 @@ class RoomController {
      * @param req Request object containing room ID.
      * @param res Response object to send the result.
      */
-    async deleteRoom(req: Request, res: Response) {
+    async deleteRoomType(req: Request, res: Response) {
         try {
-            const response = await roomService.deleteRoom(req.params.id);
+            const response = await roomTypeService.deleteRoomType(req.params.id);
             res.status(StatusCodes.SUCCESS).json({
                 success: true,
                 message: Message.deleted,
@@ -131,4 +131,4 @@ class RoomController {
     }
 }
 
-export default new RoomController();
+export default new RoomTypeController();

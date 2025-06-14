@@ -35,7 +35,6 @@ const OtherPages = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedPage, setSelectedPage] = useState<Page | null>(null);
     const [editForm, setEditForm] = useState({ name: '', slug: '' });
-    const navigate = useNavigate();
 
     const fetchPages = async () => {
         setLoading(true);

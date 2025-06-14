@@ -3,54 +3,36 @@ import { IRoom } from "../interface/room.interface";
 
 
 
-const roomSchema = new Schema<IRoom>(
-    {
-        name: {
-            type: String,
-            required: true,
-            unique: false,
-        },
-        slug: {
-            type: String,
-            required: true,
-            unique: true,
-    },
-        price: {
-            type: Number,
-            required: true,
-            unique: false,
-        },
-        shortdesc: {
-            type: String,
-            required: true,
-            unique: false,
-        },
-         heading: {
-            type: String,
-            required: true,
-            unique: false,
-        },
-         longdesc: {
-            type: String,
-            required: true,
-            unique: false,
-        },
-        features: {
-            type: [String],
-            required: true,
-            unique: false,
-    },
-        totalrooms: {
-            type: Number,
-            required: true,
-            unique: false,
-        },
-        roomImage: { type: String},
-        
-    }, { timestamps: true }
+const roomSchema = new Schema<IRoom>({
+     roomNumber: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+  roomType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'RoomType',
+    required: true
+  },
+  floor: {
+    type: Number,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['available', 'occupied', 'maintenance', 'cleaning'],
+    default: 'available'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+},        { timestamps: true }
 );
 
 const Room = mongoose.model<IRoom>("Room", roomSchema);
 
 export default Room;
+
 

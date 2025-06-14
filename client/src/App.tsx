@@ -2,11 +2,14 @@
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllRooms from "@ui/admin/pages/AllRooms"
+import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
 import CreatePage from "@ui/admin/pages/CreatePage"
-import CreateRoom from "@ui/admin/pages/CreateRoom"
+import CreateRooms from "@ui/admin/pages/CreateRooms"
+import CreateRoomType from "@ui/admin/pages/CreateRoomType"
 import ManageBooking from "@ui/admin/pages/ManageBooking"
 import ManageAdmin from "@ui/admin/pages/ManageUser"
 import OtherPages from "@ui/admin/pages/OtherPages"
+import RoomSettings from "@ui/admin/pages/RoomSettings"
 import SiteOptions from "@ui/admin/pages/SiteOptions"
 import UserProfile from "@ui/admin/pages/UserProfile"
 import PageNotFound from "@ui/common/pages/PageNotFound"
@@ -59,12 +62,7 @@ const router = createBrowserRouter([
       <ScrollToTop />
       <PageTemplate /></>,
     children: [
-      { path: "/rooms/:slug", element: <DynamicRoomPage /> },
-      { path: '/rooms/deluxe', element: <Deluxe /> },
-      { path: '/rooms/executive', element: <Executive /> },
-      { path: '/rooms/songtsan-gampo', element: <GampoSuite /> },
-      { path: '/rooms/bhrikuti-suite', element: <BhrikutiSuite /> },
-      { path: '/rooms/wencheng-suite', element: <WenchengSuite /> },
+      { path: ":slug", element: <DynamicRoomPage /> },
 
       { path: '*', element: <PageNotFound /> },
     ],
@@ -78,7 +76,6 @@ const router = createBrowserRouter([
       <PageTemplate /></>,
     children: [
       // { index: true, element: <AboutUs /> },
-      { path: "/:slug", element: <DynamicPage /> },
       { path: '/about-us', element: <AboutUs /> },
       { path: '/blogs', element: <Blogs /> },
       { path: '/media-gallery', element: <MediaGallery /> },
@@ -121,11 +118,18 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: 'dashboard', element: <AdminDashboard /> },
       { path: 'options', element: <SiteOptions /> },
+      { path: 'roomType', element: <AllRoomTypes /> },
+      { path: 'roomType/create', element: <CreateRoomType /> },
+      { path: 'roomType/edit/:roomTypeId', element: <CreateRoomType /> }, // Reusing the CreateRoom component for editing
       { path: 'rooms', element: <AllRooms /> },
-      { path: 'rooms/create', element: <CreateRoom /> },
-      { path: 'rooms/edit/:roomId', element: <CreateRoom /> }, // Reusing the CreateRoom component for editing
-      { path: 'pages', element: <OtherPages /> }, // Reusing the CreateRoom component for editing
-
+      { path: 'rooms/create', element: <CreateRooms /> },
+      { path: 'rooms/edit/:roomId', element: <CreateRooms /> },
+      {
+        path: '/admin/cms',
+        children: [
+      { path: 'home', element: <OtherPages /> }, // Reusing the CreateRoom component for editing
+      ]
+      },
       { path: 'pages/create', element: <CreatePage /> },
       { path: 'pages/edit/:pageId', element: <CreatePage /> }, // Reusing the CreateRoom component for editing
 
@@ -135,6 +139,7 @@ const router = createBrowserRouter([
       { path: 'users/edit/:id', element: <CreateAdmin /> },
       { path: 'profile', element: <UserProfile /> },
       { path: 'manage-booking', element: <ManageBooking /> },
+      { path: 'setting', element: <RoomSettings />}
     ]
   }
 

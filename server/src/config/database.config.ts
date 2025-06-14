@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const uri = process.env.DATABASE_HOST || 'mongodb+srv://grg23kaushik:lPBUG4axqMy7ACfs@hoteldb.j7fmbsm.mongodb.net/?retryWrites=true&w=majority&appName=hoteldb'; // MongoDB URI
 const dbName = process.env.DB_NAME || 'hoteldb'; // Database name
 
-export const connectDB = async () => {
+const connectDB = async () => {
     try {
         await mongoose.connect(uri, {
             dbName,                 // Database name
@@ -17,3 +17,5 @@ export const connectDB = async () => {
         throw error;
     }
 };
+
+export default connectDB;

@@ -12,7 +12,7 @@ interface RoomData {
   shortdesc: string;
   features: string[];
   roomImage: string;
-  totalrooms: number;
+  capacity: number;
   heading: string;
   longdesc: string;
 }
@@ -25,7 +25,7 @@ const DynamicRoomPage = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await axiosInstance.get(`/api/room/slug/${slug}`);
+        const response = await axiosInstance.get(`/api/roomType/slug/${slug}`);
         setRoom(response.data.data);
       } catch (err) {
         setNotFound(true);
@@ -72,14 +72,22 @@ const DynamicRoomPage = () => {
 
           <div>
             <h3 className="text-2xl font-semibold mb-4">Features</h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {room.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-3">
-                  <span className="w-2 h-2 bg-[#5b3421] rounded-full mt-1"></span>
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  {(() => {
+    try {
+      const parsedFeatures = JSON.parse(room.features[0]);
+      return parsedFeatures.map((feature, index) => (
+        <li key={index} className="flex items-center gap-3">
+          <span className="w-2 h-2 bg-[#5b3421] text-white rounded-full flex items-center justify-center text-sm font-medium">
+          </span>
+          <span>{feature}</span>
+        </li>
+      ));
+    } catch (error) {
+      return <li>No features available</li>;
+    }
+  })()}
+</ol>
           </div>
 
         </div>
@@ -89,7 +97,7 @@ const DynamicRoomPage = () => {
         <div className="bg-[#f6e6d6] border-l-4 border-b-4 border-[#5b3421] rounded-xl p-6 shadow-md shadow-[#5b3421] sticky top-8 self-start w-full">
           <h3 className="text-xl font-bold mb-3">Reserve Your Stay</h3>
           <p className="mb-2">Room: <span className="font-medium">{room.name}</span></p>
-          <p className="mb-2">Available: <span className="font-bold">{room.totalrooms}</span></p>
+          <p className="mb-2">Suitable for: <span className="font-bold">{room.capacity}</span></p>
           <p className="text-2xl font-bold mb-6">रू {room.price}/night</p>
           <Link to={"/booking"}>
           <button className="w-full border-2 border-[#5b3421] font-semibold py-3 rounded-lg transition

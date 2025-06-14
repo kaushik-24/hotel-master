@@ -4,10 +4,11 @@ import auth from './auth.route';
 import booking from './booking.route';
 import otherPage from './otherPage.route';
 import ping from "./ping.route";
-import room from './room.route';
+import roomType from './roomType.route';
 import siteInfo from "./siteInfo.route";
 import social from './socialMedia.route';
 import count from './count.route';
+import facility from './facility.route';
 
 interface Route {
     path: string;
@@ -41,14 +42,18 @@ const routes: Route[] = [
         route: siteInfo
     },
     {
-        path: "/room",
-        route: room
+        path: "/roomType",
+        route: roomType
+    },
+    { 
+        path: "/facility",
+        route: facility
     },
     {
         path: "/page",
         route: otherPage
     },
-    {
+        {
         path: "/dashboardstats",
         route: count
     }

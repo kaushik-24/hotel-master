@@ -6,7 +6,7 @@ import { LuPaintbrush } from "react-icons/lu";
 import { MdDateRange } from "react-icons/md";
 import { TiThMenu } from "react-icons/ti";
 
-const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
+const Navbar = () => {
     const [today] = useState(
         `Today : ${new Intl.DateTimeFormat('en-US', {
             month: 'short',
@@ -29,7 +29,6 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
                 </div>
                 <div className="hidden md:flex gap-x-2 items-center">
                     <p className="font-poppins text-white font-medium text-2xl">Admin Panel</p>
-                    <TiThMenu onClick={toggleSidebar} className="cursor-pointer" color="white" size={25} />
                 </div>
             </div>
 
@@ -52,10 +51,6 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
                             {today}
                             <MdDateRange size={20} />
                         </p>
-                    </div>
-
-                    <div className="flex md:hidden">
-                        <TiThMenu onClick={toggleSidebar} className="cursor-pointer text-black" size={25} />
                     </div>
                 </div>
             </div>

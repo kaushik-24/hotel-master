@@ -1,38 +1,38 @@
 import path from "path";
-import Room from "../models/room.model"; // The Room model
+import RoomType from "../models/roomType.model"; // The Room model
 import HttpException from "../utils/HttpException.utils";
 import fs from "fs";
 
-class RoomService {
+class RoomTypeService {
 
     /**
      * Create a new room.
      * @param data Room creation data (name, slug).
      * @returns Created room without sensitive data.
      */
-    async getAllRooms() {
+    async getAllRoomsType() {
         try {
-            const rooms = await Room.find();  // Fetch all rooms from the database
-            return rooms;
+            const roomsType = await RoomType.find();  // Fetch all rooms from the database
+            return roomsType;
         } catch (error: any) {
             throw HttpException.badRequest(error.message);
         }
     }
 
-    async getRoomById(id: string) {
+    async getRoomTypeById(id: string) {
         try {
-            const room = await Room.findById(id);  // Find room by ID in the database
-            if (!room) {
+            const roomType = await RoomType.findById(id);  // Find room by ID in the database
+            if (!roomType) {
                 throw HttpException.notFound("Room not found");
             }
-            return room.toObject();
+            return roomType.toObject();
         } catch (error: any) {
             throw HttpException.badRequest(error.message);
         }
     }
 
 
-    async createRoom(data: { name: string, price: number, totalrooms: number, shortdesc: string, features: string, heading: string, longdesc: string }, file?: Express.Multer.File) {
+    async createRoomType(data: { name: string, price: number, capacity: number, shortdesc: string, features: string, heading: string, longdesc: string }, file?: Express.Multer.File) {
         try {
             
             const featuresArray = data.features.split(',')
@@ -43,14 +43,14 @@ class RoomService {
                 .replace(/[^a-z0-9\s-]/g, '') // Remove special characters                 
                 .replace(/\s+/g, '-') // Replace spaces with hyphens                 
                 .trim();  
-            const existingRoom = await Room.findOne({ $or: [{ name: data.name },{ slug: slug}, { price: data.price }, {shortdesc: data.shortdesc} ] });
+            const existingRoomType = await RoomType.findOne({ $or: [{ name: data.name },{ slug: slug}, { price: data.price }, {shortdesc: data.shortdesc} ] });
 
-            if (existingRoom) {
+            if (existingRoomType) {
                 throw HttpException.badRequest("Room name or slug already exists");
             }
-            const newRoom = await Room.create({...data, slug: slug, features: featuresArray,
+            const newRoomType = await RoomType.create({...data, slug: slug, features: featuresArray,
             roomImage: file ? `/uploads/${file.filename}` : undefined,});
-            return newRoom.toObject();
+            return newRoomType.toObject();
         } catch (error: any) {
             throw HttpException.badRequest(error.message);
         }
@@ -62,11 +62,11 @@ class RoomService {
      * @param data Updated room data.
      * @returns Updated room data.
      */
-    async editRoom(id: string, data: { name?: string, price?: number, shortdesc?: string, features?: string, heading?: string, longdesc?: string  }, file?: Express.Multer.File) {
+    async editRoomType(id: string, data: { name?: string, price?: number, shortdesc?: string, features?: string, heading?: string, longdesc?: string  }, file?: Express.Multer.File) {
         try {
 
-    const existingRoom = await Room.findById(id);
-        if (!existingRoom) {
+    const existingRoomType = await RoomType.findById(id);
+        if (!existingRoomType) {
             throw HttpException.notFound("Room not found");
         }
                  // Prepare update data
@@ -87,8 +87,8 @@ class RoomService {
     // Handle image upload
     if (file) {
       // Delete the old image first
-            if (existingRoom.roomImage) {
-                const oldImagePath = path.join(__dirname, "../../", existingRoom.roomImage);
+            if (existingRoomType.roomImage) {
+                const oldImagePath = path.join(__dirname, "../../", existingRoomType.roomImage);
                 if (fs.existsSync(oldImagePath)) {
                     fs.unlinkSync(oldImagePath);
                 }
@@ -109,24 +109,24 @@ class RoomService {
     // Remove undefined fields
     Object.keys(updateData).forEach((key) => updateData[key] === undefined && delete updateData[key]);
 
-    const updatedRoom = await Room.findByIdAndUpdate(id, updateData, { new: true });
-    if (!updatedRoom) {
+    const updatedRoomType = await RoomType.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updatedRoomType) {
       throw HttpException.notFound("Room not found");
     }
 
-    return updatedRoom.toObject();  
+    return updatedRoomType.toObject();  
             } catch (error: any) {
             throw HttpException.badRequest(error.message);
         }
     }
 
-    async getRoomBySlug(slug: string) {
+    async getRoomTypeBySlug(slug: string) {
     try {
-        const room = await Room.findOne({ slug });
-        if (!room) {
+        const roomType = await RoomType.findOne({ slug });
+        if (!roomType) {
             throw HttpException.notFound("Room not found");
         }
-        return room.toObject();
+        return roomType.toObject();
     } catch (error: any) {
         throw HttpException.badRequest(error.message);
     }
@@ -138,26 +138,26 @@ class RoomService {
      * @param id Room ID.
      * @returns Success message.
      */
-    async deleteRoom(id: string) {
+    async deleteRoomType(id: string) {
         try {
-            const room = await Room.findById(id);
-            if (!room) {
+            const roomType = await RoomType.findById(id);
+            if (!roomType) {
                 throw HttpException.notFound("Room not found");
             }
             
              // Remove the image if it exists
-            if (room.roomImage) {
-              const imagePath = path.join(__dirname, "../../", room.roomImage);
+            if (roomType.roomImage) {
+              const imagePath = path.join(__dirname, "../../", roomType.roomImage);
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
                 }
             }
-            await Room.findByIdAndDelete(id);
-            return { message: "Room deleted successfully" };
+            await RoomType.findByIdAndDelete(id);
+            return { message: "Room Type deleted successfully" };
         } catch (error: any) {
             throw HttpException.badRequest(error.message);
         }
     }
 }
 
-export default new RoomService();
+export default new RoomTypeService();

@@ -42,8 +42,6 @@ const AboutIntro = () => {
                     </p>
                 </div>
             </div>
-
-
         </div>
     )
 }
