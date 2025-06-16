@@ -10,6 +10,10 @@ import social from './socialMedia.route';
 import count from './count.route';
 import facility from './facility.route';
 import hero from './hero.route';
+import homeAboutUs from './homeAboutUs.route';
+import accommodation from './accommodation.route';
+import placesSights from './placesSights.route';
+import blogPost from './blogPost.route';
 
 interface Route {
     path: string;
@@ -58,10 +62,27 @@ const routes: Route[] = [
         path: "/page",
         route: otherPage
     },
-        {
+    {
         path: "/dashboardstats",
         route: count
-    }
+    },
+    {
+        path: "/homeAboutUs",
+        route: homeAboutUs
+    },
+    {
+        path: "/accommodation",
+        route: accommodation
+    },
+    {
+        path: "/placesSights",
+        route: placesSights
+    },
+    {
+        path: "/blogPost",
+        route: blogPost
+    },
+
 
 ];
 

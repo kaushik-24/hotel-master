@@ -81,7 +81,7 @@ const RoomsCarousel: React.FC = () => {
                 <div className="flex-1">
                     {/* Room Image - use fallback if roomsdb doesn't have image */}
                     <img
-                        src={roomsdb.length > 0 ? currentRoom.roomImage || rooms[safeActiveIndex]?.roomImage : rooms[safeActiveIndex]?.roomImage}
+                        src={roomsdb.length > 0 ? `${import.meta.env.VITE_APP_BASE_URL}${currentRoom.roomImage}` || rooms[safeActiveIndex]?.roomImage : rooms[safeActiveIndex]?.roomImage}
                         alt={currentRoom.name}
                         className="w-96 md:w-full h-80 object-cover"
                     />
@@ -96,7 +96,8 @@ const RoomsCarousel: React.FC = () => {
                     <ul className="grid grid-cols-2 max-w-[300px] gap-y-3 mb-3">
                         {currentRoom.features?.slice(0, 4).map((feature, idx) => (
                             <li key={`${safeActiveIndex}-${idx}-${feature}`} className="flex items-center">
-                                <RoomFeatureIcons feature={feature} />
+                                <span className="w-2 h-2 bg-[#5b3421] text-white rounded-full flex items-center justify-center text-sm font-medium">
+          </span>
                                 <span className="ml-2">{feature}</span>
                             </li>
                         )) || []}

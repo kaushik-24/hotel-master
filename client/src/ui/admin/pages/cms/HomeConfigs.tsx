@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MdOutlineImage, MdOutlineBedroomParent, MdOutlineInfo, MdArrowLeft, MdOutlineTravelExplore } from "react-icons/md";
+import { MdOutlineImage, MdOutlineBedroomParent, MdOutlineInfo,  MdOutlineTravelExplore } from "react-icons/md";
 
 const CmsHomePage: React.FC = () => {
   return (
@@ -30,7 +30,7 @@ const CmsHomePage: React.FC = () => {
           
           {/* About Us Section Link */}
           <div className="bg-[#e4e4f4] p-4 rounded-md hover:bg-[#d9d9e9] transition-colors">
-            <Link to="/admin/about-us" className="flex items-center space-x-4">
+            <Link to="/admin/cms/home/home-about-us" className="flex items-center space-x-4">
               <MdOutlineInfo className="text-3xl text-[#019cec]" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">
@@ -45,7 +45,7 @@ const CmsHomePage: React.FC = () => {
 
           {/* Accommodation Section Link */}
           <div className="bg-[#e4e4f4] p-4 rounded-md hover:bg-[#d9d9e9] transition-colors">
-            <Link to="/admin/roomType" className="flex items-center space-x-4">
+            <Link to="/admin/cms/home/accommodation" className="flex items-center space-x-4">
               <MdOutlineBedroomParent className="text-3xl text-[#019cec]" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">
@@ -60,7 +60,7 @@ const CmsHomePage: React.FC = () => {
 
           {/* Places and Sights Section Link */}
           <div className="bg-[#e4e4f4] p-4 rounded-md hover:bg-[#d9d9e9] transition-colors">
-            <Link to="/admin/roomType" className="flex items-center space-x-4">
+            <Link to="/admin/cms/home/places-sights" className="flex items-center space-x-4">
               <MdOutlineTravelExplore className="text-3xl text-[#019cec]" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">

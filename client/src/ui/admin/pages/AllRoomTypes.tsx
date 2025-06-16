@@ -1,7 +1,7 @@
 import axiosInstance from "@services/instance";
 import { useEffect, useState } from "react";
-import { FaEdit, FaExternalLinkAlt, FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaArrowLeft, FaEdit, FaExternalLinkAlt, FaTrash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Room {
     _id: string;
@@ -15,6 +15,7 @@ interface Room {
 
 const AllRoomTypes = () => {
     const [rooms, setRooms] = useState<Room[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch rooms from the backend
@@ -46,6 +47,7 @@ const AllRoomTypes = () => {
     };
 
     return (
+        <>
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-medium">Room Types</h2>
@@ -93,7 +95,17 @@ const AllRoomTypes = () => {
                     )}
                 </tbody>
             </table>
-        </div>
+          
+          <div className="flex items-center gap-4 mt-5">
+            <button
+              onClick={() => navigate("/admin/cms/home/accommodation")}
+              className="flex items-center text-gray-600 hover:text-[#019cec]"
+            >
+              <FaExternalLinkAlt className="mr-1" /> Accommadation</button>
+          </div>
+          </div>
+
+        </>
     );
 };
 

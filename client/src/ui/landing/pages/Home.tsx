@@ -4,14 +4,12 @@ import FindYouAtVenus from "../organisms/landingPage/FindYouAtVenus"
 import Hero from "../organisms/landingPage/Hero"
 import PlacesandSights from "../organisms/landingPage/PlacesandSights"
 import Reviews from "../organisms/landingPage/Reviews"
-import Tranquility from "../organisms/landingPage/Tranquility"
 
 const Home = () => {
     return (
         <div >
             <Hero />
             <FindYouAtVenus />
-            <Tranquility />
             <Accommodation />
             <PlacesandSights />
             <Reviews />

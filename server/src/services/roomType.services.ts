@@ -81,7 +81,7 @@ class RoomTypeService {
             .filter((feature) => feature !== "")
         : [];
     } else {
-      updateData.features = [];
+      updateData.features = existingRoomType.features || [];
     }
 
     // Handle image upload

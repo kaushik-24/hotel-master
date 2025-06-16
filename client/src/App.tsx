@@ -1,6 +1,10 @@
 
+import AccommodationForm from "@ui/admin/organisms/accommodation"
+import UploadBlogPost from "@ui/admin/organisms/blogPost"
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
 import HeroSection from "@ui/admin/organisms/HeroSection"
+import HomeAboutUsForm from "@ui/admin/organisms/homeAboutUs"
+import PlacesSights from "@ui/admin/organisms/placesSights"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
@@ -123,15 +127,20 @@ const router = createBrowserRouter([
         path: '/admin/cms',
         children: [
       { path: 'home', element: <CmsHomePage /> }, // Reusing the CreateRoom component for editing
+      { path: 'blogs', element: <UploadBlogPost /> },
+
       ]
       },
       {
         path: '/admin/cms/home',
         children: [
-          {path: 'hero-section', element: <HeroSection />}
+          {path: 'hero-section', element: <HeroSection />},
+          {path: 'home-about-us', element: <HomeAboutUsForm />},
+          {path: 'accommodation', element: <AccommodationForm />},
+          {path: 'places-sights', element: <PlacesSights />},
         ]
       },
-      { path: 'pages/create', element: <CreatePage /> },
+            { path: 'pages/create', element: <CreatePage /> },
       { path: 'pages/edit/:pageId', element: <CreatePage /> }, // Reusing the CreateRoom component for editing
 
 

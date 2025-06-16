@@ -72,22 +72,14 @@ const DynamicRoomPage = () => {
 
           <div>
             <h3 className="text-2xl font-semibold mb-4">Features</h3>
-            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  {(() => {
-    try {
-      const parsedFeatures = JSON.parse(room.features[0]);
-      return parsedFeatures.map((feature, index) => (
-        <li key={index} className="flex items-center gap-3">
-          <span className="w-2 h-2 bg-[#5b3421] text-white rounded-full flex items-center justify-center text-sm font-medium">
-          </span>
-          <span>{feature}</span>
-        </li>
-      ));
-    } catch (error) {
-      return <li>No features available</li>;
-    }
-  })()}
-</ol>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {room.features.map((feature, index) => (
+                <li key={index} className="flex items-center gap-3">
+                  <span className="w-2 h-2 bg-[#5b3421] rounded-full mt-1"></span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
         </div>

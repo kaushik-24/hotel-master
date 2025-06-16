@@ -112,7 +112,7 @@ const CreateRoomType = () => {
       formData.append("name", data.name || "");
       formData.append("price", data.price ? data.price.toString() : "0");
       formData.append("shortdesc", data.shortdesc || "");
-      formData.append("features", JSON.stringify(data.features || []));
+      formData.append("features", (data.features || []).join(","));
       formData.append("capacity", data.capacity ? data.capacity.toString() : "0");
       formData.append("heading", data.heading || "");
       formData.append("longdesc", data.longdesc || "");
