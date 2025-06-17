@@ -3,7 +3,7 @@ import InputField from "@ui/common/atoms/InputField";
 import Label from "@ui/common/atoms/Label";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaArrowLeft} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,21 +13,21 @@ interface Facility {
   name: string;
 }
 
-interface RoomData {
+interface HallData {
   name: string;
   price: number;
   shortdesc: string;
-  features: string[]; // Stores facility names
-  roomImage: string;
+  features: string[];
+  hallImage: string;
   capacity: number;
   heading: string;
   longdesc: string;
 }
 
-const CreateRoomType = () => {
+const CreateHall = () => {
   const navigate = useNavigate();
-  const { roomTypeId } = useParams();
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<RoomData>({
+  const { hallId } = useParams();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<HallData>({
     defaultValues: {
       features: [],
     },
@@ -50,32 +50,32 @@ const CreateRoomType = () => {
     fetchFacilities();
   }, []);
 
-  // Fetch room data for editing
+  // Fetch hall data for editing
   useEffect(() => {
-    const fetchRoomData = async () => {
-      if (roomTypeId) {
+    const fetchHallData = async () => {
+      if (hallId) {
         try {
-          const response = await axiosInstance.get(`/api/roomType/${roomTypeId}`);
-          const roomData = response.data.data;
-          setValue("name", roomData.name || "");
-          setValue("price", roomData.price || 0);
-          setValue("shortdesc", roomData.shortdesc || "");
-          const features = roomData.features || [];
+          const response = await axiosInstance.get(`/api/halls/${hallId}`);
+          const hallData = response.data.data;
+          setValue("name", hallData.name || "");
+          setValue("price", hallData.price || 0);
+          setValue("shortdesc", hallData.shortdesc || "");
+          const features = hallData.features || [];
           setSelectedFacilities(features);
           setValue("features", features);
-          setValue("capacity", roomData.capacity || 0);
-          setValue("heading", roomData.heading || "");
-          setValue("longdesc", roomData.longdesc || "");
-          if (roomData.roomImage) {
-            setImagePreview(`${import.meta.env.VITE_APP_BASE_URL}${roomData.roomImage}`);
+          setValue("capacity", hallData.capacity || 0);
+          setValue("heading", hallData.heading || "");
+          setValue("longdesc", hallData.longdesc || "");
+          if (hallData.hallImage) {
+            setImagePreview(`${import.meta.env.VITE_APP_BASE_URL}${hallData.hallImage}`);
           }
         } catch (error) {
-          console.error("Error fetching room data:", error);
+          console.error("Error fetching hall data:", error);
         }
       }
     };
-    fetchRoomData();
-  }, [roomTypeId, setValue]);
+    fetchHallData();
+  }, [hallId, setValue]);
 
   // Clean up image preview
   useEffect(() => {
@@ -84,7 +84,7 @@ const CreateRoomType = () => {
     };
   }, [imagePreview]);
 
-  // Handle file input for room image
+  // Handle file input for hall image
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
@@ -106,7 +106,7 @@ const CreateRoomType = () => {
   };
 
   // Handle form submission
-  const onSubmit = async (data: RoomData) => {
+  const onSubmit = async (data: HallData) => {
     try {
       const formData = new FormData();
       formData.append("name", data.name || "");
@@ -117,21 +117,21 @@ const CreateRoomType = () => {
       formData.append("heading", data.heading || "");
       formData.append("longdesc", data.longdesc || "");
       if (selectedFile) {
-        formData.append("roomImage", selectedFile);
+        formData.append("hallImage", selectedFile);
       }
 
-      if (roomTypeId) {
-        await axiosInstance.put(`/api/roomType/${roomTypeId}`, formData, {
+      if (hallId) {
+        await axiosInstance.put(`/api/halls/${hallId}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        await axiosInstance.post("/api/roomType", formData, {
+        await axiosInstance.post("/api/halls", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
-      navigate("/admin/hotel/roomType", { replace: true });
+      navigate("/admin/hotel/halls", { replace: true });
     } catch (error) {
-      console.error("Error submitting room type data:", error);
+      console.error("Error submitting hall data:", error);
     }
   };
 
@@ -141,10 +141,10 @@ const CreateRoomType = () => {
        <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800 flex items-center">
             <MdOutlineBedroomParent className="mr-2 text-blue-600" />
-            {roomTypeId ? 'Edit Room Type' : 'Create Room Type'}
+            {hallId ? 'Edit Hall Type' : 'Create Hall Type'}
           </h2>
           <button
-            onClick={() => navigate('/admin/hotel/roomType')}
+            onClick={() => navigate('/admin/hotel/halls')}
             className="flex items-center text-gray-600 hover:text-[#019cec]"
           >
             <FaArrowLeft className="mr-1" /> Back to List
@@ -158,13 +158,13 @@ const CreateRoomType = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label name="name" label="Room Name" />
+                <Label name="name" label="Hall Name" />
                 <InputField
                   name="name"
                   type="text"
-                  placeholder="Enter room name"
+                  placeholder="Enter hall name"
                   register={register}
-                  required="Room name is required"
+                  required="Hall name is required"
                   className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
@@ -182,11 +182,11 @@ const CreateRoomType = () => {
                 {errors.capacity && <p className="text-red-500 text-sm mt-1">{errors.capacity.message}</p>}
               </div>
               <div>
-                <Label name="price" label="Room Price" />
+                <Label name="price" label="Hall Price" />
                 <InputField
                   name="price"
                   type="number"
-                  placeholder="Enter room price"
+                  placeholder="Enter hall price"
                   register={register}
                   required="Price is required"
                   className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
@@ -218,22 +218,21 @@ const CreateRoomType = () => {
                 ))}
               </div>
               {errors.features && <p className="text-red-500 text-sm mt-1">{errors.features.message}</p>}
-                          
             </div>
           </div>
 
           {/* Descriptions Section */}
           <div className="mb-8 bg-[#e4e4f4] p-4 rounded-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b-2 border-[#019cec] pb-2">
-              Descriptions <span className="text-gray-500 text-sm">(for room pages)</span>
+              Descriptions <span className="text-gray-500 text-sm">(for hall pages)</span>
             </h3>
             <div className="space-y-6">
               <div>
-                <Label name="heading" label="Room Heading" />
+                <Label name="heading" label="Hall Heading" />
                 <InputField
                   name="heading"
                   type="text"
-                  placeholder="Enter room heading"
+                  placeholder="Enter hall heading"
                   register={register}
                   required="Heading is required"
                   className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
@@ -241,7 +240,7 @@ const CreateRoomType = () => {
                 {errors.heading && <p className="text-red-500 text-sm mt-1">{errors.heading.message}</p>}
               </div>
               <div>
-                <Label name="shortdesc" label="Short Description"  />
+                <Label name="shortdesc" label="Short Description" />
                 <InputField
                   name="shortdesc"
                   type="text"
@@ -253,7 +252,7 @@ const CreateRoomType = () => {
                 {errors.shortdesc && <p className="text-red-500 text-sm mt-1">{errors.shortdesc.message}</p>}
               </div>
               <div>
-                <Label name="longdesc" label="Long Description"  />
+                <Label name="longdesc" label="Long Description" />
                 <textarea
                   placeholder="Enter long description"
                   {...register("longdesc", { required: "Long description is required" })}
@@ -271,18 +270,18 @@ const CreateRoomType = () => {
               Media
             </h3>
             <div>
-              <Label name="roomImage" label="Room Image"  />
+              <Label name="hallImage" label="Hall Image" />
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#019cec] file:text-white hover:file:bg-[#017a9b] cursor-pointer"
+                className="block wReplaced w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#019cec] file:text-white hover:file:bg-[#017a9b] cursor-pointer"
               />
               {imagePreview && (
                 <div className="mt-4 relative inline-block">
                   <img
                     src={imagePreview}
-                    alt="Room Preview"
+                    alt="Hall Preview"
                     className="w-48 h-32 object-cover rounded-md border border-gray-300"
                   />
                   <button
@@ -305,7 +304,7 @@ const CreateRoomType = () => {
           <div className="flex justify-end gap-4">
             <button
               type="button"
-              onClick={() => navigate("/admin/hotel/roomType")}
+              onClick={() => navigate("/admin/hotel/halls")}
               className="px-6 py-2 bg-gray-300 rounded-md text-gray-700 font-poppins hover:bg-gray-400 transition-colors"
             >
               Cancel
@@ -314,11 +313,11 @@ const CreateRoomType = () => {
               type="submit"
               className="px-6 py-2 bg-[#019cec] rounded-md text-white font-poppins hover:bg-[#017a9b] transition-colors"
             >
-              {roomTypeId ? "Update Room Type" : "Create Room Type"}
+              {hallId ? "Update Hall Type" : "Create Hall Type"}
             </button>
           </div>
           <p className="text-gray-600 text-sm mt-3">
-            This will also create a page for this room type.
+            This will also create a page for this hall type.
           </p>
         </form>
       </div>
@@ -326,4 +325,4 @@ const CreateRoomType = () => {
   );
 };
 
-export default CreateRoomType;
+export default CreateHall;

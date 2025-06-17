@@ -7,10 +7,12 @@ import HeroSection from "@ui/admin/organisms/HeroSection"
 import HomeAboutUsForm from "@ui/admin/organisms/homeAboutUs"
 import PlacesSights from "@ui/admin/organisms/placesSights"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
+import AllHalls from "@ui/admin/pages/AllHalls"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
 import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
 import CmsHomePage from "@ui/admin/pages/cms/HomeConfigs"
+import CreateHall from "@ui/admin/pages/CreateHallTypes"
 import CreatePage from "@ui/admin/pages/CreatePage"
 import CreateRooms from "@ui/admin/pages/CreateRooms"
 import CreateRoomType from "@ui/admin/pages/CreateRoomType"
@@ -28,6 +30,7 @@ import Careers from "@ui/landing/pages/Careers"
 import Contact from "@ui/landing/pages/Contact"
 import DynamicBlogPage from "@ui/landing/pages/DynamicBlogPostPage"
 import BlogPostPage from "@ui/landing/pages/DynamicBlogPostPage"
+import DynamicHallPage from "@ui/landing/pages/DynamicHallPage"
 import DynamicRoomPage from "@ui/landing/pages/DynamicRoomPage"
 import Home from "@ui/landing/pages/Home"
 import MediaGallery from "@ui/landing/pages/MediaGallery"
@@ -74,16 +77,32 @@ const router = createBrowserRouter([
     ],
   },
 
-  //Blog Page
+  //Hall Page
+  {
+    path: '/halls',
+    element: <>
+      <ScrollToTop />
+      <PageTemplate />
+    </>,
+    children: [
+      { path: ":slug", element: <DynamicHallPage /> },
+
+      { path: '*', element: <PageNotFound /> },
+    ],
+  },
+
+
+  //Blogs Page
   {
     path: '/blogs',
     element: <>
       <ScrollToTop />
       <RoomNavbar />
       <Blogs />
+      <BookingInquiries />
     </>,
   },
-
+  //Blog Posts
   {
     path: '/blogs/:slug', element:
     <>
@@ -143,12 +162,18 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: 'dashboard', element: <AdminDashboard /> },
       { path: 'options', element: <SiteOptions /> },
+      { path: '/admin/hotel',
+        children: [
       { path: 'roomType', element: <AllRoomTypes /> },
       { path: 'roomType/create', element: <CreateRoomType /> },
       { path: 'roomType/edit/:roomTypeId', element: <CreateRoomType /> }, // Reusing the CreateRoom component for editing
       { path: 'rooms', element: <AllRooms /> },
       { path: 'rooms/create', element: <CreateRooms /> },
       { path: 'rooms/edit/:roomId', element: <CreateRooms /> },
+      { path: 'halls', element: <AllHalls /> },
+      { path: 'halls/create', element: <CreateHall /> },
+      { path: 'halls/edit/:hallId', element: <CreateHall /> },
+      ]},      
       {
         path: '/admin/cms',
         children: [

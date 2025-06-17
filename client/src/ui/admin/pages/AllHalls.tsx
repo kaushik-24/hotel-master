@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEdit, FaExternalLinkAlt, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-interface Room {
+interface Hall {
     _id: string;
     slug: string;
     name: string;
@@ -13,36 +13,36 @@ interface Room {
     features: string[];
 }
 
-const AllRoomTypes = () => {
-    const [rooms, setRooms] = useState<Room[]>([]);
+const AllHalls = () => {
+    const [halls, setHalls] = useState<Hall[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch rooms from the backend
-        const fetchRooms = async () => {
+        // Fetch halls from the backend
+        const fetchHalls = async () => {
             try {
-                const response = await axiosInstance.get("/api/roomType");
-                const roomData = response.data?.data; // Access the nested `data` field
-                if (Array.isArray(roomData)) {
-                    setRooms(roomData); // Set rooms from the `data` array
+                const response = await axiosInstance.get("/api/halls");
+                const hallData = response.data?.data; // Access the nested `data` field
+                if (Array.isArray(hallData)) {
+                    setHalls(hallData); // Set halls from the `data` array
                 } else {
                     console.error("Unexpected data format:", response.data);
-                    setRooms([]); // Fallback in case the response is not an array
+                    setHalls([]); // Fallback in case the response is not an array
                 }
             } catch (error) {
-                console.error("Error fetching rooms:", error);
+                console.error("Error fetching halls:", error);
             }
         };
 
-        fetchRooms();
+        fetchHalls();
     }, []);
 
     const handleDelete = async (id: string) => {
         try {
-            await axiosInstance.delete(`/api/roomType/${id}`);
-            setRooms(rooms.filter((room) => room._id !== id));
+            await axiosInstance.delete(`/api/halls/${id}`);
+            setHalls(halls.filter((hall) => hall._id !== id));
         } catch (error) {
-            console.error("Error deleting room:", error);
+            console.error("Error deleting hall:", error);
         }
     };
 
@@ -50,11 +50,11 @@ const AllRoomTypes = () => {
         <>
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-medium">Room Types</h2>
-                <Link to="/admin/hotel/roomType/create">
+                <h2 className="text-2xl font-medium">Hall Types</h2>
+                <Link to="/admin/hotel/halls/create">
                 <button
                     className="px-6 py-2 bg-[#019cec] rounded-md text-white font-poppins hover:bg-[#017a9b] transition-colors"
-            >Create Room Type
+            >Create Hall Type
             </button></Link>
             </div>
             <table className="w-full border-collapse">
@@ -67,20 +67,20 @@ const AllRoomTypes = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {rooms.length > 0 ? (
-                        rooms.map((room) => (
-                            <tr key={room._id}>
-                                <td className="border px-4 py-2">{room.name}</td>
-                                <td className="border px-4 py-2">{room.price}</td>
-                                <td className="border px-4 py-2">{room.capacity}</td>
+                    {halls.length > 0 ? (
+                        halls.map((hall) => (
+                            <tr key={hall._id}>
+                                <td className="border px-4 py-2">{hall.name}</td>
+                                <td className="border px-4 py-2">{hall.price}</td>
+                                <td className="border px-4 py-2">{hall.capacity}</td>
                                 <td className="border px-4 py-2 flex space-x-4">
-                                    <Link to={`/admin/hotel/roomType/edit/${room._id}`} className="btn-edit text-blue-600 hover:text-blue-800">
+                                    <Link to={`/admin/hotel/halls/edit/${hall._id}`} className="btn-edit text-blue-600 hover:text-blue-800">
                                       <FaEdit />
                                     </Link>
-                                    <button onClick={() => handleDelete(room._id)} className="btn-delete text-red-600 hover:text-red-800">
+                                    <button onClick={() => handleDelete(hall._id)} className="btn-delete text-red-600 hover:text-red-800">
                                       <FaTrash />
                                     </button>
-                                    <Link to={`/rooms/${room.slug}`} 
+                                    <Link to={`/halls/${hall.slug}`} 
                                     className="text-blue-600 hover:text-blue-800"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -90,23 +90,14 @@ const AllRoomTypes = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={3} className="text-center py-4">No rooms found.</td>
+                            <td colSpan={3} className="text-center py-4">No halls found.</td>
                         </tr>
                     )}
                 </tbody>
             </table>
-          
-          <div className="flex items-center gap-4 mt-5">
-            <button
-              onClick={() => navigate("/admin/cms/home")}
-              className="flex items-center text-gray-600 hover:text-[#019cec]"
-            >
-              <FaExternalLinkAlt className="mr-1" /> Accommadation</button>
           </div>
-          </div>
-
         </>
     );
 };
 
-export default AllRoomTypes;
+export default AllHalls;

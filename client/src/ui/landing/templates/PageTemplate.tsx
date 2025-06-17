@@ -8,7 +8,6 @@ const PageTemplate = () => {
     return (
         <div>
             <RoomNavbar />
-            <Blogs />
             <Outlet />
             <BookingInquiries />
             {/* <BookNow /> */}
