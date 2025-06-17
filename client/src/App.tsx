@@ -1,5 +1,6 @@
 
 import AccommodationForm from "@ui/admin/organisms/accommodation"
+import CreateBlogPost from "@ui/admin/organisms/blogPost"
 import UploadBlogPost from "@ui/admin/organisms/blogPost"
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
 import HeroSection from "@ui/admin/organisms/HeroSection"
@@ -8,6 +9,7 @@ import PlacesSights from "@ui/admin/organisms/placesSights"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
+import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
 import CmsHomePage from "@ui/admin/pages/cms/HomeConfigs"
 import CreatePage from "@ui/admin/pages/CreatePage"
 import CreateRooms from "@ui/admin/pages/CreateRooms"
@@ -18,16 +20,21 @@ import RoomSettings from "@ui/admin/pages/RoomSettings"
 import SiteOptions from "@ui/admin/pages/SiteOptions"
 import UserProfile from "@ui/admin/pages/UserProfile"
 import PageNotFound from "@ui/common/pages/PageNotFound"
+import BookingInquiries from "@ui/landing/organisms/BookingInquiries"
+import RoomNavbar from "@ui/landing/organisms/RoomNavbar"
 import AboutUs from "@ui/landing/pages/AboutUs"
 import Blogs from "@ui/landing/pages/Blogs"
 import Careers from "@ui/landing/pages/Careers"
 import Contact from "@ui/landing/pages/Contact"
+import DynamicBlogPage from "@ui/landing/pages/DynamicBlogPostPage"
+import BlogPostPage from "@ui/landing/pages/DynamicBlogPostPage"
 import DynamicRoomPage from "@ui/landing/pages/DynamicRoomPage"
 import Home from "@ui/landing/pages/Home"
 import MediaGallery from "@ui/landing/pages/MediaGallery"
 import Policies from "@ui/landing/pages/Policies"
 import Reviews from "@ui/landing/pages/Reviews"
 import Sustainability from "@ui/landing/pages/Sustainability"
+import BlogTemplate from "@ui/landing/templates/BlogTemplate"
 import LandingPageTemplate from "@ui/landing/templates/LandingPageTemplate"
 import PageTemplate from "@ui/landing/templates/PageTemplate"
 import Login from "@ui/user/pages/auth/Login"
@@ -67,6 +74,25 @@ const router = createBrowserRouter([
     ],
   },
 
+  //Blog Page
+  {
+    path: '/blogs',
+    element: <>
+      <ScrollToTop />
+      <RoomNavbar />
+      <Blogs />
+    </>,
+  },
+
+  {
+    path: '/blogs/:slug', element:
+    <>
+    <RoomNavbar />
+    <DynamicBlogPage />
+    <BookingInquiries />
+    </>
+  },
+  
   //Other navigations
   {
     path: '/',
@@ -75,8 +101,8 @@ const router = createBrowserRouter([
       <PageTemplate /></>,
     children: [
       // { index: true, element: <AboutUs /> },
+      { path: '/blogs', element: <Blogs />},
       { path: '/about-us', element: <AboutUs /> },
-      { path: '/blogs', element: <Blogs /> },
       { path: '/media-gallery', element: <MediaGallery /> },
       { path: '/career', element: <Careers /> },
       { path: '/sustainability', element: <Sustainability /> },
@@ -127,7 +153,9 @@ const router = createBrowserRouter([
         path: '/admin/cms',
         children: [
       { path: 'home', element: <CmsHomePage /> }, // Reusing the CreateRoom component for editing
-      { path: 'blogs', element: <UploadBlogPost /> },
+      { path: 'blogs', element: <AllBlogPosts /> },
+      { path: 'blogs/create', element: <CreateBlogPost /> },
+      { path: 'blogs/edit/:blogPostId', element: <CreateBlogPost /> },
 
       ]
       },

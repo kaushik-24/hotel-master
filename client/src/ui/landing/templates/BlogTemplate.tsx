@@ -1,15 +1,13 @@
 import { Outlet } from "react-router-dom"
 import BookingInquiries from "../organisms/BookingInquiries"
-import Footer from "../organisms/Footer"
 import RoomNavbar from "../organisms/RoomNavbar"
-import Blogs from "../pages/Blogs"
 
-const PageTemplate = () => {
+const BlogTemplate = () => {
     return (
         <div>
             <RoomNavbar />
-            <Blogs />
             <Outlet />
+
             <BookingInquiries />
             {/* <BookNow /> */}
 
@@ -17,4 +15,5 @@ const PageTemplate = () => {
     )
 }
 
-export default PageTemplate
+export default BlogTemplate
+

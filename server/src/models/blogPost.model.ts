@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 export interface IBlogPost {
+  slug: string;
   title: string;
   author: string;
   date: Date;
@@ -14,13 +15,12 @@ const blogPostSchema = new Schema<IBlogPost>(
       type: String,
       required: true,
     },
+    slug: {
+      type: String,
+    },
     author: {
       type: String,
       required: true,
-    },
-    date: {
-      type: Date,
-      default: Date.now,
     },
     content: {
       type: String,
