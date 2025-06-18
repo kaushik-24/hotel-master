@@ -1,3 +1,4 @@
+import Room from '../models/room.model';
 import mongoose from 'mongoose';
 
 const uri = process.env.DATABASE_HOST || 'mongodb+srv://grg23kaushik:lPBUG4axqMy7ACfs@hoteldb.j7fmbsm.mongodb.net/?retryWrites=true&w=majority&appName=hoteldb'; // MongoDB URI
@@ -11,6 +12,7 @@ const connectDB = async () => {
             socketTimeoutMS: 30000,    // 30s socket timeout
             maxPoolSize: 10,            // Connection pool size (updated)
         });
+         await Room.collection.drop();
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('MongoDB connection error:', error);

@@ -8,7 +8,7 @@ export const adminSidebar = [
         route: '/admin/hotel/roomType',
         subItems: [
             { id: 31, label: 'Room Type', route: '/admin/hotel/roomType', title: 'Room type' },
-            { id: 32, label: 'Create Rooms', route: '/admin/hotel/rooms/create', title: 'Create rooms' },
+            { id: 32, label: 'Create Rooms', route: '/admin/hotel/rooms', title: 'Create rooms' },
             { id: 33, label: 'Hall Type', route: '/admin/hotel/halls', title: 'Hall Type' },
         ]
     },

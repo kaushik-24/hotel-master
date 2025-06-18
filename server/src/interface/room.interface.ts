@@ -19,7 +19,7 @@ export interface IRoomType {
 export interface IRoom {
     roomNumber: string,
     roomType: mongoose.Schema.Types.ObjectId,
-    floor: number,
+    floor: string,
     status: string,
     isActive: Boolean,
 }

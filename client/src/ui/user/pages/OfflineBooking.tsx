@@ -1,0 +1,283 @@
+import { bookingSchema } from "@config/schema/booking.schema";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { BookingFormData } from "@interface/booking.interface";
+import axiosInstance from "@services/instance";
+import RoomSelector from "@ui/common/molecules/RoomSelector";
+import { toast } from "@ui/common/organisms/toast/ToastManage";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import RoomNavbar from "@ui/landing/organisms/RoomNavbar";
+import BookingInquiries from "@ui/landing/organisms/BookingInquiries";
+import * as yup from "yup";
+
+interface ExtendedBookingFormData extends BookingFormData {
+  status: "online" | "offline";
+}
+
+const OfflineBookingForm: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingTransition, setIsLoadingTransition] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
+  const [bookingMode, setBookingMode] = useState<"online" | "offline">("offline");
+
+  const getAuthToken = () => {
+    return localStorage.getItem("authToken");
+  };
+
+  // Define the extended schema
+  const extendedSchema = bookingSchema().concat(
+    yup.object().shape({
+      status: yup.string().oneOf(["online", "offline"]).required("Booking status is required"),
+    })
+  );
+
+  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<ExtendedBookingFormData>({
+    resolver: yupResolver(extendedSchema),
+    defaultValues: {
+      name: "",
+      numberOfRoom: 1,
+      rooms: [],
+      roomNames: [],
+      checkInDate: "",
+      checkOutDate: "",
+      status: "offline",
+    },
+  });
+
+  const onRoomSelect = (roomId: string, roomName: string) => {
+    setIsLoadingTransition(true);
+    setTimeout(() => {
+      setSelectedRoom({ id: roomId, name: roomName });
+      setValue("rooms", [roomId]);
+      setValue("roomNames", [roomName]);
+      setIsLoadingTransition(false);
+    }, 500);
+  };
+
+  const onCancel = () => {
+    setIsLoadingTransition(true);
+    setTimeout(() => {
+      setSelectedRoom(null);
+      reset({
+        name: "",
+        numberOfRoom: 1,
+        rooms: [],
+        roomNames: [],
+        checkInDate: "",
+        checkOutDate: "",
+        status: bookingMode,
+      });
+      setIsLoadingTransition(false);
+    }, 500);
+  };
+
+  const onSubmit: SubmitHandler<ExtendedBookingFormData> = async (data) => {
+    setIsLoading(true);
+    try {
+      const token = getAuthToken();
+      const response = await axiosInstance.post("/api/booking", {
+        ...data,
+        status: bookingMode,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 201) {
+        toast.show({
+          title: "Success",
+          content: `Booking successfully created (${bookingMode})`,
+          duration: 2000,
+          type: "success",
+        });
+        onCancel();
+      }
+    } catch (error: any) {
+      console.error("Error submitting booking form:", error);
+      if (error.response) {
+        if (error.response.status === 403) {
+          toast.show({
+            title: "Authorization Error",
+            content: "You don't have permission to create a booking. Please login again.",
+            duration: 3000,
+            type: "error",
+          });
+        } else {
+          toast.show({
+            title: "Error",
+            content: error.response.data?.message || "Booking creation failed",
+            duration: 2000,
+            type: "error",
+          });
+        }
+      } else if (error.request) {
+        toast.show({
+          title: "Network Error",
+          content: "Unable to connect to the server",
+          duration: 2000,
+          type: "error",
+        });
+      } else {
+        toast.show({
+          title: "Error",
+          content: "An unexpected error occurred",
+          duration: 2000,
+          type: "error",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-[#f6e6d6] min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
+      <RoomNavbar />
+      <div className="container mx-auto p-2 sm:p-4 min-h-[600px] flex items-start justify-center">
+        {isLoadingTransition ? (
+          <div className="flex items-center justify-center h-[400px]">
+            <div className="w-12 h-12 border-b-2 border-[#5b3423] border-t-2 rounded-full animate-spin"></div>
+          </div>
+        ) : selectedRoom ? (
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto bg-[#ffeedc] rounded-lg shadow-sm shadow-[#5b3423] p-3 sm:p-4">
+            <h3 className="text-base sm:text-lg font-bold text-[#5b3423] mb-3">
+              Book {selectedRoom.name} ({bookingMode})
+            </h3>
+            <div className="space-y-3">
+              <div>
+                <label htmlFor="name" className="block text-[#5b3423] text-xs sm:text-sm">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  {...register("name")}
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="checkInDate" className="block text-[#5b3423] text-xs sm:text-sm">
+                  Check-In Date
+                </label>
+                <input
+                  type="date"
+                  id="checkInDate"
+                  {...register("checkInDate")}
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                />
+                {errors.checkInDate && (
+                  <p className="text-red-500 text-xs mt-1">{errors.checkInDate.message}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="checkOutDate" className="block text-[#5b3423] text-xs sm:text-sm">
+                  Check-Out Date
+                </label>
+                <input
+                  type="date"
+                  id="checkOutDate"
+                  {...register("checkOutDate")}
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                />
+                {errors.checkOutDate && (
+                  <p className="text-red-500 text-xs mt-1">{errors.checkOutDate.message}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="numberOfRoom" className="block text-[#5b3423] text-xs sm:text-sm">
+                  Number of Rooms
+                </label>
+                <select
+                  id="numberOfRoom"
+                  {...register("numberOfRoom")}
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+                {errors.numberOfRoom && (
+                  <p className="text-red-500 text-xs mt-1">{errors.numberOfRoom.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-[#5b3423] text-xs sm:text-sm">
+                  Booking Mode
+                </label>
+                <div className="flex space-x-2">
+                  <label className="flex items-center text-xs sm:text-sm text-[#5b3423]">
+                    <input
+                      type="radio"
+                      value="offline"
+                      checked={bookingMode === "offline"}
+                      onChange={() => {
+                        setBookingMode("offline");
+                        setValue("status", "offline");
+                      }}
+                      className="mr-1"
+                    />
+                    Offline
+                  </label>
+                  <label className="flex items-center text-xs sm:text-sm text-[#5b3423]">
+                    <input
+                      type="radio"
+                      value="online"
+                      checked={bookingMode === "online"}
+                      onChange={() => {
+                        setBookingMode("online");
+                        setValue("status", "online");
+                      }}
+                      className="mr-1"
+                    />
+                    Online
+                  </label>
+                </div>
+                {errors.status && (
+                  <p className="text-red-500 text-xs mt-1">{errors.status.message}</p>
+                )}
+              </div>
+              <div className="flex space-x-2">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className={`w-1/3 bg-[#5b3423] text-[#ffeedc] font-semibold py-1.5 text-xs sm:text-sm rounded-lg hover:bg-[#f6e6d6] hover:text-[#5b3423] transition-colors duration-200 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  {isLoading ? "Submitting..." : "Confirm Booking"}
+                </button>
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  className="w-1/3 bg-[#f6e6d6] text-[#5b3423] font-semibold py-1.5 text-xs sm:text-sm rounded-lg hover:bg-[#5b3423] hover:text-[#ffeedc] transition-colors duration-200"
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  className="w-1/3 bg-[#f6e6d6] text-[#5b3423] font-semibold py-1.5 text-xs sm:text-sm rounded-lg hover:bg-[#5b3423] hover:text-[#ffeedc] transition-colors duration-200"
+                >
+                  Back to Rooms
+                </button>
+              </div>
+            </div>
+          </form>
+        ) : (
+          <RoomSelector register={register} onRoomSelect={onRoomSelect} />
+        )}
+      </div>
+      <div className="bg-[#f6e6d6]">
+        <BookingInquiries />
+      </div>
+    </div>
+  );
+};
+
+export default OfflineBookingForm;

@@ -11,24 +11,17 @@ const roomSchema = new Schema<IRoom>({
     trim: true
   },
   roomType: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'RoomType',
-    required: true
+    required: true,
+    unique: false
   },
   floor: {
-    type: Number,
-    required: true
-  },
-  status: {
     type: String,
-    enum: ['available', 'occupied', 'maintenance', 'cleaning'],
-    default: 'available'
+    required: true,
+    unique: false
   },
-  isActive: {
-    type: Boolean,
-    default: true
-  }
-},        { timestamps: true }
+  },        { timestamps: true }
 );
 
 const Room = mongoose.model<IRoom>("Room", roomSchema);
