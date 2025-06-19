@@ -6,11 +6,13 @@ import HeroSection from "@ui/admin/organisms/HeroSection"
 import HomeAboutUsForm from "@ui/admin/organisms/homeAboutUs"
 import PlacesSights from "@ui/admin/organisms/placesSights"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
+import AllHallNumbers from "@ui/admin/pages/AllHallNumbers"
 import AllHalls from "@ui/admin/pages/AllHalls"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
 import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
 import CmsHomePage from "@ui/admin/pages/cms/HomeConfigs"
+import CreateHallNumber from "@ui/admin/pages/CreateHalls"
 import CreateHall from "@ui/admin/pages/CreateHallTypes"
 import CreatePage from "@ui/admin/pages/CreatePage"
 import CreateRooms from "@ui/admin/pages/CreateRooms"
@@ -40,6 +42,7 @@ import PageTemplate from "@ui/landing/templates/PageTemplate"
 import Login from "@ui/user/pages/auth/Login"
 import SignUp from "@ui/user/pages/auth/SignUp"
 import BookingForm from "@ui/user/pages/Booking"
+import OfflineBookingForm from "@ui/user/pages/OfflineBooking"
 import ScrollToTop from "function/ScrollToTop"
 import ProtectedRoute from "ProtectedRoute"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
@@ -170,6 +173,9 @@ const router = createBrowserRouter([
       { path: 'halls', element: <AllHalls /> },
       { path: 'halls/create', element: <CreateHall /> },
       { path: 'halls/edit/:hallId', element: <CreateHall /> },
+      { path: 'hallNumber', element: <AllHallNumbers /> },
+      { path: 'hallNumber/create', element: <CreateHallNumber /> },
+      { path: 'hallNumber/edit/:hallNumberId', element: <CreateHallNumber /> },
       ]},      
       {
         path: '/admin/cms',
@@ -199,6 +205,7 @@ const router = createBrowserRouter([
       { path: 'users/edit/:id', element: <CreateAdmin /> },
       { path: 'profile', element: <UserProfile /> },
       { path: 'manage-booking', element: <ManageBooking /> },
+      { path: 'offlineBooking', element: <OfflineBookingForm /> },
       { path: 'setting', element: <RoomSettings />}
     ]
   }

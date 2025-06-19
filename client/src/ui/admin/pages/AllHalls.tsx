@@ -16,7 +16,6 @@ interface Hall {
 const AllHalls: React.FC = () => {
   const [halls, setHalls] = useState<Hall[]>([]);
   const [isMobile, setIsMobile] = useState(false);
-  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ const AllHalls: React.FC = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get('/api/halls', {
-        params: { search },
       });
       const hallData = response.data?.data;
       if (Array.isArray(hallData)) {
@@ -55,7 +53,7 @@ const AllHalls: React.FC = () => {
 
   useEffect(() => {
     loadHalls();
-  }, [search]);
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this hall?')) {

@@ -5,34 +5,19 @@ import axiosInstance from "@services/instance";
 import RoomSelector from "@ui/common/molecules/RoomSelector";
 import { toast } from "@ui/common/organisms/toast/ToastManage";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import RoomNavbar from "@ui/landing/organisms/RoomNavbar";
-import BookingInquiries from "@ui/landing/organisms/BookingInquiries";
-import * as yup from "yup";
-
-interface ExtendedBookingFormData extends BookingFormData {
-  status: "online" | "offline";
-}
+import { useState } from "react";
 
 const OfflineBookingForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTransition, setIsLoadingTransition] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
-  const [bookingMode, setBookingMode] = useState<"online" | "offline">("offline");
 
   const getAuthToken = () => {
     return localStorage.getItem("authToken");
   };
 
-  // Define the extended schema
-  const extendedSchema = bookingSchema().concat(
-    yup.object().shape({
-      status: yup.string().oneOf(["online", "offline"]).required("Booking status is required"),
-    })
-  );
-
-  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<ExtendedBookingFormData>({
-    resolver: yupResolver(extendedSchema),
+  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<BookingFormData>({
+    resolver: yupResolver(bookingSchema()),
     defaultValues: {
       name: "",
       numberOfRoom: 1,
@@ -40,7 +25,6 @@ const OfflineBookingForm: React.FC = () => {
       roomNames: [],
       checkInDate: "",
       checkOutDate: "",
-      status: "offline",
     },
   });
 
@@ -58,27 +42,16 @@ const OfflineBookingForm: React.FC = () => {
     setIsLoadingTransition(true);
     setTimeout(() => {
       setSelectedRoom(null);
-      reset({
-        name: "",
-        numberOfRoom: 1,
-        rooms: [],
-        roomNames: [],
-        checkInDate: "",
-        checkOutDate: "",
-        status: bookingMode,
-      });
+      reset();
       setIsLoadingTransition(false);
     }, 500);
   };
 
-  const onSubmit: SubmitHandler<ExtendedBookingFormData> = async (data) => {
+  const onSubmit: SubmitHandler<BookingFormData> = async (data) => {
     setIsLoading(true);
     try {
       const token = getAuthToken();
-      const response = await axiosInstance.post("/api/booking", {
-        ...data,
-        status: bookingMode,
-      }, {
+      const response = await axiosInstance.post("/api/booking", data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -86,12 +59,7 @@ const OfflineBookingForm: React.FC = () => {
       });
 
       if (response.status === 201) {
-        toast.show({
-          title: "Success",
-          content: `Booking successfully created (${bookingMode})`,
-          duration: 2000,
-          type: "success",
-        });
+        toast.show({ title: "Success", content: "Booking successfully created", duration: 2000, type: "success" });
         onCancel();
       }
     } catch (error: any) {
@@ -133,35 +101,34 @@ const OfflineBookingForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#f6e6d6] min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
-      <RoomNavbar />
+    <div className="bg-white min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
       <div className="container mx-auto p-2 sm:p-4 min-h-[600px] flex items-start justify-center">
         {isLoadingTransition ? (
           <div className="flex items-center justify-center h-[400px]">
-            <div className="w-12 h-12 border-b-2 border-[#5b3423] border-t-2 rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-b-2  border-t-2 rounded-full animate-spin"></div>
           </div>
         ) : selectedRoom ? (
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto bg-[#ffeedc] rounded-lg shadow-sm shadow-[#5b3423] p-3 sm:p-4">
-            <h3 className="text-base sm:text-lg font-bold text-[#5b3423] mb-3">
-              Book {selectedRoom.name} ({bookingMode})
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto bg-[#e4e4f4] rounded-lg shadow-sm  p-3 sm:p-4">
+            <h3 className="text-base sm:text-lg font-bold  mb-3">
+              Book {selectedRoom.name}
             </h3>
             <div className="space-y-3">
               <div>
-                <label htmlFor="name" className="block text-[#5b3423] text-xs sm:text-sm">
+                <label htmlFor="name" className="block text-xs sm:text-sm">
                   Full Name
                 </label>
                 <input
                   type="text"
                   id="name"
                   {...register("name")}
-                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                  className="w-full p-1.5 border  rounded-md text-xs sm:text-sm bg-[#ffeedc] "
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
                 )}
               </div>
               <div>
-                <label htmlFor="checkInDate" className="block text-[#5b3423] text-xs sm:text-sm">
+                <label htmlFor="checkInDate" className="block  text-xs sm:text-sm">
                   Check-In Date
                 </label>
                 <input
@@ -206,42 +173,6 @@ const OfflineBookingForm: React.FC = () => {
                   <p className="text-red-500 text-xs mt-1">{errors.numberOfRoom.message}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-[#5b3423] text-xs sm:text-sm">
-                  Booking Mode
-                </label>
-                <div className="flex space-x-2">
-                  <label className="flex items-center text-xs sm:text-sm text-[#5b3423]">
-                    <input
-                      type="radio"
-                      value="offline"
-                      checked={bookingMode === "offline"}
-                      onChange={() => {
-                        setBookingMode("offline");
-                        setValue("status", "offline");
-                      }}
-                      className="mr-1"
-                    />
-                    Offline
-                  </label>
-                  <label className="flex items-center text-xs sm:text-sm text-[#5b3423]">
-                    <input
-                      type="radio"
-                      value="online"
-                      checked={bookingMode === "online"}
-                      onChange={() => {
-                        setBookingMode("online");
-                        setValue("status", "online");
-                      }}
-                      className="mr-1"
-                    />
-                    Online
-                  </label>
-                </div>
-                {errors.status && (
-                  <p className="text-red-500 text-xs mt-1">{errors.status.message}</p>
-                )}
-              </div>
               <div className="flex space-x-2">
                 <button
                   type="submit"
@@ -273,11 +204,9 @@ const OfflineBookingForm: React.FC = () => {
           <RoomSelector register={register} onRoomSelect={onRoomSelect} />
         )}
       </div>
-      <div className="bg-[#f6e6d6]">
-        <BookingInquiries />
-      </div>
     </div>
   );
 };
 
 export default OfflineBookingForm;
+

@@ -1,40 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaEdit, FaTrash, FaPlus, FaSearch, } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaSearch, FaExternalLinkAlt } from 'react-icons/fa';
 import axiosInstance from '@services/instance';
 
-interface Room {
+interface HallNumber {
   _id: string;
-  roomNumber: string;
-  roomType: string;
+  hallNumber: string;
+  hallType: string;
   floor: string;
 }
 
-const AllRooms: React.FC = () => {
-  const [rooms, setRooms] = useState<Room[]>([]);
+const AllHallNumbers: React.FC = () => {
+  const [hallNumbers, setHallNumbers] = useState<HallNumber[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const loadRooms = async () => {
+  const loadHallNumbers = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get('/api/room', {
+      const response = await axiosInstance.get('/api/hallNumber', {
         params: { search },
       });
-      const roomData = response.data?.data;
-      if (Array.isArray(roomData)) {
-        setRooms(roomData);
+      const hallNumberData = response.data?.data;
+      if (Array.isArray(hallNumberData)) {
+        setHallNumbers(hallNumberData);
         setError('');
       } else {
         setError('Unexpected data format');
-        setRooms([]);
+        setHallNumbers([]);
       }
     } catch (error) {
-      setError('Failed to load rooms');
-      console.error('Error fetching rooms:', error);
+      setError('Failed to load hallNumbers');
+      console.error('Error fetching hallNumbers:', error);
     } finally {
       setLoading(false);
     }
@@ -51,17 +51,17 @@ const AllRooms: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    loadRooms();
+    loadHallNumbers();
   }, [search]);
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this room?')) {
+    if (window.confirm('Are you sure you want to delete this hall?')) {
       try {
-        await axiosInstance.delete(`/api/room/${id}`);
-        loadRooms();
+        await axiosInstance.delete(`/api/hallNumber/${id}`);
+        loadHallNumbers();
       } catch (error) {
-        setError('Failed to delete room');
-        console.error('Error deleting room:', error);
+        setError('Failed to delete hallNumber');
+        console.error('Error deleting hallNumber:', error);
       }
     }
   };
@@ -83,10 +83,10 @@ const AllRooms: React.FC = () => {
       <div className="bg-white rounded-lg shadow p-4 sm:p-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Room Management</h1>
-          <Link to="/admin/hotel/rooms/create">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Hall Number Management</h1>
+          <Link to="/admin/hotel/hallNumber/create">
             <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center text-sm">
-              <FaPlus className="mr-2" /> Add Room
+              <FaPlus className="mr-2" /> Add Hall 
             </button>
           </Link>
         </div>
@@ -96,7 +96,7 @@ const AllRooms: React.FC = () => {
           <div className="relative w-full sm:w-64">
             <input
               type="text"
-              placeholder="Search rooms..."
+              placeholder="Search hallNumbers..."
               className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -123,33 +123,33 @@ const AllRooms: React.FC = () => {
               <thead className="bg-gray-200">
                 <tr>
                   <th className="py-2 px-3 text-left">Name</th>
-                  <th className="py-2 px-3 text-left">Room Type</th>
+                  <th className="py-2 px-3 text-left">Hall Type</th>
                   <th className="py-2 px-3 text-left">Floor</th>
                   <th className="py-2 px-3 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {rooms.length > 0 ? (
-                  rooms.map(room => (
-                    <tr key={room._id} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-3">{room.roomNumber}</td>
-                      <td className='py-2 px-3'>{room.roomType}</td>
-                      <td className="py-2 px-3">{room.floor}</td>
-                      
+                {hallNumbers.length > 0 ? (
+                  hallNumbers.map(hallNumber => (
+                    <tr key={hallNumber._id} className="border-b hover:bg-gray-50">
+                      <td className="py-2 px-3">{hallNumber.hallNumber}</td>
+                      <td className='py-2 px-3'>{hallNumber.hallType}</td>
+                      <td className="py-2 px-3">{hallNumber.floor}</td>
                       <td className="py-2 px-3">
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => navigate(`/admin/hotel/rooms/edit/${room._id}`)}
+                            onClick={() => navigate(`/admin/hotel/hallNumber/edit/${hallNumber._id}`)}
                             className="text-blue-600 hover:text-blue-800"
                           >
                             <FaEdit />
                           </button>
                           <button
-                            onClick={() => handleDelete(room._id)}
+                            onClick={() => handleDelete(hallNumber._id)}
                             className="text-red-600 hover:text-red-800"
                           >
                             <FaTrash />
                           </button>
+                          
                         </div>
                       </td>
                     </tr>
@@ -157,7 +157,7 @@ const AllRooms: React.FC = () => {
                 ) : (
                   <tr>
                     <td colSpan={6} className="py-4 px-4 text-center text-gray-500">
-                      No rooms found
+                      No hallNumbers found
                     </td>
                   </tr>
                 )}
@@ -165,10 +165,9 @@ const AllRooms: React.FC = () => {
             </table>
           )}
         </div>
-
-              </div>
+      </div>
     </div>
   );
 };
 
-export default AllRooms;
+export default AllHallNumbers;

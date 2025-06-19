@@ -16,6 +16,7 @@ import placesSights from './placesSights.route';
 import blogPost from './blogPost.route';
 import hall from './hall.route';
 import room from './room.route';
+import hallNumber from './hallNumber.route';
 
 interface Route {
     path: string;
@@ -92,6 +93,11 @@ const routes: Route[] = [
         path: "/room",
         route: room
     },
+    {
+        path: "/hallNumber",
+        route: hallNumber
+    },
+
 
 ];
 

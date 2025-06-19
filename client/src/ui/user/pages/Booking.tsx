@@ -5,7 +5,7 @@ import axiosInstance from "@services/instance";
 import RoomSelector from "@ui/common/molecules/RoomSelector";
 import { toast } from "@ui/common/organisms/toast/ToastManage";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import RoomNavbar from "@ui/landing/organisms/RoomNavbar";
 import BookingInquiries from "@ui/landing/organisms/BookingInquiries";
 
@@ -24,7 +24,7 @@ const BookingForm: React.FC = () => {
       name: "",
       numberOfRoom: 1,
       rooms: [],
-      roomNames:[],
+      roomNames: [],
       checkInDate: "",
       checkOutDate: "",
     },
@@ -34,18 +34,19 @@ const BookingForm: React.FC = () => {
     setIsLoadingTransition(true);
     setTimeout(() => {
       setSelectedRoom({ id: roomId, name: roomName });
-      setValue("rooms", [roomId]); // Store single room ID in rooms array
+      setValue("rooms", [roomId]);
+      setValue("roomNames", [roomName]);
       setIsLoadingTransition(false);
-    }, 500); // Simulate loading delay
+    }, 500);
   };
 
   const onCancel = () => {
     setIsLoadingTransition(true);
     setTimeout(() => {
       setSelectedRoom(null);
-      reset(); // Reset form fields
+      reset();
       setIsLoadingTransition(false);
-    }, 500); // Simulate loading delay
+    }, 500);
   };
 
   const onSubmit: SubmitHandler<BookingFormData> = async (data) => {
@@ -61,7 +62,7 @@ const BookingForm: React.FC = () => {
 
       if (response.status === 201) {
         toast.show({ title: "Success", content: "Booking successfully created", duration: 2000, type: "success" });
-        onCancel(); // Reset form and show RoomSelector
+        onCancel();
       }
     } catch (error: any) {
       console.error("Error submitting booking form:", error);

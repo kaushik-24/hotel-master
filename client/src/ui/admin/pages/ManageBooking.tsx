@@ -6,10 +6,11 @@ import axiosInstance from "@services/instance"; // Ensure this path is correct
 import { toast } from "@ui/common/organisms/toast/ToastManage";
 import { useDebounce } from "Debounce"; // Adjust the path as necessary
 import { useEffect, useState } from "react";
-import { FaSearch, FaWindowClose } from "react-icons/fa";
+import { FaPlus, FaSearch, FaWindowClose } from "react-icons/fa";
 import { MdArrowDropDown, MdArrowDropUp, MdDeleteOutline } from "react-icons/md";
 import { RiExpandUpDownFill } from "react-icons/ri";
 import Pagination from "../organisms/Pagination";
+import { Link } from "react-router-dom";
 // Import modal components if implemented
 // import ViewDetails from "./ViewDetails";
 // import EditBooking from "./EditBooking";
@@ -158,6 +159,12 @@ const ManageBooking = () => {
 
     return (
         <div className="relative w-full mt-10 px-5 z-0">
+            <Link to="/admin/offlineBooking">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center text-sm">
+              <FaPlus className="mr-2" />Offline Bookings 
+            </button>
+          </Link>
+
             {/* Search Bar */}
             <div className="flex justify-end items-center mb-4 relative">
                 <input

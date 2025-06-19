@@ -16,7 +16,6 @@ interface Room {
 const AllRoomTypes: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isMobile, setIsMobile] = useState(false);
-  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ const AllRoomTypes: React.FC = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get('/api/roomType', {
-        params: { search },
       });
       const roomData = response.data?.data;
       if (Array.isArray(roomData)) {
@@ -55,7 +53,7 @@ const AllRoomTypes: React.FC = () => {
 
   useEffect(() => {
     loadRooms();
-  }, [search]);
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this room type?')) {
@@ -92,20 +90,6 @@ const AllRoomTypes: React.FC = () => {
               <FaPlus className="mr-2" /> Add Room Type
             </button>
           </Link>
-        </div>
-
-        {/* Search */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
-          <div className="relative w-full sm:w-64">
-            <input
-              type="text"
-              placeholder="Search rooms..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <FaSearch className="absolute left-3 top-3 text-gray-400" />
-          </div>
         </div>
 
         {/* Error Message */}

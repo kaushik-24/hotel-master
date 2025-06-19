@@ -10,6 +10,7 @@ export const adminSidebar = [
             { id: 31, label: 'Room Type', route: '/admin/hotel/roomType', title: 'Room type' },
             { id: 32, label: 'Create Rooms', route: '/admin/hotel/rooms', title: 'Create rooms' },
             { id: 33, label: 'Hall Type', route: '/admin/hotel/halls', title: 'Hall Type' },
+            { id: 34, label: 'Create Hall ', route: '/admin/hotel/hallNumber', title: 'Hall Type' },
         ]
     },
     {

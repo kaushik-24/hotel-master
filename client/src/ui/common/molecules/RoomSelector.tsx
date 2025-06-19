@@ -7,7 +7,6 @@ interface Room {
   _id: string;
   name: string;
   price: number;
-  features: string[];
   roomImage: string;
   totalrooms: string;
   heading: string;
@@ -25,7 +24,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ register, onRoomSelect }) =
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axiosInstance.get("/api/room");
+        const response = await axiosInstance.get("/api/roomType");
         const roomData = response.data?.data;
         if (Array.isArray(roomData)) {
           setRooms(roomData);
@@ -72,23 +71,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ register, onRoomSelect }) =
                 रू {room.price}/night
               </p>
               <ul className="grid grid-cols-2 gap-1.5 mb-3 text-gray-700 text-xs sm:text-sm">
-                {room.features.slice(0, 4).map((feature, index) => (
-                  <li key={index} className="flex items-center space-x-1.5">
-                    <svg
-                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#5b3423]"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                              </ul>
               <button
                 type="button"
                 className="w-full bg-[#f6e6d6] text-[#5b3423] font-semibold py-1.5 text-sm rounded-lg hover:bg-[#5b3423] hover:text-[#ffeedc] transition-colors duration-200"
