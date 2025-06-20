@@ -1,0 +1,25 @@
+# Devlopment Configuration
+NODE_ENV = DEVELOPMENT
+# PRODUCTION | DEVELOPMENT
+PORT=3000
+
+# Database Configuration
+DATABASE_HOST=mongodb://mongo:WzhONRbaTRtuTHMYhJJARzZukzJOgBrR@switchback.proxy.rlwy.net:34975
+
+#ADMIN_PASSWORD
+ADMIN_PASSWORD=Hotel@123
+
+#custonm admin path
+ADMIN_PATH=admin-1234
+
+# DEBUG_MODE
+DEBUG_MODE = true
+
+#JWT TOKEN
+JWT_SECRET=WfWLBHbJKJC11Ah8ny98v8RoU70N9Sn8gXj56FRI
+JWT_TOKEN_EXPIRE = 30d
+
+
+CORS_ORIGIN = http://localhost:5173
+
+API_KEY = 12345

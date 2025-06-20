@@ -3,7 +3,7 @@
 import { Request, Response } from "express";
 import { Message } from "../constant/messages";
 import { StatusCodes } from "../constant/statusCode";
-import { CreateBookingDTO } from "../dto/booking.dto";
+import { CreateBookingDTO, SendBookingEmailDTO } from "../dto/booking.dto";
 import { IBookingInput } from "../interface/bookingInput.interface";
 import bookingServices from "../services/booking.services"; // Import default export
 import { getPagination, getPagingData, validatePagination } from "../utils/pagination"; // Import utility functions
@@ -40,6 +40,7 @@ class BookingController {
             // Create a new object conforming to IBookingInput
             const bookingData: IBookingInput = {
                 name: dto.name,
+                email: dto.email,
                 numberOfRoom: dto.numberOfRoom,
                 rooms: dto.rooms,
                 roomNames: dto.roomNames,
@@ -123,6 +124,30 @@ class BookingController {
             });
         }
     }
+    async sendBookingEmail(req: Request, res: Response) {
+    try {
+      const dto: SendBookingEmailDTO = req.body;
+      const emailResult = await bookingServices.sendBookingEmail({
+        bookingId: dto.bookingId,
+        name: dto.name,
+        email: dto.email,
+        roomName: dto.roomName,
+        checkInDate: dto.checkInDate,
+        checkOutDate: dto.checkOutDate,
+        numberOfRooms: dto.numberOfRooms,
+      });
+      res.status(StatusCodes.SUCCESS).json({
+        success: emailResult.success,
+        message: emailResult.message,
+      });
+    } catch (error: any) {
+      console.error("Error Sending Booking Email:", error);
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: error.message || "Failed to send email",
+      });
+    }
+  }
 }
 
 export default BookingController;

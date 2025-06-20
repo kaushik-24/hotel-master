@@ -20,6 +20,7 @@ const OfflineBookingForm: React.FC = () => {
     resolver: yupResolver(bookingSchema()),
     defaultValues: {
       name: "",
+      email: "",
       numberOfRoom: 1,
       rooms: [],
       roomNames: [],
@@ -125,6 +126,20 @@ const OfflineBookingForm: React.FC = () => {
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-xs sm:text-sm">
+                 email 
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  {...register("email")}
+                  className="w-full p-1.5 border  rounded-md text-xs sm:text-sm bg-[#ffeedc] "
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                 )}
               </div>
               <div>

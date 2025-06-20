@@ -3,6 +3,7 @@
 export interface GetBookingList {
     _id: string;
     id: string;
+    email: string;
     roomImage: string;
     name: string;
     numberOfRoom: number;
@@ -15,6 +16,7 @@ export interface GetBookingList {
 // Interface for the form submission data (excludes server-generated fields)
 export interface BookingFormData {
     name: string;
+    email: string;
     numberOfRoom: number;
     rooms: string[];
     roomNames: string[];

@@ -1,12 +1,21 @@
 // src/models/booking.model.ts
 import mongoose, { Schema } from 'mongoose';
 import { IBooking } from '../interface/booking.interface';
+import { emailRegex } from '../constant/regex';
+import { Message } from '../constant/messages';
 
 const bookingSchema = new Schema<IBooking>({
     name: {
         type: String,
         required: true,
     },
+    email: {
+            type: String,
+            required: true,
+            unique: true,
+            match: [emailRegex, Message.validEmailAddress],  // Email validation
+        },
+ 
     numberOfRoom: {
         type: Number,
         required: true,

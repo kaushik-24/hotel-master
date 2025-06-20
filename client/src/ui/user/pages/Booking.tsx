@@ -6,8 +6,6 @@ import RoomSelector from "@ui/common/molecules/RoomSelector";
 import { toast } from "@ui/common/organisms/toast/ToastManage";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
-import RoomNavbar from "@ui/landing/organisms/RoomNavbar";
-import BookingInquiries from "@ui/landing/organisms/BookingInquiries";
 
 const BookingForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +20,7 @@ const BookingForm: React.FC = () => {
     resolver: yupResolver(bookingSchema()),
     defaultValues: {
       name: "",
+      email: "",
       numberOfRoom: 1,
       rooms: [],
       roomNames: [],
@@ -49,6 +48,44 @@ const BookingForm: React.FC = () => {
     }, 500);
   };
 
+  const sendBookingEmail = async (bookingData: BookingFormData, bookingId: string) => {
+    try {
+      const token = getAuthToken();
+      await axiosInstance.post(
+        "/api/booking/send-email",
+        {
+          bookingId,
+          name: bookingData.name,
+          email: bookingData.email,
+          roomName: bookingData.roomNames[0],
+          checkInDate: bookingData.checkInDate,
+          checkOutDate: bookingData.checkOutDate,
+          numberOfRooms: bookingData.numberOfRoom,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toast.show({
+        title: "Email Sent",
+        content: "Booking confirmation email has been sent to your email address.",
+        duration: 2000,
+        type: "success",
+      });
+    } catch (error: any) {
+      console.error("Error sending booking email:", error);
+      toast.show({
+        title: "Email Error",
+        content: "Booking was successful, but failed to send confirmation email.",
+        duration: 3000,
+        type: "warning",
+      });
+    }
+  };
+
   const onSubmit: SubmitHandler<BookingFormData> = async (data) => {
     setIsLoading(true);
     try {
@@ -62,6 +99,7 @@ const BookingForm: React.FC = () => {
 
       if (response.status === 201) {
         toast.show({ title: "Success", content: "Booking successfully created", duration: 2000, type: "success" });
+        await sendBookingEmail(data, response.data.bookingId || "unknown");
         onCancel();
       }
     } catch (error: any) {
@@ -104,7 +142,6 @@ const BookingForm: React.FC = () => {
 
   return (
     <div className="bg-[#f6e6d6] min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
-      <RoomNavbar />
       <div className="container mx-auto p-2 sm:p-4 min-h-[600px] flex items-start justify-center">
         {isLoadingTransition ? (
           <div className="flex items-center justify-center h-[400px]">
@@ -128,6 +165,20 @@ const BookingForm: React.FC = () => {
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-[#5b3423] text-xs sm:text-sm">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  {...register("email")}
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                 )}
               </div>
               <div>
@@ -207,9 +258,7 @@ const BookingForm: React.FC = () => {
           <RoomSelector register={register} onRoomSelect={onRoomSelect} />
         )}
       </div>
-      <div className="bg-[#f6e6d6]">
-        <BookingInquiries />
-      </div>
+      <div className="bg-[#f6e6d6]"></div>
     </div>
   );
 };

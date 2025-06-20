@@ -37,6 +37,7 @@ import MediaGallery from "@ui/landing/pages/MediaGallery"
 import Policies from "@ui/landing/pages/Policies"
 import Reviews from "@ui/landing/pages/Reviews"
 import Sustainability from "@ui/landing/pages/Sustainability"
+import BillTemplate from "@ui/landing/templates/BillTemplate"
 import LandingPageTemplate from "@ui/landing/templates/LandingPageTemplate"
 import PageTemplate from "@ui/landing/templates/PageTemplate"
 import Login from "@ui/user/pages/auth/Login"
@@ -121,6 +122,8 @@ const router = createBrowserRouter([
     children: [
       // { index: true, element: <AboutUs /> },
       { path: '/blogs', element: <Blogs />},
+      { path: '/booking', element: <BookingForm /> },
+      { path: '/bill', element: <BillTemplate />},
       { path: '/about-us', element: <AboutUs /> },
       { path: '/media-gallery', element: <MediaGallery /> },
       { path: '/career', element: <Careers /> },
@@ -150,7 +153,6 @@ const router = createBrowserRouter([
     element: null,
     children: [
       { index: true, element: <BookingForm /> },
-      { path: '/booking', element: <BookingForm /> },
 
       { path: '*', element: <PageNotFound /> }
     ]

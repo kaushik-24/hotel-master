@@ -200,6 +200,7 @@ const ManageBooking = () => {
                                         {sortStatus === 2 && <MdArrowDropUp size={24} />}
                                     </div>
                                 </th>
+                                <th className="px-6 py-3 border">Email</th>
                                 <th className="px-6 py-3 border">Number of Rooms</th>
                                 <th className="px-6 py-3 border">Rooms</th>
                                 <th className="px-6 py-3 border">Check-In Date</th>
@@ -212,6 +213,7 @@ const ManageBooking = () => {
                                 <tr key={booking._id} className="border-b hover:bg-gray-100">
                                     <td className="px-6 py-4 border">{(pagination.currentPage - 1) * pagination.perpage + index + 1}</td>
                                     <td className="px-6 py-4 border">{booking.name}</td>
+                                    <td className="px-6 py-4 border">{booking.email}</td>
                                     <td className="px-6 py-4 border">{booking.numberOfRoom}</td>
                                     <td className="px-6 py-4 border">{booking.rooms.join(", ")}</td>
                                     <td className="px-6 py-4 border">{new Date(booking.checkInDate).toLocaleDateString()}</td>

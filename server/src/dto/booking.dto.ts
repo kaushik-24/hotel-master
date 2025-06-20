@@ -5,6 +5,9 @@ export class CreateBookingDTO {
     @IsNotEmpty()
     @Length(2, 30)
     name!: string;
+    
+    @IsOptional()
+    email!: string;
 
     @IsNotEmpty()
     @IsNumber()
@@ -30,4 +33,35 @@ export class CreateBookingDTO {
     @IsOptional()
     @IsDateString({}, { message: "Invalid Check-Out Date format" })
     checkOutDate?: string;
+}
+
+
+export class SendBookingEmailDTO {
+  @IsNotEmpty()
+  @IsString()
+  bookingId!: string;
+
+  @IsNotEmpty()
+  @Length(2, 30)
+  name!: string;
+
+  @IsOptional()
+  email!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  roomName!: string;
+
+  @IsNotEmpty()
+  @IsDateString({}, { message: "Invalid Check-In Date format" })
+  checkInDate!: string;
+
+  @IsNotEmpty()
+  @IsDateString({}, { message: "Invalid Check-Out Date format" })
+  checkOutDate!: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1, { message: "Number of rooms must be at least 1" })
+  numberOfRooms!: number;
 }

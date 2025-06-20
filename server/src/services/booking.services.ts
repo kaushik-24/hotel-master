@@ -1,5 +1,6 @@
 // src/services/booking.services.ts
 
+import { sendBookingConfirmationEmail } from '../utils/email';
 import { IBookingInput } from '../interface/bookingInput.interface';
 import Booking from '../models/booking.model';
 import HttpException from "../utils/HttpException.utils";
@@ -64,6 +65,29 @@ class BookingService {
             throw HttpException.badRequest(error?.message);
         }
     }
+    
+     async sendBookingEmail(data: {
+    bookingId: string;
+    name: string;
+    email: string;
+    roomName: string;
+    checkInDate: string;
+    checkOutDate: string;
+    numberOfRooms: number;
+  }) {
+    try {
+      // Verify booking exists
+      const booking = await Booking.findById(data.bookingId);
+      if (!booking) {
+        throw HttpException.notFound("Booking not found");
+      }
+      const emailResult = await sendBookingConfirmationEmail(data);
+      return emailResult;
+    } catch (error: any) {
+      throw HttpException.badRequest(error.message);
+    }
+  }
+
 }
 
 export default new BookingService();

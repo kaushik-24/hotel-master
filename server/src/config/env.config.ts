@@ -19,6 +19,9 @@ export class DotenvConfig {
 
     //add the custom admin path
     static ADMIN_PATH = process.env.ADMIN_PATH;
+    
+    static EMAIL_USER = process.env.EMAIL_USER;
+    static EMAIL_PASS = process.env.EMAIL_PASS;
 
     // DEBUG_MODE
     static DEBUG_MODE = process.env.DEBUG_MODE;

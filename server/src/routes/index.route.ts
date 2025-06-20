@@ -97,7 +97,7 @@ const routes: Route[] = [
         path: "/hallNumber",
         route: hallNumber
     },
-
+    
 
 ];
 
