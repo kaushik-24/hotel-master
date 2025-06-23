@@ -74,6 +74,8 @@ class BookingService {
     checkInDate: string;
     checkOutDate: string;
     numberOfRooms: number;
+    roomPrice: number;
+    totalPrice: number;
   }) {
     try {
       // Verify booking exists

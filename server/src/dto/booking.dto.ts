@@ -33,6 +33,9 @@ export class CreateBookingDTO {
     @IsOptional()
     @IsDateString({}, { message: "Invalid Check-Out Date format" })
     checkOutDate?: string;
+
+    @IsOptional()
+    roomPrice?: number;
 }
 
 
@@ -64,4 +67,7 @@ export class SendBookingEmailDTO {
   @IsNumber()
   @Min(1, { message: "Number of rooms must be at least 1" })
   numberOfRooms!: number;
+
+  @IsOptional()
+  roomPrice!: number;
 }

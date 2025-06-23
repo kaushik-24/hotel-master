@@ -10,7 +10,7 @@ import { useState } from "react";
 const BookingForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTransition, setIsLoadingTransition] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string; price: number; } | null>(null);
 
   const getAuthToken = () => {
     return localStorage.getItem("authToken");
@@ -26,15 +26,17 @@ const BookingForm: React.FC = () => {
       roomNames: [],
       checkInDate: "",
       checkOutDate: "",
+      roomPrice: 0,
     },
   });
 
-  const onRoomSelect = (roomId: string, roomName: string) => {
+  const onRoomSelect = (roomId: string, roomName: string, roomPrice: number) => {
     setIsLoadingTransition(true);
     setTimeout(() => {
-      setSelectedRoom({ id: roomId, name: roomName });
+      setSelectedRoom({ id: roomId, name: roomName, price: roomPrice });
       setValue("rooms", [roomId]);
       setValue("roomNames", [roomName]);
+      setValue("roomPrice", roomPrice);
       setIsLoadingTransition(false);
     }, 500);
   };
@@ -46,44 +48,6 @@ const BookingForm: React.FC = () => {
       reset();
       setIsLoadingTransition(false);
     }, 500);
-  };
-
-  const sendBookingEmail = async (bookingData: BookingFormData, bookingId: string) => {
-    try {
-      const token = getAuthToken();
-      await axiosInstance.post(
-        "/api/booking/send-email",
-        {
-          bookingId,
-          name: bookingData.name,
-          email: bookingData.email,
-          roomName: bookingData.roomNames[0],
-          checkInDate: bookingData.checkInDate,
-          checkOutDate: bookingData.checkOutDate,
-          numberOfRooms: bookingData.numberOfRoom,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      toast.show({
-        title: "Email Sent",
-        content: "Booking confirmation email has been sent to your email address.",
-        duration: 2000,
-        type: "success",
-      });
-    } catch (error: any) {
-      console.error("Error sending booking email:", error);
-      toast.show({
-        title: "Email Error",
-        content: "Booking was successful, but failed to send confirmation email.",
-        duration: 3000,
-        type: "warning",
-      });
-    }
   };
 
   const onSubmit: SubmitHandler<BookingFormData> = async (data) => {
@@ -98,8 +62,15 @@ const BookingForm: React.FC = () => {
       });
 
       if (response.status === 201) {
-        toast.show({ title: "Success", content: "Booking successfully created", duration: 2000, type: "success" });
-        await sendBookingEmail(data, response.data.bookingId || "unknown");
+        console.log("Booking response:", JSON.stringify(response.data, null, 2));
+        toast.show({
+          title: "Success",
+          content: response.data.message.includes("email") 
+            ? response.data.message
+            : "Booking successfully created and confirmation email sent",
+          duration: 2000,
+          type: "success",
+        });
         onCancel();
       }
     } catch (error: any) {

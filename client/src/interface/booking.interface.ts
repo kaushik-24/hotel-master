@@ -22,6 +22,7 @@ export interface BookingFormData {
     roomNames: string[];
     checkInDate: string;
     checkOutDate: string;
+    roomPrice: number;
 }
 
 // Optional: Type to pick only the fields we need from GetBookingList

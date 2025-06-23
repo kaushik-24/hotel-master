@@ -15,7 +15,7 @@ interface Room {
 
 interface RoomSelectorProps {
   register: UseFormRegister<BookingFormData>;
-  onRoomSelect: (roomId: string, roomName: string) => void;
+  onRoomSelect: (roomId: string, roomName: string, roomPrice: number) => void;
 }
 
 const RoomSelector: React.FC<RoomSelectorProps> = ({ register, onRoomSelect }) => {
@@ -75,7 +75,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ register, onRoomSelect }) =
               <button
                 type="button"
                 className="w-full bg-[#f6e6d6] text-[#5b3423] font-semibold py-1.5 text-sm rounded-lg hover:bg-[#5b3423] hover:text-[#ffeedc] transition-colors duration-200"
-                onClick={() => onRoomSelect(room._id, room.name)}
+                onClick={() => onRoomSelect(room._id, room.name, room.price)}
               >
                 Book Now
               </button>

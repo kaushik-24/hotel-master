@@ -12,7 +12,7 @@ const bookingSchema = new Schema<IBooking>({
     email: {
             type: String,
             required: true,
-            unique: true,
+            unique: false,
             match: [emailRegex, Message.validEmailAddress],  // Email validation
         },
  

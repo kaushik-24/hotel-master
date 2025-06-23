@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface IBooking extends mongoose.Document {
+    _id: string;
     name: string;
     email: string;
     numberOfRoom: number;

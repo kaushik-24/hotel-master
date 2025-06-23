@@ -6,4 +6,6 @@ export interface IBookingInput {
     roomNames?: string[];
     checkInDate?: Date;
     checkOutDate?: Date;
+    roomPrice?: number;
+    totalPrice?: number;
 }

@@ -3,66 +3,97 @@
 import { Request, Response } from "express";
 import { Message } from "../constant/messages";
 import { StatusCodes } from "../constant/statusCode";
-import { CreateBookingDTO, SendBookingEmailDTO } from "../dto/booking.dto";
+import { CreateBookingDTO } from "../dto/booking.dto";
 import { IBookingInput } from "../interface/bookingInput.interface";
 import bookingServices from "../services/booking.services"; // Import default export
-import { getPagination, getPagingData, validatePagination } from "../utils/pagination"; // Import utility functions
+import { getPagination, getPagingData, validatePagination } from "../utils/pagination";
+import { IBooking } from "../interface/booking.interface";
 
 class BookingController {
+    
     async createBooking(req: Request, res: Response) {
-        try {
-            const dto: CreateBookingDTO = req.body;
-            console.log("Incoming Data:", dto);
+    try {
+      const dto: CreateBookingDTO = req.body;
+      console.log('Incoming Data:', dto);
 
-            // Convert dates only if they exist in the request
-            let checkInDate: Date | undefined;
-            if (dto.checkInDate) {
-                checkInDate = new Date(dto.checkInDate);
-                if (isNaN(checkInDate.getTime())) {
-                    return res.status(StatusCodes.BAD_REQUEST).json({
-                        success: false,
-                        message: "Invalid Check In Date",
-                    });
-                }
-            }
-
-            let checkOutDate: Date | undefined;
-            if (dto.checkOutDate) {
-                checkOutDate = new Date(dto.checkOutDate);
-                if (isNaN(checkOutDate.getTime())) {
-                    return res.status(StatusCodes.BAD_REQUEST).json({
-                        success: false,
-                        message: "Invalid Check Out Date",
-                    });
-                }
-            }
-
-            // Create a new object conforming to IBookingInput
-            const bookingData: IBookingInput = {
-                name: dto.name,
-                email: dto.email,
-                numberOfRoom: dto.numberOfRoom,
-                rooms: dto.rooms,
-                roomNames: dto.roomNames,
-                checkInDate: checkInDate,
-                checkOutDate: checkOutDate,
-            };
-
-            // Pass the transformed data to the service layer
-            const response = await bookingServices.createBooking(bookingData);
-            res.status(StatusCodes.CREATED).json({
-                success: true,
-                message: Message.created,
-                data: response
-            });
-        } catch (error: any) {
-            console.error("Error Creating Booking:", error);
-            res.status(StatusCodes.BAD_REQUEST).json({
-                success: false,
-                message: error.message || "An error occurred",
-            });
+      let checkInDate: Date | undefined;
+      if (dto.checkInDate) {
+        checkInDate = new Date(dto.checkInDate);
+        if (isNaN(checkInDate.getTime())) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: 'Invalid Check In Date',
+          });
         }
+      }
+
+      let checkOutDate: Date | undefined;
+      if (dto.checkOutDate) {
+        checkOutDate = new Date(dto.checkOutDate);
+        if (isNaN(checkOutDate.getTime())) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: 'Invalid Check Out Date',
+          });
+        }
+      }
+
+      // Fetch roomType price
+      let roomPrice = dto.roomPrice || 0;
+
+      const totalPrice = roomPrice * dto.numberOfRoom;
+
+      const bookingData: IBookingInput = {
+        name: dto.name,
+        email: dto.email,
+        numberOfRoom: dto.numberOfRoom,
+        rooms: dto.rooms,
+        roomNames: dto.roomNames || [],
+        checkInDate: checkInDate,
+        checkOutDate: checkOutDate,
+        roomPrice,
+        totalPrice,
+      };
+
+      const response: IBooking = await bookingServices.createBooking(bookingData);
+
+      // Send email after booking creation
+      try {
+        const emailResult = await bookingServices.sendBookingEmail({
+          bookingId: response._id.toString(),
+          name: dto.name,
+          email: dto.email,
+          roomName: dto.roomNames && dto.roomNames.length > 0 ? dto.roomNames[0] : 'Unknown Room',
+          checkInDate: dto.checkInDate || '' ,
+          checkOutDate: dto.checkOutDate || '',
+          numberOfRooms: dto.numberOfRoom,
+          roomPrice,
+          totalPrice,
+        });
+        console.log('Email sent successfully:', emailResult);
+        res.status(StatusCodes.CREATED).json({
+          success: true,
+          message: 'Booking created successfully and confirmation email sent',
+          data: response,
+          bookingId: response._id.toString(),
+        });
+      } catch (emailError: any) {
+        console.error('Failed to send booking email:', emailError.message, emailError.stack);
+        res.status(StatusCodes.CREATED).json({
+          success: true,
+          message: 'Booking created successfully, but failed to send confirmation email',
+          data: response,
+          bookingId: response._id.toString(),
+        });
+      }
+    } catch (error: any) {
+      console.error('Error Creating Booking:', error);
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: error.message || 'An error occurred',
+      });
     }
+  }
 
     async getAllBookings(req: Request, res: Response) {
         try {
@@ -124,30 +155,6 @@ class BookingController {
             });
         }
     }
-    async sendBookingEmail(req: Request, res: Response) {
-    try {
-      const dto: SendBookingEmailDTO = req.body;
-      const emailResult = await bookingServices.sendBookingEmail({
-        bookingId: dto.bookingId,
-        name: dto.name,
-        email: dto.email,
-        roomName: dto.roomName,
-        checkInDate: dto.checkInDate,
-        checkOutDate: dto.checkOutDate,
-        numberOfRooms: dto.numberOfRooms,
-      });
-      res.status(StatusCodes.SUCCESS).json({
-        success: emailResult.success,
-        message: emailResult.message,
-      });
-    } catch (error: any) {
-      console.error("Error Sending Booking Email:", error);
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: error.message || "Failed to send email",
-      });
     }
-  }
-}
 
 export default BookingController;
