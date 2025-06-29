@@ -2,10 +2,11 @@ export interface IBookingInput {
     name: string;
     email: string;
     numberOfRoom: number;
-    rooms?: string[];
-    roomNames?: string[];
+    rooms: string;
+    roomNames: string;
     checkInDate?: Date;
     checkOutDate?: Date;
     roomPrice?: number;
     totalPrice?: number;
+    idImage: string;
 }

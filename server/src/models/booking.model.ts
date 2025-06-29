@@ -21,18 +21,18 @@ const bookingSchema = new Schema<IBooking>({
         required: true,
         min: [1, 'Number of rooms must be at least 1'],
     },
-    rooms: [
+    rooms: 
         {
             type: String, // Changed from ObjectId to String
             required: false, // Made optional
         },
-    ],
-    roomNames: [
+
+    roomNames: 
         {
             type: String,
             required: false, // Optional to match rooms
         },
-    ],
+
     checkInDate: {
         type: Date,
         required: false,
@@ -41,6 +41,10 @@ const bookingSchema = new Schema<IBooking>({
         type: Date,
         required: false,
     },
+    idImage: {
+        type: String,
+        required: false
+  },
 }, {
     timestamps: true,
 });

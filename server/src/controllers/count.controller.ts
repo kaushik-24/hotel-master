@@ -2,24 +2,23 @@ import { Message } from "../constant/messages";
 import { Request, Response } from 'express';
 import { StatusCodes } from "../constant/statusCode";
 import Booking from "../models/booking.model";
-import Room from "../models/room.model";
+import RoomType from "../models/roomType.model";
 import Page from "../models/otherPage.model";
+import Room from "../models/room.model";
+import Hall from "../models/hall.model";
+import HallNumber from "../models/hallNumber.model";
 
 class CountController{
  // New method for dashboard stats
   async getDashboardStats(req: Request, res: Response) {
     try {
       const bookingsCount = await Booking.countDocuments();
-      const roomsCount = await Room.countDocuments();
+      const roomsCount = await RoomType.countDocuments();
       const pagesCount = await Page.countDocuments(); 
-      const rooms = await Room.find().select('name totalrooms'); // Fetch all rooms
-
-      const { slug } = req.query;
-      let roomDetails = null;
-      if (slug && typeof slug === 'string') {
-        roomDetails = await Room.findOne({ slug }).select('name totalrooms');
-      }
-
+      const rooms = await Room.find().select('roomNumber roomType'); // Fetch all rooms
+      const halls = await HallNumber.find().select('hallNumber hallType');
+      const hallsCount = await Hall.countDocuments();
+      
       res.status(StatusCodes.SUCCESS || 200).json({
         status: true,
         data: { 
@@ -27,6 +26,8 @@ class CountController{
           rooms: roomsCount, 
           pages: pagesCount,
           roomsList: rooms,
+          halls: hallsCount, 
+          hallsList: halls,
         },
         message: Message.fetched,
       });

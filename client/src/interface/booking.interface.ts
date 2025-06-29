@@ -11,6 +11,7 @@ export interface GetBookingList {
     roomNames: string[];
     checkInDate: string;
     checkOutDate: string;
+    idImage: string;
 }
 
 // Interface for the form submission data (excludes server-generated fields)
@@ -23,6 +24,7 @@ export interface BookingFormData {
     checkInDate: string;
     checkOutDate: string;
     roomPrice: number;
+    idImage: string;
 }
 
 // Optional: Type to pick only the fields we need from GetBookingList

@@ -5,7 +5,9 @@ export interface DashboardStatsResponse {
         rooms: number;
         bookings: number;
         pages: number;
-        roomsList: { name: string; totalrooms: number }[];
+        roomsList: { roomNumber: number; roomType: string }[];
+        hallsList: { hallNumber: number; hallType: string }[];
+        halls: number;
     };
     message: string;
 }
@@ -14,7 +16,9 @@ export interface Stats {
   rooms: number;
   bookings: number;
   pages: number;
-  roomsList: { name: string; totalrooms: number }[];
+  roomsList: { roomNumber: number; roomType: string}[];
+  hallsList: { hallNumber: number; hallType: string }[];
+  halls: number;
 }
 
 export interface RoomsResponse {

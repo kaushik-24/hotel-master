@@ -31,7 +31,6 @@ class blogPostService {
         }
     }
 
-
     async createBlogPost(data: { title: string, author: string, content: string, }, file?: Express.Multer.File) {
         try {
             const slug = data.title.toLowerCase()                 

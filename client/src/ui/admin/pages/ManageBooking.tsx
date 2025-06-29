@@ -215,7 +215,7 @@ const ManageBooking = () => {
                                     <td className="px-6 py-4 border">{booking.name}</td>
                                     <td className="px-6 py-4 border">{booking.email}</td>
                                     <td className="px-6 py-4 border">{booking.numberOfRoom}</td>
-                                    <td className="px-6 py-4 border">{booking.rooms.join(", ")}</td>
+                                    <td className="px-6 py-4 border">{booking.roomNames}</td>
                                     <td className="px-6 py-4 border">{new Date(booking.checkInDate).toLocaleDateString()}</td>
                                     <td className="px-6 py-4 border">{new Date(booking.checkOutDate).toLocaleDateString()}</td>
                                     <td className="px-6 py-4 border flex justify-center space-x-4">
@@ -260,9 +260,10 @@ const ManageBooking = () => {
                                     <h2 className="text-xl font-bold mb-4">Booking Details</h2>
                                     <p><strong>Name:</strong> {specificBooking.name}</p>
                                     <p><strong>Number of Rooms:</strong> {specificBooking.numberOfRoom}</p>
-                                    <p><strong>Rooms:</strong> {specificBooking.rooms.join(", ")}</p>
+                                    <p><strong>Rooms:</strong> {specificBooking.roomNames}</p>
                                     <p><strong>Check-In Date:</strong> {new Date(specificBooking.checkInDate).toLocaleDateString()}</p>
                                     <p><strong>Check-Out Date:</strong> {new Date(specificBooking.checkOutDate).toLocaleDateString()}</p>
+                                    <img src={`${import.meta.env.VITE_APP_BASE_URL}${specificBooking.idImage}`} />
                                 </div>
                             )}
                             {modalContent === 'edit' && specificBooking && (

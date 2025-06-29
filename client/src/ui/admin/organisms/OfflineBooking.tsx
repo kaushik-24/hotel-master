@@ -2,19 +2,16 @@ import { bookingSchema } from "@config/schema/booking.schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BookingFormData } from "@interface/booking.interface";
 import axiosInstance from "@services/instance";
-import RoomSelector from "@ui/common/molecules/RoomSelector";
 import { toast } from "@ui/common/organisms/toast/ToastManage";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
+import AdminRoomSelector from "./RoomSelector";
 
 const OfflineBookingForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTransition, setIsLoadingTransition] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
-
-  const getAuthToken = () => {
-    return localStorage.getItem("authToken");
-  };
+  const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string; price: number } | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<BookingFormData>({
     resolver: yupResolver(bookingSchema()),
@@ -26,15 +23,18 @@ const OfflineBookingForm: React.FC = () => {
       roomNames: [],
       checkInDate: "",
       checkOutDate: "",
+      roomPrice: 0,
     },
   });
 
-  const onRoomSelect = (roomId: string, roomName: string) => {
+  const onRoomSelect = (roomId: string, roomName: string, roomPrice: number) => {
     setIsLoadingTransition(true);
     setTimeout(() => {
-      setSelectedRoom({ id: roomId, name: roomName });
+      setSelectedRoom({ id: roomId, name: roomName, price: roomPrice });
       setValue("rooms", [roomId]);
-      setValue("roomNames", [roomName]);
+      setValue("roomNames", [roomName]); // Use the displayed room name
+      setValue("roomPrice", roomPrice);
+      console.log('Selected Room:', { id: roomId, name: roomName, price: roomPrice });
       setIsLoadingTransition(false);
     }, 500);
   };
@@ -43,73 +43,95 @@ const OfflineBookingForm: React.FC = () => {
     setIsLoadingTransition(true);
     setTimeout(() => {
       setSelectedRoom(null);
+      setImagePreview(null);
       reset();
       setIsLoadingTransition(false);
     }, 500);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
+  };
+
   const onSubmit: SubmitHandler<BookingFormData> = async (data) => {
     setIsLoading(true);
     try {
-      const token = getAuthToken();
-      const response = await axiosInstance.post("/api/booking", data, {
+
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("numberOfRoom", data.numberOfRoom.toString());
+      formData.append("rooms", data.rooms?.[0] || "");
+      formData.append("roomNames", data.roomNames?.[0] || selectedRoom?.name || ""); // Use displayed room name
+      if (data.checkInDate) formData.append("checkInDate", data.checkInDate);
+      if (data.checkOutDate) formData.append("checkOutDate", data.checkOutDate);
+      formData.append("roomPrice", Number(data.roomPrice).toString());
+
+      const imageInput = document.getElementById("idImage") as HTMLInputElement;
+      if (imageInput?.files?.[0]) {
+        formData.append("idImage", imageInput.files[0]);
+      } else {
+        throw new Error("Please upload an ID image");
+      }
+
+      console.log('FormData:', {
+        name: data.name,
+        email: data.email,
+        numberOfRoom: data.numberOfRoom,
+        rooms: data.rooms?.[0],
+        roomNames: data.roomNames?.[0],
+        checkInDate: data.checkInDate,
+        checkOutDate: data.checkOutDate,
+        roomPrice: data.roomPrice,
+      });
+
+      const response = await axiosInstance.post("/api/booking", formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
 
       if (response.status === 201) {
-        toast.show({ title: "Success", content: "Booking successfully created", duration: 2000, type: "success" });
+        console.log("Booking response:", JSON.stringify(response.data, null, 2));
+        toast.show({
+          title: "Success",
+          content: response.data.message || "Booking successfully created",
+          duration: 2000,
+          type: "success",
+        });
         onCancel();
       }
     } catch (error: any) {
       console.error("Error submitting booking form:", error);
-      if (error.response) {
-        if (error.response.status === 403) {
-          toast.show({
-            title: "Authorization Error",
-            content: "You don't have permission to create a booking. Please login again.",
-            duration: 3000,
-            type: "error",
-          });
-        } else {
-          toast.show({
-            title: "Error",
-            content: error.response.data?.message || "Booking creation failed",
-            duration: 2000,
-            type: "error",
-          });
-        }
-      } else if (error.request) {
-        toast.show({
-          title: "Network Error",
-          content: "Unable to connect to the server",
-          duration: 2000,
-          type: "error",
-        });
-      } else {
-        toast.show({
-          title: "Error",
-          content: "An unexpected error occurred",
-          duration: 2000,
-          type: "error",
-        });
-      }
+      toast.show({
+        title: "Error",
+        content: error.response?.data?.message || error.message || "Booking creation failed",
+        duration: 2000,
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-white min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
+    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
       <div className="container mx-auto p-2 sm:p-4 min-h-[600px] flex items-start justify-center">
         {isLoadingTransition ? (
           <div className="flex items-center justify-center h-[400px]">
             <div className="w-12 h-12 border-b-2  border-t-2 rounded-full animate-spin"></div>
           </div>
         ) : selectedRoom ? (
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto bg-[#e4e4f4] rounded-lg shadow-sm  p-3 sm:p-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto  rounded-lg shadow-sm  p-3 sm:p-4">
             <h3 className="text-base sm:text-lg font-bold  mb-3">
               Book {selectedRoom.name}
             </h3>
@@ -122,7 +144,7 @@ const OfflineBookingForm: React.FC = () => {
                   type="text"
                   id="name"
                   {...register("name")}
-                  className="w-full p-1.5 border  rounded-md text-xs sm:text-sm bg-[#ffeedc] "
+                  className="w-full p-1.5 border  rounded-md text-xs sm:text-sm bg-[#ffeedc] ]"
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
@@ -130,7 +152,7 @@ const OfflineBookingForm: React.FC = () => {
               </div>
               <div>
                 <label htmlFor="email" className="block text-xs sm:text-sm">
-                 email 
+                  Email
                 </label>
                 <input
                   type="email"
@@ -143,7 +165,25 @@ const OfflineBookingForm: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="checkInDate" className="block  text-xs sm:text-sm">
+                <label htmlFor="idImage" className="block  text-xs sm:text-sm">
+                  ID Image
+                </label>
+                <input
+                  type="file"
+                  id="idImage"
+                  accept="image/jpeg,image/jpg,image/png"
+                  capture="environment"
+                  onChange={handleImageChange}
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
+                />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img src={imagePreview} alt="ID Preview" className="w-full h-32 object-cover rounded-md" />
+                  </div>
+                )}
+              </div>
+              <div>
+                <label htmlFor="checkInDate" className="block text-[#5b3423] text-xs sm:text-sm">
                   Check-In Date
                 </label>
                 <input
@@ -216,7 +256,7 @@ const OfflineBookingForm: React.FC = () => {
             </div>
           </form>
         ) : (
-          <RoomSelector register={register} onRoomSelect={onRoomSelect} />
+          <AdminRoomSelector  register={register} onRoomSelect={onRoomSelect} />
         )}
       </div>
     </div>

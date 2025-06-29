@@ -4,17 +4,21 @@ import CreateBlogPost from "@ui/admin/organisms/blogPost"
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
 import HeroSection from "@ui/admin/organisms/HeroSection"
 import HomeAboutUsForm from "@ui/admin/organisms/homeAboutUs"
+import OfflineBookingForm from "@ui/admin/organisms/OfflineBooking"
 import PlacesSights from "@ui/admin/organisms/placesSights"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllHallNumbers from "@ui/admin/pages/AllHallNumbers"
 import AllHalls from "@ui/admin/pages/AllHalls"
+import AllPolicies from "@ui/admin/pages/AllPolicy"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
 import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
+import GalleryComponent from "@ui/admin/pages/cms/CreateGallery"
 import CmsHomePage from "@ui/admin/pages/cms/HomeConfigs"
 import CreateHallNumber from "@ui/admin/pages/CreateHalls"
 import CreateHall from "@ui/admin/pages/CreateHallTypes"
 import CreatePage from "@ui/admin/pages/CreatePage"
+import CreatePolicy from "@ui/admin/pages/CreatePolicy"
 import CreateRooms from "@ui/admin/pages/CreateRooms"
 import CreateRoomType from "@ui/admin/pages/CreateRoomType"
 import ManageBooking from "@ui/admin/pages/ManageBooking"
@@ -31,9 +35,11 @@ import Careers from "@ui/landing/pages/Careers"
 import Contact from "@ui/landing/pages/Contact"
 import DynamicBlogPage from "@ui/landing/pages/DynamicBlogPostPage"
 import DynamicHallPage from "@ui/landing/pages/DynamicHallPage"
+import DynamicPolicyPage from "@ui/landing/pages/DynamicPolicyPage"
 import DynamicRoomPage from "@ui/landing/pages/DynamicRoomPage"
 import Home from "@ui/landing/pages/Home"
-import MediaGallery from "@ui/landing/pages/MediaGallery"
+import GalleryDisplay from "@ui/landing/pages/MediaGallery"
+import PoliciesPage from "@ui/landing/pages/Policies"
 import Policies from "@ui/landing/pages/Policies"
 import Reviews from "@ui/landing/pages/Reviews"
 import Sustainability from "@ui/landing/pages/Sustainability"
@@ -43,7 +49,6 @@ import PageTemplate from "@ui/landing/templates/PageTemplate"
 import Login from "@ui/user/pages/auth/Login"
 import SignUp from "@ui/user/pages/auth/SignUp"
 import BookingForm from "@ui/user/pages/Booking"
-import OfflineBookingForm from "@ui/user/pages/OfflineBooking"
 import ScrollToTop from "function/ScrollToTop"
 import ProtectedRoute from "ProtectedRoute"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
@@ -92,6 +97,26 @@ const router = createBrowserRouter([
     ],
   },
 
+  //Policies Page
+  {
+    path: '/policy',
+    element: <>
+      <ScrollToTop />
+      <RoomNavbar />
+      <PoliciesPage />
+      <BookingInquiries />
+    </>,
+  },
+  
+   //Policy Posts
+  {
+    path: '/policy/:slug', element:
+    <>
+    <RoomNavbar />
+    <DynamicPolicyPage />
+    <BookingInquiries />
+    </>
+  },
 
   //Blogs Page
   {
@@ -103,6 +128,7 @@ const router = createBrowserRouter([
       <BookingInquiries />
     </>,
   },
+
   //Blog Posts
   {
     path: '/blogs/:slug', element:
@@ -125,12 +151,12 @@ const router = createBrowserRouter([
       { path: '/booking', element: <BookingForm /> },
       { path: '/bill', element: <BillTemplate />},
       { path: '/about-us', element: <AboutUs /> },
-      { path: '/media-gallery', element: <MediaGallery /> },
+      { path: '/media-gallery', element: <GalleryDisplay /> },
       { path: '/career', element: <Careers /> },
       { path: '/sustainability', element: <Sustainability /> },
       { path: '/review', element: <Reviews /> },
       { path: '/contact', element: <Contact /> },
-      { path: '/hotel-policies', element: <Policies /> },
+      { path: '/policy', element: <Policies /> },
 
       { path: '*', element: <PageNotFound /> },
     ],
@@ -186,6 +212,10 @@ const router = createBrowserRouter([
       { path: 'blogs', element: <AllBlogPosts /> },
       { path: 'blogs/create', element: <CreateBlogPost /> },
       { path: 'blogs/edit/:blogPostId', element: <CreateBlogPost /> },
+      { path: 'gallery', element: <GalleryComponent /> },
+      { path: 'policy', element: <AllPolicies /> },
+      { path: 'policy/create', element: <CreatePolicy /> },
+      { path: 'policy/edit/:policyId', element: <CreatePolicy /> },
 
       ]
       },

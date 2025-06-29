@@ -1,33 +1,69 @@
-import { media } from "@data/medias"
-import RoomDescription from "../atoms/RoomDescription"
-import RoomHeading from "../atoms/RoomHeading"
-import RoomSlogan from "../atoms/RoomSlogan"
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '@services/instance';
 
-const MediaGallery = () => {
-    return (
-        <div className="bg-[#f6e6d6] flex flex-col justify-center ">
-            <div className="mb-20">
-                <RoomHeading headingText="Media" />
-                <RoomSlogan slogan="Gallery" />
-                <RoomDescription
-                    description={"A picture speaks a thousand words. Explore our hotel through stunning photographs."} />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-28 py-20 bg-[#ffeedc] ">
-                {media.map((item, index) => (
-                    <div key={index} className="relative overflow-hidden group">
-                        {/* Image with hover effect */}
-                        <img
-                            src={item.image}
-                            alt={`Media ${index + 1}`}
-                            className="w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-110"
-                        />
-                    </div>
-                ))}
-            </div>
-
-        </div>
-    )
+interface GalleryImage {
+  _id: string;
+  image: string;
+  createdAt: string;
 }
 
-export default MediaGallery
+const GalleryDisplay: React.FC = () => {
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch all gallery images on component mount
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
+  const fetchImages = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get('/api/gallery');
+      setImages(response.data.data || []);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load images');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-4 h-full">
+      <h1 className="text-4xl font-bold text-center mb-6 text-[#5b3423]">Photo Gallery</h1>
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-red-500 text-center mb-4">{error}</p>
+      )}
+
+      {/* Gallery Grid */}
+      {images.length === 0 && !loading ? (
+        <p className="text-center text-gray-500">No images in the gallery yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {images.map((image) => (
+            <div key={image._id} className="relative">
+              <img
+                src={`${import.meta.env.VITE_APP_BASE_URL}${image.image}`}
+                alt="Gallery image"
+                className="w-full h-64 object-cover rounded-lg shadow-md"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="text-center mt-4">
+          <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GalleryDisplay;

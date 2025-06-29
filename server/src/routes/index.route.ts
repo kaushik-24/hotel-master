@@ -17,6 +17,8 @@ import blogPost from './blogPost.route';
 import hall from './hall.route';
 import room from './room.route';
 import hallNumber from './hallNumber.route';
+import gallery from './gallery.route';
+import policy from './policy.route';
 
 interface Route {
     path: string;
@@ -97,7 +99,14 @@ const routes: Route[] = [
         path: "/hallNumber",
         route: hallNumber
     },
-    
+    {
+        path: "/gallery",
+        route: gallery
+    }, 
+    {
+        path: "/policy",
+        route: policy
+    },
 
 ];
 

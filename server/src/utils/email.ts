@@ -5,7 +5,7 @@ interface SendBookingEmailData {
   bookingId: string;
   name: string;
   email: string;
-  roomName: string;
+  roomNames: string;
   checkInDate: string;
   checkOutDate: string;
   numberOfRooms: number;
@@ -33,12 +33,12 @@ export const sendBookingConfirmationEmail = async (data: SendBookingEmailData) =
     doc.moveDown();
     doc.fontSize(12);
     doc.text(`Booking ID: ${data.bookingId}`);
-    doc.text(`Room: ${data.roomName}`);
+    doc.text(`Room: ${data.roomNames}`);
     doc.text(`Check-in: ${data.checkInDate || 'Not specified'}`);
     doc.text(`Check-out: ${data.checkOutDate || 'Not specified'}`);
     doc.text(`Number of Rooms: ${data.numberOfRooms}`);
-    doc.text(`Price per Rooms: ${data.roomPrice.toFixed(2)}`);
-    doc.text(`Total Price: ${data.totalPrice.toFixed(2)}`);
+    doc.text(`Price per Rooms: ${data.roomPrice}`);
+    doc.text(`Total Price: ${data.totalPrice}`);
     doc.moveDown();
     doc.text('Thank you for choosing us!');
     doc.text('Best regards,');
