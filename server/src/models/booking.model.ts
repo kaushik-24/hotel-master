@@ -45,6 +45,10 @@ const bookingSchema = new Schema<IBooking>({
         type: String,
         required: false
   },
+    assignedRoomNumbers: [{
+        type: String,
+        required: true
+  }],
 }, {
     timestamps: true,
 });

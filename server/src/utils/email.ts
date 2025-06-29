@@ -33,7 +33,7 @@ export const sendBookingConfirmationEmail = async (data: SendBookingEmailData) =
     doc.moveDown();
     doc.fontSize(12);
     doc.text(`Booking ID: ${data.bookingId}`);
-    doc.text(`Room: ${data.roomNames}`);
+    doc.text(`Room Type: ${data.roomNames}`);
     doc.text(`Check-in: ${data.checkInDate || 'Not specified'}`);
     doc.text(`Check-out: ${data.checkOutDate || 'Not specified'}`);
     doc.text(`Number of Rooms: ${data.numberOfRooms}`);

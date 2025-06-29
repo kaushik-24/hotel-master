@@ -4,6 +4,9 @@ import Booking from '../models/booking.model';
 import HttpException from "../utils/HttpException.utils";
 import fs from 'fs';
 import path from 'path';
+import Room from '../models/room.model';
+import RoomType from '../models/roomType.model';
+import { Types } from 'mongoose';
 
 interface IPaginatedResult {
     data: IBookingInput[];
@@ -19,7 +22,84 @@ class BookingService {
             fs.mkdirSync(this.uploadDir, { recursive: true });
         }
     }
+    private async assignRandomRooms(roomTypeId: string, roomNames: string, numberOfRooms: number): Promise<string[]> {
+        // Validate roomTypeId is a valid ObjectId
+        if (!Types.ObjectId.isValid(roomTypeId)) {
+            console.error(`Invalid ObjectId format for roomTypeId: ${roomTypeId}`);
+            throw HttpException.badRequest(`Invalid room type ID format: ${roomTypeId}`);
+        }
 
+        // Validate roomType exists
+        const roomType = await RoomType.findById(roomTypeId);
+        if (!roomType) {
+            console.error(`RoomType not found for ID: ${roomTypeId}`);
+            throw HttpException.badRequest(`Room type not found: ${roomTypeId}`);
+        }
+
+        console.log(`Processing roomTypeId: ${roomTypeId}, Room Type Name: ${roomType.name}, Requested Rooms: ${numberOfRooms}`);
+
+        // Check for rooms with invalid roomType values
+        const invalidRooms = await Room.find({ roomType: { $not: { $type: "objectId" } } });
+        if (invalidRooms.length > 0) {
+            console.warn(`Found rooms with invalid roomType values:`, invalidRooms.map(r => ({ roomNumber: r.roomNumber, roomType: r.roomType })));
+        }
+
+        // Fetch available rooms for the given room type
+        const availableRooms = await Room.find({
+            roomType: roomNames,
+            isAvailable: true,
+        }).select('roomNumber');
+
+        console.log(`Available rooms for roomType ${roomTypeId} (${roomType.name}):`, availableRooms.map(r => r.roomNumber));
+
+        if (availableRooms.length === 0) {
+            throw HttpException.badRequest(`No rooms available for room type "${roomType.name}" (ID: ${roomTypeId})`);
+        }
+
+        if (availableRooms.length < numberOfRooms) {
+            throw HttpException.badRequest(`Only ${availableRooms.length} rooms available for "${roomType.name}" (ID: ${roomTypeId}), but ${numberOfRooms} requested`);
+        }
+
+        // Shuffle and select required number of rooms
+        const shuffled = availableRooms.sort(() => 0.5 - Math.random());
+        const assignedRooms = shuffled.slice(0, numberOfRooms).map(room => room.roomNumber);
+
+        // Mark rooms as unavailable
+        await Room.updateMany(
+            { roomType: roomNames, roomNumber: { $in: assignedRooms } },
+            { $set: { isAvailable: false } }
+        );
+
+        console.log(`Assigned rooms for roomType ${roomTypeId} (${roomType.name}):`, assignedRooms);
+
+        return assignedRooms;
+    }
+    
+     async checkOutBooking(bookingId: string) {
+        try {
+            const booking = await Booking.findById(bookingId);
+            if (!booking) {
+                throw HttpException.notFound("Booking not found");
+            }
+
+            // Mark assigned rooms as available
+            await Room.updateMany(
+                { roomType: booking.roomNames, roomNumber: { $in: booking.assignedRoomNumbers } },
+                { $set: { isAvailable: true } }
+            );
+
+            // Optionally delete the booking
+            await Booking.findByIdAndDelete(bookingId);
+
+            console.log(`Booking ${bookingId} checked out successfully, rooms marked available: ${booking.assignedRoomNumbers}`);
+            return { message: "Booking checked out successfully" };
+        } catch (error: any) {
+            console.error("Check-out Error:", error.message, error.stack);
+            throw HttpException.badRequest(error?.message || "Failed to check out booking");
+        }
+    }
+
+    
     async createBooking(data: IBookingInput, file?: Express.Multer.File) {
         try {
             let idImagePath: string | undefined;
@@ -29,7 +109,12 @@ class BookingService {
                 throw HttpException.badRequest("No image file provided");
             }
 
-            const bookingData = { ...data, idImage: idImagePath };
+             const roomType = await RoomType.findById(data.rooms);
+            if (!roomType) throw HttpException.notFound("Room type not found");
+
+            const assignedRoomNumbers = await this.assignRandomRooms(data.rooms, data.roomNames, data.numberOfRoom);
+
+            const bookingData = { ...data, idImage: idImagePath, assignedRoomNumbers };
             const bookingResponse = await Booking.create(bookingData);
             console.log("Booking Created:", bookingResponse);
             return bookingResponse;

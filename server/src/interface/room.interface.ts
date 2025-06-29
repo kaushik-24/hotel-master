@@ -21,6 +21,6 @@ export interface IRoom {
     roomType: mongoose.Schema.Types.ObjectId,
     floor: string,
     status: string,
-    isActive: Boolean,
+    isAvailable: Boolean,
 }
 

@@ -21,6 +21,10 @@ const roomSchema = new Schema<IRoom>({
     required: true,
     unique: false
   },
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
   },        { timestamps: true }
 );
 
