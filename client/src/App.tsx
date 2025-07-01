@@ -13,6 +13,7 @@ import AllPolicies from "@ui/admin/pages/AllPolicy"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
 import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
+import ContactSection from "@ui/admin/pages/cms/CreateContact"
 import GalleryComponent from "@ui/admin/pages/cms/CreateGallery"
 import CmsHomePage from "@ui/admin/pages/cms/HomeConfigs"
 import CreateHallNumber from "@ui/admin/pages/CreateHalls"
@@ -213,6 +214,7 @@ const router = createBrowserRouter([
       { path: 'blogs/create', element: <CreateBlogPost /> },
       { path: 'blogs/edit/:blogPostId', element: <CreateBlogPost /> },
       { path: 'gallery', element: <GalleryComponent /> },
+      { path: 'contact', element: <ContactSection /> },
       { path: 'policy', element: <AllPolicies /> },
       { path: 'policy/create', element: <CreatePolicy /> },
       { path: 'policy/edit/:policyId', element: <CreatePolicy /> },

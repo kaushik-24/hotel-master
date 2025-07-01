@@ -19,6 +19,7 @@ import room from './room.route';
 import hallNumber from './hallNumber.route';
 import gallery from './gallery.route';
 import policy from './policy.route';
+import contact from './contact.route';
 
 interface Route {
     path: string;
@@ -106,6 +107,10 @@ const routes: Route[] = [
     {
         path: "/policy",
         route: policy
+    },
+    {
+        path: "/contact",
+        route: contact
     },
 
 ];

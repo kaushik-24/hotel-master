@@ -4,8 +4,32 @@ import RoomHeading from "../atoms/RoomHeading"
 import RoomSlogan from "../atoms/RoomSlogan"
 import ContactInfo from "../molecules/ContactInfo"
 import OurLocation from "../molecules/OurLocation"
+import { useEffect, useState } from "react"
+import axiosInstance from "@services/instance"
+
+interface ContactData {
+  heading1: string;
+  heading2: string;
+  contactImage: string;
+}
 
 const Contact = () => {
+    
+    const [contactData, setContactData] = useState<ContactData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        const response = await axiosInstance.get("/api/contact");
+        setContactData(response.data.data);
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to fetch contact data");
+      }
+    };
+    fetchContactData();
+  }, []);
+
     return (
         <div className=" bg-[#f6e6d6] flex flex-col justify-center ">
             <div className="mb-10">
