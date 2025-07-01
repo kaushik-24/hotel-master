@@ -23,7 +23,7 @@ const OurLocation = () => {
       doubleClickZoom: true, // Double-click zoom
       boxZoom: true, // Shift-drag zoom
       fullscreenControl: true, // Fullscreen toggle
-    });
+    } as any);
     mapInstanceRef.current = map;
 
     // Try Stamen Terrain tiles first
@@ -115,6 +115,7 @@ const OurLocation = () => {
 
     // Scale control
     L.control.scale({ metric: true, imperial: false }).addTo(map);
+
 
     // Custom map style
     const style = document.createElement("style");

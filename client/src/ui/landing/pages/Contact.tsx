@@ -8,8 +8,6 @@ import { useEffect, useState } from "react"
 import axiosInstance from "@services/instance"
 
 interface ContactData {
-  heading1: string;
-  heading2: string;
   contactImage: string;
 }
 
@@ -40,7 +38,7 @@ const Contact = () => {
             </div>
 
             <div className="px-20 md:px-32 mt-20">
-                <img src={image?.contact} alt="" />
+                <img src={`${import.meta.env.VITE_APP_BASE_URL}${contactData?.contactImage}`} alt="" />
             </div>
 
             <ContactInfo />
