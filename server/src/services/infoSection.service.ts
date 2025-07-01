@@ -13,6 +13,7 @@ class InfoSectionService {
             if (!infoSection) {
                 // Create a default info section if none exists
                 infoSection = await InfoSection.create({
+                    name: "",
                     address: "",
                     phoneNumbers: [],
                     whatsapp: "",

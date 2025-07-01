@@ -16,6 +16,12 @@ const Social: React.FC = () => {
         tripAdvisor: "example@tripAdvisor",
         whatsApp: "example@whatsApp",
     });
+    
+    // Ensure the URL is absolute by prepending https:// if no protocol is present
+    const formatUrl = (url: string): string => {
+    if (!url) return "#"; // Fallback for empty URLs
+    return url.match(/^https?:\/\//) ? url : `https://${url}`;
+  };
 
     // Fetch the social media links from the API
     useEffect(() => {
@@ -36,7 +42,7 @@ const Social: React.FC = () => {
         <div className="flex items justify-center gap-x-3 ">
             {/* Facebook */}
             {socialLinks.facebook && (
-                <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer">
+                <a href={formatUrl(socialLinks.facebook)} target="_blank" rel="noopener noreferrer">
                     <p className="bg-[#6f4028] rounded-full p-2 hover:bg-white hover:text-black">
                         <FaFacebookF className="text-[#ffeedc] hover:text-black" />
                     </p>
@@ -45,7 +51,7 @@ const Social: React.FC = () => {
 
             {/* Instagram */}
             {socialLinks.instagram && (
-                <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                <a href={formatUrl(socialLinks.instagram)} target="_blank" rel="noopener noreferrer">
                     <p className="bg-[#6f4028] rounded-full p-2 hover:bg-white hover:text-black">
                         <FaInstagram className="text-[#ffeedc] hover:text-black" />
                     </p>
@@ -54,7 +60,7 @@ const Social: React.FC = () => {
 
             {/* TripAdvisor */}
             {socialLinks.tripAdvisor && (
-                <a href={socialLinks.tripAdvisor} target="_blank" rel="noopener noreferrer">
+                <a href={formatUrl(socialLinks.tripAdvisor)} target="_blank" rel="noopener noreferrer">
                     <p className="bg-[#6f4028] rounded-full p-2 hover:bg-white hover:text-black">
                         <FaTripadvisor className="text-[#ffeedc] hover:text-black" />
                     </p>
@@ -63,7 +69,7 @@ const Social: React.FC = () => {
 
             {/* WhatsApp */}
             {socialLinks.whatsApp && (
-                <a href={socialLinks.whatsApp} target="_blank" rel="noopener noreferrer">
+                <a href={formatUrl(socialLinks.whatsApp)} target="_blank" rel="noopener noreferrer">
                     <p className="bg-[#6f4028] rounded-full p-2 hover:bg-white hover:text-black">
                         <FaWhatsapp className="text-[#ffeedc] hover:text-black" />
                     </p>

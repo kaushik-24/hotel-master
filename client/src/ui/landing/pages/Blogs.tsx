@@ -69,7 +69,7 @@ const slugify = (text: string): string => {
                     <div className='group bg-[#ffeedc] flex flex-col  ' key={index}>
                         <div className="  flex justify-center items-center overflow-hidden ">
                             <img src={`${import.meta.env.VITE_APP_BASE_URL}${blogs.image}`} alt=""
-                                className="group-hover:opacity-90 object-contain transform transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                className="w-52 h-42 group-hover:opacity-90 object-contain transform transition-transform duration-300 ease-in-out group-hover:scale-110"
                             />
                         </div>
 

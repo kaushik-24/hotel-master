@@ -20,6 +20,8 @@ import hallNumber from './hallNumber.route';
 import gallery from './gallery.route';
 import policy from './policy.route';
 import contact from './contact.route';
+import location from './location.route';
+import aboutUs from './aboutUs.route';
 
 interface Route {
     path: string;
@@ -112,6 +114,14 @@ const routes: Route[] = [
         path: "/contact",
         route: contact
     },
+    {
+        path: "/location",
+        route: location
+    },
+    {
+        path: "/aboutUs",
+        route: aboutUs
+  },
 
 ];
 

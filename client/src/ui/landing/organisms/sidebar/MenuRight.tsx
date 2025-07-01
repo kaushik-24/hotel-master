@@ -15,10 +15,7 @@ const MenuRight: React.FC<MenuProps> = ({ onClose }) => {
                 <div className="flex-1">
                     <ul className="font-nanum flex flex-col gap-y-2 text-[28px]">
                         <li className="hover:underline">Places & Sights</li>
-                        <li className="hover:underline">Eat & Drink</li>
-                        <li className="hover:underline">Infinity Pool</li>
                         <li className="hover:underline">Conference</li>
-                        <li className="hover:underline">Wellness</li>
                         <li className="hover:underline">Offers</li>
                     </ul>
 

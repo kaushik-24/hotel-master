@@ -7,7 +7,7 @@ import FooterNavList from "../molecules/FooterNavList"
 
 const Footer = () => {
     return (
-        <div className=" bg-[#ffeedc] flex flex-col md:flex-row w-full justify-between items-center h-fit">
+        <div className=" bg-[#ffeedc] flex flex-col md:flex-row w-auto justify-between items-center h-auto">
             <div className="text-[#543421] flex-1 flex flex-col px-20 items-center  ">
                 <div className="flex flex-row justify-center items-center w-full">
                     <div className="flex-1">
@@ -34,7 +34,7 @@ const Footer = () => {
             </div>
 
             <div className="hidden flex-1 md:flex justify-end ">
-                <img src={image.footerImage} className="h-[700px]" />
+                <img src={image.footerImage} className="h-[500px]" />
             </div>
         </div>
     )

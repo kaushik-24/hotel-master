@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IoAddCircleOutline, IoTrashOutline } from "react-icons/io5";
 
 interface SiteInfoForm {
+    name: string;
     enquiryEmail: string;
     contactEmail: string;
     address: string;
@@ -27,6 +28,7 @@ const SiteInfoSection = () => {
 
                 if (response.data) {
                     const siteInfo = response.data.data;
+                    setValue("name", siteInfo.name|| "");
                     setValue("enquiryEmail", siteInfo.enquiryEmail || "");
                     setValue("contactEmail", siteInfo.contactEmail || "");
                     setValue("address", siteInfo.address || "");
@@ -95,6 +97,10 @@ const SiteInfoSection = () => {
     return (
         <div className="p-4">
             <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="mb-4">
+                    <Label textSize="text-sm" fontSize="font-normal" textColor="text-black" name="name" label="Hotel Name" />
+                    <InputField name="name" type="text" register={register} />
+                </div>
                 <div className="mb-4">
                     <Label textSize="text-sm" fontSize="font-normal" textColor="text-black" name="enquiryEmail" label="Enquiry Email" />
                     <InputField name="enquiryEmail" type="email" register={register} />

@@ -3,26 +3,55 @@ import L, { Map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-fullscreen/dist/leaflet.fullscreen.css";
 import "leaflet-fullscreen/dist/Leaflet.fullscreen";
+import axiosInstance from "@services/instance";
 
-const OurLocation = () => {
+interface LocationData {
+  name: string;
+  subtitle: string;
+  address: string;
+  location: string;
+}
+
+const LocationMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
   const [startLocation, setStartLocation] = useState("");
+  const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    const fetchLocationData = async () => {
+      try {
+        const response = await axiosInstance.get("/api/location");
+        setLocationData(response.data.data);
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to fetch location data");
+      }
+    };
+    fetchLocationData();
+  }, []);
+
+  useEffect(() => {
+    if (!mapRef.current || !locationData) return;
+
+    // Parse location string (expected format: "lat,lng")
+    const [lat, lng] = locationData.location.split(",").map(coord => parseFloat(coord.trim()));
+    if (isNaN(lat) || isNaN(lng)) {
+      console.error("Invalid location coordinates");
+      return;
+    }
 
     // Initialize Leaflet map
     const map = L.map(mapRef.current, {
-      center: [27.7394404, 85.3392062], // Hotel Shambala coordinates
+      center: [lat, lng],
       zoom: 15,
-      zoomControl: true, // Zoom buttons
-      scrollWheelZoom: true, // Mouse wheel zoom
-      dragging: true, // Enable dragging
-      touchZoom: true, // Touch zoom/pan
-      doubleClickZoom: true, // Double-click zoom
-      boxZoom: true, // Shift-drag zoom
-      fullscreenControl: true, // Fullscreen toggle
+      zoomControl: true,
+      scrollWheelZoom: true,
+      dragging: true,
+      touchZoom: true,
+      doubleClickZoom: true,
+      boxZoom: true,
+      fullscreenControl: true,
     } as any);
     mapInstanceRef.current = map;
 
@@ -69,19 +98,16 @@ const OurLocation = () => {
       shadowSize: [41, 41],
     });
 
-    // Hotel Shambala marker with styled popup
-    L.marker([27.7394404, 85.3392062], { icon: customIcon })
+    // Main location marker with styled popup
+    L.marker([lat, lng], { icon: customIcon })
       .addTo(map)
       .bindPopup(
         `
         <div style="font-family: 'Nanum Myeongjo', serif; color: #5b3423; background: #ffeedc; padding: 10px; border-radius: 5px; text-align: center; max-width: 200px;">
-          <img src="/images/hotel-shambala-logo.png" alt="Bhat-Bhateni Logo" style="height: 40px; margin: 0 auto 5px;" />
-          <h3 style="margin: 0 0 5px; font-size: 16px; font-weight: bold;">Bhat-Bhateni Department Store</h3>
-          <p style="margin: 0; font-size: 14px;">
-           P8QQ+QMG, Ring Rd, Kathmandu 44600 
-          </p>
-          
-          <a href="https://www.google.com/maps/dir/?api=1&destination=27.7394404, 85.3392062" target="_blank" style="color: #019cec; text-decoration: none; font-size: 14px; display: block; margin-top: 5px;">
+          <img src="/images/hotel-shambala-logo.png" alt="${locationData.name} Logo" style="height: 40px; margin: 0 auto 5px;" />
+          <h3 style="margin: 0 0 5px; font-size: 16px; font-weight: bold;">${locationData.name}</h3>
+          <p style="margin: 0; font-size: 14px;">${locationData.address}</p>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" style="color: #019cec; text-decoration: none; font-size: 14px; display: block; margin-top: 5px;">
             Get Directions
           </a>
         </div>
@@ -116,7 +142,6 @@ const OurLocation = () => {
     // Scale control
     L.control.scale({ metric: true, imperial: false }).addTo(map);
 
-
     // Custom map style
     const style = document.createElement("style");
     style.innerHTML = `
@@ -147,17 +172,20 @@ const OurLocation = () => {
       map.remove();
       document.head.removeChild(style);
     };
-  }, []);
+  }, [locationData]);
 
   const handleDirections = (e: React.FormEvent) => {
     e.preventDefault();
-    if (startLocation) {
-      window.open(
-        `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
-          startLocation
-        )}&destination=27.7394404, 85.3392062`,
-        "_blank"
-      );
+    if (startLocation && locationData) {
+      const [lat, lng] = locationData.location.split(",").map(coord => parseFloat(coord.trim()));
+      if (!isNaN(lat) && !isNaN(lng)) {
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
+            startLocation
+          )}&destination=${lat},${lng}`,
+          "_blank"
+        );
+      }
     }
   };
 
@@ -170,17 +198,17 @@ const OurLocation = () => {
           </h1>
         </div>
         <div className="flex-1">
-          <p>
-            Hotel Shambala boasts a strategically advantageous location in the
-            heart of Kathmandu. Situated along the “Embassy road”, within close
-            proximity of all the major embassies and the key attractions of the
-            city, as well as less than half an hour away from the airport as well
-            as a main bus station, the hotel is an ideal choice for both business
-            and leisure travelers. Whether travelers are seeking to explore the
-            city’s rich heritage, conduct business, or simply unwind, our location
-            ensures that they’re always well-placed to make the most of their stay
-            in Kathmandu.
-          </p>
+          {error ? (
+            <p className="text-red-500">{error}</p>
+          ) : locationData ? (
+            <>
+              <h2 className="font-nanum text-xl font-bold text-[#5b3423] mb-2">{locationData.name}</h2>
+              <p className="text-[#5b3423] mb-2">{locationData.subtitle}</p>
+              <p className="text-[#5b3423]">{locationData.address}</p>
+            </>
+          ) : (
+            <p className="text-[#5b3423]">Loading location data...</p>
+          )}
         </div>
       </div>
 
@@ -196,7 +224,7 @@ const OurLocation = () => {
           />
           <button
             type="submit"
-            className="font-nanum px-4 py-2  text-[#5b3423] border-[#5b3423] border rounded-md hover:bg-[#5b3423] hover:text-white"
+            className="font-nanum px-4 py-2 text-[#5b3423] border-[#5b3423] border rounded-md hover:bg-[#5b3423] hover:text-white"
           >
             Get Directions
           </button>
@@ -211,4 +239,4 @@ const OurLocation = () => {
   );
 };
 
-export default OurLocation;
+export default LocationMap;

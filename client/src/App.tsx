@@ -1,4 +1,5 @@
 
+import IntroAboutUsForm from "@ui/admin/organisms/AboutIntro"
 import AccommodationForm from "@ui/admin/organisms/accommodation"
 import CreateBlogPost from "@ui/admin/organisms/blogPost"
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
@@ -12,6 +13,7 @@ import AllHalls from "@ui/admin/pages/AllHalls"
 import AllPolicies from "@ui/admin/pages/AllPolicy"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
+import CmsAboutPage from "@ui/admin/pages/cms/CreateAboutUs"
 import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
 import ContactSection from "@ui/admin/pages/cms/CreateContact"
 import GalleryComponent from "@ui/admin/pages/cms/CreateGallery"
@@ -215,6 +217,7 @@ const router = createBrowserRouter([
       { path: 'blogs/edit/:blogPostId', element: <CreateBlogPost /> },
       { path: 'gallery', element: <GalleryComponent /> },
       { path: 'contact', element: <ContactSection /> },
+      { path: 'aboutUs', element: <CmsAboutPage /> },
       { path: 'policy', element: <AllPolicies /> },
       { path: 'policy/create', element: <CreatePolicy /> },
       { path: 'policy/edit/:policyId', element: <CreatePolicy /> },
@@ -230,10 +233,19 @@ const router = createBrowserRouter([
           {path: 'places-sights', element: <PlacesSights />},
         ]
       },
-            { path: 'pages/create', element: <CreatePage /> },
+
+      {
+        path: '/admin/cms/aboutUs',
+        children: [
+          {path: 'intro', element: <IntroAboutUsForm />},
+          {path: 'home-about-us', element: <HomeAboutUsForm />},
+          {path: 'accommodation', element: <AccommodationForm />},
+          {path: 'places-sights', element: <PlacesSights />},
+        ]
+      },
+      
+      { path: 'pages/create', element: <CreatePage /> },
       { path: 'pages/edit/:pageId', element: <CreatePage /> }, // Reusing the CreateRoom component for editing
-
-
       { path: 'users', element: <ManageAdmin /> },
       { path: 'users/create', element: <CreateAdmin /> },
       { path: 'users/edit/:id', element: <CreateAdmin /> },
