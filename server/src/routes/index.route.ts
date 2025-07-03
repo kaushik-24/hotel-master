@@ -22,6 +22,8 @@ import policy from './policy.route';
 import contact from './contact.route';
 import location from './location.route';
 import aboutUs from './aboutUs.route';
+import history from './history.route';
+import questValues from './questValues.route';
 
 interface Route {
     path: string;
@@ -121,7 +123,15 @@ const routes: Route[] = [
     {
         path: "/aboutUs",
         route: aboutUs
-  },
+    },
+    {
+        path: "/history",
+        route: history
+    },
+    {
+        path: "/questValues",
+        route: questValues
+    },
 
 ];
 

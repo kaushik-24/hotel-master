@@ -8,7 +8,7 @@ export interface IBooking extends mongoose.Document {
     rooms?: string[]; // Changed from ObjectId[] to string[]
     roomNames?: string[];
     assignedRoomNumbers?: string[];
-    checkInDate?: Date;
-    checkOutDate?: Date;
+    checkInDate: string;
+    checkOutDate: string;
     idImage?: string;
 }

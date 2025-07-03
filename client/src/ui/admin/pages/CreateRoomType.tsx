@@ -3,7 +3,7 @@ import InputField from "@ui/common/atoms/InputField";
 import Label from "@ui/common/atoms/Label";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaArrowLeft} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,7 +17,7 @@ interface RoomData {
   name: string;
   price: number;
   shortdesc: string;
-  features: string[]; // Stores facility names
+  features: string[];
   roomImage: string;
   capacity: number;
   heading: string;
@@ -36,27 +36,28 @@ const CreateRoomType = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch facilities from backend
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
         const response = await axiosInstance.get('/api/facility');
-        setFacilities(response.data);
-      } catch (error) {
+        setFacilities(response.data || []);
+        setError(null);
+      } catch (error: any) {
         console.error("Error fetching facilities:", error);
+        setError(error.response?.data?.message || "Failed to fetch facilities");
       }
     };
     fetchFacilities();
   }, []);
 
-  // Fetch room data for editing
   useEffect(() => {
     const fetchRoomData = async () => {
       if (roomTypeId) {
         try {
           const response = await axiosInstance.get(`/api/roomType/${roomTypeId}`);
-          const roomData = response.data.data;
+          const roomData = response.data.data.roomType;
           setValue("name", roomData.name || "");
           setValue("price", roomData.price || 0);
           setValue("shortdesc", roomData.shortdesc || "");
@@ -69,22 +70,22 @@ const CreateRoomType = () => {
           if (roomData.roomImage) {
             setImagePreview(`${import.meta.env.VITE_APP_BASE_URL}${roomData.roomImage}`);
           }
-        } catch (error) {
+          setError(null);
+        } catch (error: any) {
           console.error("Error fetching room data:", error);
+          setError(error.response?.data?.message || "Failed to fetch room type data");
         }
       }
     };
     fetchRoomData();
   }, [roomTypeId, setValue]);
 
-  // Clean up image preview
   useEffect(() => {
     return () => {
       if (imagePreview) URL.revokeObjectURL(imagePreview);
     };
   }, [imagePreview]);
 
-  // Handle file input for room image
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
@@ -96,7 +97,6 @@ const CreateRoomType = () => {
     }
   };
 
-  // Handle facility selection
   const handleFacilityChange = (facilityName: string, checked: boolean) => {
     const updatedFacilities = checked
       ? [...selectedFacilities, facilityName]
@@ -105,7 +105,6 @@ const CreateRoomType = () => {
     setValue("features", updatedFacilities);
   };
 
-  // Handle form submission
   const onSubmit = async (data: RoomData) => {
     try {
       const formData = new FormData();
@@ -130,15 +129,16 @@ const CreateRoomType = () => {
         });
       }
       navigate("/admin/hotel/roomType", { replace: true });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting room type data:", error);
+      setError(error.response?.data?.message || "Failed to save room type");
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow-md rounded-lg p-6">
-       <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800 flex items-center">
             <MdOutlineBedroomParent className="mr-2 text-blue-600" />
             {roomTypeId ? 'Edit Room Type' : 'Create Room Type'}
@@ -149,9 +149,13 @@ const CreateRoomType = () => {
           >
             <FaArrowLeft className="mr-1" /> Back to List
           </button>
-      </div>
+        </div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Basic Information Section */}
           <div className="mb-8 bg-[#e4e4f4] p-4 rounded-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b-2 border-[#019cec] pb-2">
               Basic Information
@@ -196,7 +200,6 @@ const CreateRoomType = () => {
             </div>
           </div>
 
-          {/* Features Section */}
           <div className="mb-8 bg-[#e4e4f4] p-4 rounded-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b-2 border-[#019cec] pb-2">
               Features
@@ -204,25 +207,27 @@ const CreateRoomType = () => {
             <div>
               <Label name="features" label="Select Facilities" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {facilities.map((facility) => (
-                  <label key={facility._id} className="flex items-center space-x-2 text-sm">
-                    <input
-                      type="checkbox"
-                      value={facility.name}
-                      checked={selectedFacilities.includes(facility.name)}
-                      onChange={(e) => handleFacilityChange(facility.name, e.target.checked)}
-                      className="h-4 w-4 text-[#019cec] border-gray-300 rounded focus:ring-[#019cec]"
-                    />
-                    <span>{facility.name}</span>
-                  </label>
-                ))}
+                {facilities.length === 0 ? (
+                  <p className="text-gray-500 text-sm">No facilities available</p>
+                ) : (
+                  facilities.map((facility) => (
+                    <label key={facility._id} className="flex items-center space-x-2 text-sm">
+                      <input
+                        type="checkbox"
+                        value={facility.name}
+                        checked={selectedFacilities.includes(facility.name)}
+                        onChange={(e) => handleFacilityChange(facility.name, e.target.checked)}
+                        className="h-4 w-4 text-[#019cec] border-gray-300 rounded focus:ring-[#019cec]"
+                      />
+                      <span>{facility.name}</span>
+                    </label>
+                  ))
+                )}
               </div>
               {errors.features && <p className="text-red-500 text-sm mt-1">{errors.features.message}</p>}
-                          
             </div>
           </div>
 
-          {/* Descriptions Section */}
           <div className="mb-8 bg-[#e4e4f4] p-4 rounded-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b-2 border-[#019cec] pb-2">
               Descriptions <span className="text-gray-500 text-sm">(for room pages)</span>
@@ -241,7 +246,7 @@ const CreateRoomType = () => {
                 {errors.heading && <p className="text-red-500 text-sm mt-1">{errors.heading.message}</p>}
               </div>
               <div>
-                <Label name="shortdesc" label="Short Description"  />
+                <Label name="shortdesc" label="Short Description" />
                 <InputField
                   name="shortdesc"
                   type="text"
@@ -253,7 +258,7 @@ const CreateRoomType = () => {
                 {errors.shortdesc && <p className="text-red-500 text-sm mt-1">{errors.shortdesc.message}</p>}
               </div>
               <div>
-                <Label name="longdesc" label="Long Description"  />
+                <Label name="longdesc" label="Long Description" />
                 <textarea
                   placeholder="Enter long description"
                   {...register("longdesc", { required: "Long description is required" })}
@@ -265,13 +270,12 @@ const CreateRoomType = () => {
             </div>
           </div>
 
-          {/* Media Section */}
           <div className="mb-8 bg-[#e4e4f4] p-4 rounded-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b-2 border-[#019cec] pb-2">
               Media
             </h3>
             <div>
-              <Label name="roomImage" label="Room Image"  />
+              <Label name="roomImage" label="Room Image" />
               <input
                 type="file"
                 accept="image/*"
@@ -301,7 +305,6 @@ const CreateRoomType = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-end gap-4">
             <button
               type="button"

@@ -14,7 +14,7 @@ interface RoomType {
 
 interface RoomData {
   roomNumber: string;
-  roomType: string; // Store room type name instead of ID
+  roomType: string; // Stores room type ID
   floor: string;
 }
 
@@ -23,23 +23,35 @@ const CreateRoom = () => {
   const { roomId } = useParams();
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<RoomData>({
     defaultValues: {
+      roomNumber: "",
+      roomType: "",
+      floor: "",
     },
   });
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch room types from backend
   useEffect(() => {
     const fetchRoomTypes = async () => {
+      setLoading(true);
       try {
         const response = await axiosInstance.get('/api/roomType');
-        const roomTypeData = response.data?.data;
+        const roomTypeData = response.data.data.roomTypes;
         if (Array.isArray(roomTypeData)) {
+          console.log("Fetched room types:", roomTypeData); // Debug log
           setRoomTypes(roomTypeData);
+          setError(null);
         } else {
-          console.error("Unexpected room type data format");
+          console.error("Unexpected room type data format:", response.data);
+          setError("Failed to load room types: Unexpected data format");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching room types:", error);
+        setError(error.response?.data?.message || "Failed to load room types");
+      } finally {
+        setLoading(false);
       }
     };
     fetchRoomTypes();
@@ -52,12 +64,14 @@ const CreateRoom = () => {
         try {
           const response = await axiosInstance.get(`/api/room/${roomId}`);
           const roomData = response.data.data;
+          console.log("Fetched room data:", roomData); // Debug log
           setValue("roomNumber", roomData.roomNumber || "");
-          // Assuming the backend returns the room type name or we fetch it separately
-          setValue("roomType", roomData.roomTypeName || ""); // Adjust based on backend response
+          setValue("roomType", roomData.roomType || "");
           setValue("floor", roomData.floor || "");
-        } catch (error) {
+          setError(null);
+        } catch (error: any) {
           console.error("Error fetching room data:", error);
+          setError(error.response?.data?.message || "Failed to fetch room data");
         }
       }
     };
@@ -67,20 +81,24 @@ const CreateRoom = () => {
   // Handle form submission
   const onSubmit = async (data: RoomData) => {
     try {
+      console.log("Submitting room data:", data); // Debug log
       const payload = {
         roomNumber: data.roomNumber,
-        roomType: data.roomType, // Send room type name
+        roomType: data.roomType,
         floor: data.floor,
       };
-
       if (roomId) {
         await axiosInstance.put(`/api/room/${roomId}`, payload);
       } else {
         await axiosInstance.post("/api/room", payload);
       }
       navigate("/admin/hotel/rooms", { replace: true });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting room data:", error);
+      const message = error.response?.data?.message?.includes("Cast to ObjectId failed")
+        ? "Invalid room type selected. Please choose a valid room type."
+        : error.response?.data?.message || "Failed to save room";
+      setError(message);
     }
   };
 
@@ -99,55 +117,64 @@ const CreateRoom = () => {
             <FaArrowLeft className="mr-1" /> Back to List
           </button>
         </div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Basic Information Section */}
           <div className="mb-8 bg-[#e4e4f4] p-4 rounded-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b-2 border-[#019cec] pb-2">
               Basic Information
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label name="roomNumber" label="Room Number" />
-                <InputField
-                  name="roomNumber"
-                  type="text"
-                  placeholder="Enter room number"
-                  register={register}
-                  required="Room number is required"
-                  className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
-                />
-                {errors.roomNumber && <p className="text-red-500 text-sm mt-1">{errors.roomNumber.message}</p>}
+            {loading ? (
+              <p className="text-gray-500 text-sm">Loading room types...</p>
+            ) : roomTypes.length === 0 ? (
+              <p className="text-red-500 text-sm">No room types available. Please create a room type first.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label name="roomNumber" label="Room Number" />
+                  <InputField
+                    name="roomNumber"
+                    type="text"
+                    placeholder="Enter room number"
+                    register={register}
+                    required="Room number is required"
+                    className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
+                  />
+                  {errors.roomNumber && <p className="text-red-500 text-sm mt-1">{errors.roomNumber.message}</p>}
+                </div>
+                <div>
+                  <Label name="floor" label="Floor" />
+                  <InputField
+                    name="floor"
+                    type="text"
+                    placeholder="Enter floor number"
+                    register={register}
+                    required="Floor is required"
+                    className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
+                  />
+                  {errors.floor && <p className="text-red-500 text-sm mt-1">{errors.floor.message}</p>}
+                </div>
+                <div>
+                  <Label name="roomType" label="Room Type" />
+                  <select
+                    {...register("roomType", { required: "Room type is required" })}
+                    className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20 text-sm"
+                  >
+                    <option value="">Select a room type</option>
+                    {roomTypes.map((roomType) => (
+                      <option key={roomType._id} value={roomType._id}>
+                        {roomType.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.roomType && <p className="text-red-500 text-sm mt-1">{errors.roomType.message}</p>}
+                </div>
               </div>
-              <div>
-                <Label name="floor" label="Floor" />
-                <InputField
-                  name="floor"
-                  type="text"
-                  placeholder="Enter floor number"
-                  register={register}
-                  required="Floor is required"
-                  className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20"
-                />
-                {errors.floor && <p className="text-red-500 text-sm mt-1">{errors.floor.message}</p>}
-              </div>
-              <div>
-                <Label name="roomType" label="Room Type" />
-                <select
-                  {...register("roomType", { required: "Room type is required" })}
-                  className="w-full bg-white p-3 border border-gray-300 rounded-md focus:border-[#019cec] focus:ring-2 focus:ring-[#019cec]/20 text-sm"
-                >
-                  <option value="">Select a room type</option>
-                  {roomTypes.map((roomType) => (
-                    <option key={roomType._id} value={roomType.name}>
-                      {roomType.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.roomType && <p className="text-red-500 text-sm mt-1">{errors.roomType.message}</p>}
-              </div>
-              
-              
-            </div>
+            )}
           </div>
 
           {/* Submit Button */}
@@ -162,6 +189,7 @@ const CreateRoom = () => {
             <button
               type="submit"
               className="px-6 py-2 bg-[#019cec] rounded-md text-white font-poppins hover:bg-[#017a9b] transition-colors"
+              disabled={loading || roomTypes.length === 0}
             >
               {roomId ? "Update Room" : "Create Room"}
             </button>

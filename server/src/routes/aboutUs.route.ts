@@ -5,10 +5,10 @@ import path from "path";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Save files to 'Uploads' directory
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -17,8 +17,7 @@ const upload = multer({ storage });
 const router = Router();
 
 router.get("/", AboutUsController.getAboutUs);
-router.post("/", upload.single("image"), AboutUsController.createAboutUs);
-router.put("/", upload.single("image"), AboutUsController.updateAboutUs);
-router.delete("/", AboutUsController.deleteAboutUs);
+router.post("/", upload.single("aboutUsImage"), AboutUsController.createAboutUs);
+router.put("/", upload.single("aboutUsImage"), AboutUsController.updateAboutUs);
 
 export default router;

@@ -1,32 +1,32 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface IAboutUs {
+  heading1: string;
+  heading2: string;
   subtitle: string;
-  heading: string;
-  subheading: string;
-  description1: string;
-  image?: string; // Base64 encoded image
+  description: string;
+  aboutUsImage?: string;
 }
 
 const aboutUsSchema = new Schema<IAboutUs>(
   {
+    heading1: {
+      type: String,
+      required: true,
+    },
+    heading2: {
+      type: String,
+      required: true,
+    },
     subtitle: {
       type: String,
       required: true,
     },
-    heading: {
+    description: {
       type: String,
       required: true,
     },
-    subheading: {
-      type: String,
-      required: true,
-    },
-    description1: {
-      type: String,
-      required: false,
-    },
-    image: {
+    aboutUsImage: {
       type: String,
       required: false,
     },

@@ -8,7 +8,6 @@ const AboutUs = () => {
         <div>
             <AboutIntro />
             <OurHistory />
-            <TibetianTouch />
             <QuestAndValues />
 
         </div>

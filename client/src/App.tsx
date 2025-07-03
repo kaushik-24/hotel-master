@@ -1,12 +1,14 @@
 
-import IntroAboutUsForm from "@ui/admin/organisms/AboutIntro"
+import AboutUsForm from "@ui/admin/organisms/AboutIntro"
 import AccommodationForm from "@ui/admin/organisms/accommodation"
 import CreateBlogPost from "@ui/admin/organisms/blogPost"
 import CreateAdmin from "@ui/admin/organisms/CreateAdmin"
 import HeroSection from "@ui/admin/organisms/HeroSection"
+import HistoryForm from "@ui/admin/organisms/history"
 import HomeAboutUsForm from "@ui/admin/organisms/homeAboutUs"
 import OfflineBookingForm from "@ui/admin/organisms/OfflineBooking"
 import PlacesSights from "@ui/admin/organisms/placesSights"
+import QuestAndValuesForm from "@ui/admin/organisms/QuestValues"
 import AdminDashboard from "@ui/admin/pages/AdminDashboard"
 import AllHallNumbers from "@ui/admin/pages/AllHallNumbers"
 import AllHalls from "@ui/admin/pages/AllHalls"
@@ -42,6 +44,7 @@ import DynamicPolicyPage from "@ui/landing/pages/DynamicPolicyPage"
 import DynamicRoomPage from "@ui/landing/pages/DynamicRoomPage"
 import Home from "@ui/landing/pages/Home"
 import GalleryDisplay from "@ui/landing/pages/MediaGallery"
+import Offers from "@ui/landing/pages/Offers"
 import PoliciesPage from "@ui/landing/pages/Policies"
 import Policies from "@ui/landing/pages/Policies"
 import Reviews from "@ui/landing/pages/Reviews"
@@ -158,9 +161,9 @@ const router = createBrowserRouter([
       { path: '/career', element: <Careers /> },
       { path: '/sustainability', element: <Sustainability /> },
       { path: '/review', element: <Reviews /> },
+      { path: '/offers', element: <Offers />},
       { path: '/contact', element: <Contact /> },
       { path: '/policy', element: <Policies /> },
-
       { path: '*', element: <PageNotFound /> },
     ],
   },
@@ -237,10 +240,9 @@ const router = createBrowserRouter([
       {
         path: '/admin/cms/aboutUs',
         children: [
-          {path: 'intro', element: <IntroAboutUsForm />},
-          {path: 'home-about-us', element: <HomeAboutUsForm />},
-          {path: 'accommodation', element: <AccommodationForm />},
-          {path: 'places-sights', element: <PlacesSights />},
+          {path: 'intro', element: <AboutUsForm />},
+          {path: 'history', element: <HistoryForm />},
+          {path: 'questValues', element: <QuestAndValuesForm />},
         ]
       },
       

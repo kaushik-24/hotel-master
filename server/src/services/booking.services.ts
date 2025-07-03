@@ -14,7 +14,7 @@ interface IPaginatedResult {
 }
 
 class BookingService {
-    private readonly uploadDir = path.join(__dirname, '../../uploads');
+    private readonly uploadDir = path.join(__dirname, '../../Uploads');
 
     constructor() {
         // Ensure uploads directory exists
@@ -22,6 +22,7 @@ class BookingService {
             fs.mkdirSync(this.uploadDir, { recursive: true });
         }
     }
+
     private async assignRandomRooms(roomTypeId: string, roomNames: string, numberOfRooms: number): Promise<string[]> {
         // Validate roomTypeId is a valid ObjectId
         if (!Types.ObjectId.isValid(roomTypeId)) {
@@ -46,7 +47,7 @@ class BookingService {
 
         // Fetch available rooms for the given room type
         const availableRooms = await Room.find({
-            roomType: roomNames,
+            roomType: roomTypeId, // Use roomTypeId instead of roomNames
             isAvailable: true,
         }).select('roomNumber');
 
@@ -66,7 +67,7 @@ class BookingService {
 
         // Mark rooms as unavailable
         await Room.updateMany(
-            { roomType: roomNames, roomNumber: { $in: assignedRooms } },
+            { roomType: roomTypeId, roomNumber: { $in: assignedRooms } }, // Use roomTypeId
             { $set: { isAvailable: false } }
         );
 
@@ -74,8 +75,8 @@ class BookingService {
 
         return assignedRooms;
     }
-    
-     async checkOutBooking(bookingId: string) {
+
+    async checkOutBooking(bookingId: string) {
         try {
             const booking = await Booking.findById(bookingId);
             if (!booking) {
@@ -84,7 +85,7 @@ class BookingService {
 
             // Mark assigned rooms as available
             await Room.updateMany(
-                { roomType: booking.roomNames, roomNumber: { $in: booking.assignedRoomNumbers } },
+                { roomType: booking.rooms, roomNumber: { $in: booking.assignedRoomNumbers } }, // Use rooms (RoomType._id)
                 { $set: { isAvailable: true } }
             );
 
@@ -99,17 +100,16 @@ class BookingService {
         }
     }
 
-    
     async createBooking(data: IBookingInput, file?: Express.Multer.File) {
         try {
             let idImagePath: string | undefined;
             if (file) {
-                idImagePath = `/uploads/${file.filename}`;
+                idImagePath = `/Uploads/${file.filename}`;
             } else {
                 throw HttpException.badRequest("No image file provided");
             }
 
-             const roomType = await RoomType.findById(data.rooms);
+            const roomType = await RoomType.findById(data.rooms);
             if (!roomType) throw HttpException.notFound("Room type not found");
 
             const assignedRoomNumbers = await this.assignRandomRooms(data.rooms, data.roomNames, data.numberOfRoom);
@@ -117,6 +117,20 @@ class BookingService {
             const bookingData = { ...data, idImage: idImagePath, assignedRoomNumbers };
             const bookingResponse = await Booking.create(bookingData);
             console.log("Booking Created:", bookingResponse);
+
+            // Send confirmation email
+            await this.sendBookingEmail({
+                bookingId: bookingResponse._id.toString(),
+                name: data.name,
+                email: data.email,
+                roomNames: data.roomNames,
+                checkInDate: data.checkInDate,
+                checkOutDate: data.checkOutDate,
+                numberOfRooms: data.numberOfRoom,
+                roomPrice: roomType.price, // Use actual RoomType price
+                totalPrice: data.totalPrice,
+            });
+
             return bookingResponse;
         } catch (error: any) {
             console.error("Service Error:", error);
@@ -141,7 +155,7 @@ class BookingService {
                     }
                 }
                 // Update with new image path
-                data.idImage = `/uploads/${file.filename}`;
+                data.idImage = `/Uploads/${file.filename}`;
             }
 
             const updatedBooking = await Booking.findByIdAndUpdate(bookingId, data, { new: true });

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaEdit, FaTrash, FaPlus, FaSearch, } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaSearch } from 'react-icons/fa';
 import axiosInstance from '@services/instance';
 
 interface Room {
   _id: string;
   roomNumber: string;
-  roomType: string;
+  roomType: { _id: string; name: string };
+  roomTypeName: string;
   floor: string;
 }
 
@@ -25,6 +26,7 @@ const AllRooms: React.FC = () => {
         params: { search },
       });
       const roomData = response.data?.data;
+      console.log('Fetched rooms:', roomData); // Debug log
       if (Array.isArray(roomData)) {
         setRooms(roomData);
         setError('');
@@ -32,7 +34,7 @@ const AllRooms: React.FC = () => {
         setError('Unexpected data format');
         setRooms([]);
       }
-    } catch (error) {
+    } catch (error: any) {
       setError('Failed to load rooms');
       console.error('Error fetching rooms:', error);
     } finally {
@@ -59,7 +61,7 @@ const AllRooms: React.FC = () => {
       try {
         await axiosInstance.delete(`/api/room/${id}`);
         loadRooms();
-      } catch (error) {
+      } catch (error: any) {
         setError('Failed to delete room');
         console.error('Error deleting room:', error);
       }
@@ -133,9 +135,8 @@ const AllRooms: React.FC = () => {
                   rooms.map(room => (
                     <tr key={room._id} className="border-b hover:bg-gray-50">
                       <td className="py-2 px-3">{room.roomNumber}</td>
-                      <td className='py-2 px-3'>{room.roomType}</td>
+                      <td className="py-2 px-3">{room.roomTypeName || room.roomType?.name || 'Unknown'}</td>
                       <td className="py-2 px-3">{room.floor}</td>
-                      
                       <td className="py-2 px-3">
                         <div className="flex space-x-2">
                           <button
@@ -156,7 +157,7 @@ const AllRooms: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-4 px-4 text-center text-gray-500">
+                    <td colSpan={4} className="py-4 px-4 text-center text-gray-500">
                       No rooms found
                     </td>
                   </tr>
@@ -165,8 +166,7 @@ const AllRooms: React.FC = () => {
             </table>
           )}
         </div>
-
-              </div>
+      </div>
     </div>
   );
 };

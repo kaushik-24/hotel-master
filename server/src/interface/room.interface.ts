@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface IRoomType {
     name: string,
-    price: Number,
+    price: number,
     capacity: Number,
     slug: string,
     shortdesc: string,
@@ -14,11 +14,13 @@ export interface IRoomType {
     heading: string,
     longdesc: string,
     isActive: boolean,
+    discount: number,
 }
 
 export interface IRoom {
     roomNumber: string,
-    roomType: mongoose.Schema.Types.ObjectId,
+    roomType: mongoose.Schema.Types.ObjectId | { _id: string; name: string},
+    roomTypeName: string,
     floor: string,
     status: string,
     isAvailable: Boolean,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaEdit, FaTrash, FaPlus, FaSearch, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaExternalLinkAlt } from 'react-icons/fa';
 import axiosInstance from '@services/instance';
 
 interface Room {
@@ -11,6 +11,9 @@ interface Room {
   price: number;
   shortdesc: string;
   features: string[];
+  discount: number;
+  discountedPrice: number | null;
+  availableRooms: number;
 }
 
 const AllRoomTypes: React.FC = () => {
@@ -23,19 +26,18 @@ const AllRoomTypes: React.FC = () => {
   const loadRooms = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get('/api/roomType', {
-      });
-      const roomData = response.data?.data;
+      const response = await axiosInstance.get('/api/roomType');
+      const roomData = response.data.data.roomTypes;
       if (Array.isArray(roomData)) {
         setRooms(roomData);
         setError('');
       } else {
-        setError('Unexpected data format');
+        setError('Unexpected data format: roomTypes is not an array');
         setRooms([]);
       }
-    } catch (error) {
-      setError('Failed to load rooms');
-      console.error('Error fetching rooms:', error);
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Failed to load room types');
+      console.error('Error fetching room types:', error);
     } finally {
       setLoading(false);
     }
@@ -60,9 +62,9 @@ const AllRoomTypes: React.FC = () => {
       try {
         await axiosInstance.delete(`/api/roomType/${id}`);
         loadRooms();
-      } catch (error) {
-        setError('Failed to delete room');
-        console.error('Error deleting room:', error);
+      } catch (error: any) {
+        setError(error.response?.data?.message || 'Failed to delete room type');
+        console.error('Error deleting room type:', error);
       }
     }
   };
@@ -82,7 +84,6 @@ const AllRoomTypes: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Room Type Management</h1>
           <Link to="/admin/hotel/roomType/create">
@@ -92,14 +93,12 @@ const AllRoomTypes: React.FC = () => {
           </Link>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
             {error}
           </div>
         )}
 
-        {/* Table or Loader */}
         <div className="overflow-x-auto">
           {loading ? (
             <div className="flex justify-center items-center h-32">
@@ -111,8 +110,10 @@ const AllRoomTypes: React.FC = () => {
                 <tr>
                   <th className="py-2 px-3 text-left">Name</th>
                   <th className="py-2 px-3 text-left">Price</th>
+                  <th className="py-2 px-3 text-left">Discount</th>
                   <th className="py-2 px-3 text-left">Capacity</th>
                   <th className="py-2 px-3 text-left">Features</th>
+                  <th className="py-2 px-3 text-left">Available Rooms</th>
                   <th className="py-2 px-3 text-left">Actions</th>
                 </tr>
               </thead>
@@ -121,11 +122,20 @@ const AllRoomTypes: React.FC = () => {
                   rooms.map(room => (
                     <tr key={room._id} className="border-b hover:bg-gray-50">
                       <td className="py-2 px-3">{room.name}</td>
-                      <td className="py-2 px-3">${room.price.toFixed(2)}</td>
-                      <td className="py-2 px-3">{room.capacity}</td>
                       <td className="py-2 px-3">
-                        {room.features.join(', ')}
+                        {room.discount > 0 ? (
+                          <>
+                            <span className="line-through text-gray-500 mr-2">${room.price.toFixed(2)}</span>
+                            <span>${room.discountedPrice?.toFixed(2)}</span>
+                          </>
+                        ) : (
+                          <span>${room.price.toFixed(2)}</span>
+                        )}
                       </td>
+                      <td className="py-2 px-3">{room.discount > 0 ? `${room.discount}%` : 'None'}</td>
+                      <td className="py-2 px-3">{room.capacity}</td>
+                      <td className="py-2 px-3">{room.features.join(', ')}</td>
+                      <td className="py-2 px-3">{room.availableRooms}</td>
                       <td className="py-2 px-3">
                         <div className="flex space-x-2">
                           <button
@@ -154,8 +164,8 @@ const AllRoomTypes: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-4 px-4 text-center text-gray-500">
-                      No rooms found
+                    <td colSpan={7} className="py-4 px-4 text-center text-gray-500">
+                      No room types found
                     </td>
                   </tr>
                 )}
@@ -164,7 +174,6 @@ const AllRoomTypes: React.FC = () => {
           )}
         </div>
 
-        {/* Accommodation Link */}
         <div className="flex items-center gap-4 mt-6">
           <button
             onClick={() => navigate('/admin/cms/home')}

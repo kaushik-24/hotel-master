@@ -8,25 +8,38 @@ import Room from "../models/room.model";
 import Hall from "../models/hall.model";
 import HallNumber from "../models/hallNumber.model";
 
-class CountController{
- // New method for dashboard stats
+class CountController {
   async getDashboardStats(req: Request, res: Response) {
     try {
       const bookingsCount = await Booking.countDocuments();
       const roomsCount = await RoomType.countDocuments();
-      const pagesCount = await Page.countDocuments(); 
-      const rooms = await Room.find().select('roomNumber roomType'); // Fetch all rooms
-      const halls = await HallNumber.find().select('hallNumber hallType');
+      const pagesCount = await Page.countDocuments();
+      const rooms = await Room.find()
+        .select('roomNumber roomType roomTypeName isAvailable')
+        .populate('roomType', 'name')
+        .lean();
+      const halls = await HallNumber.find().select('hallNumber hallType').lean();
       const hallsCount = await Hall.countDocuments();
-      
+
+      // Debug log for raw room data
+      console.log('Raw rooms from DB:', rooms);
+
+      // Ensure isAvailable is a boolean
+      const formattedRooms = rooms.map(room => ({
+        ...room,
+        isAvailable: room.isAvailable !== undefined ? Boolean(room.isAvailable) : true, // Default to true if undefined
+      }));
+
+      console.log('Formatted rooms:', formattedRooms); // Debug log
+
       res.status(StatusCodes.SUCCESS || 200).json({
         status: true,
-        data: { 
-          bookings: bookingsCount, 
-          rooms: roomsCount, 
+        data: {
+          bookings: bookingsCount,
+          rooms: roomsCount,
           pages: pagesCount,
-          roomsList: rooms,
-          halls: hallsCount, 
+          roomsList: formattedRooms,
+          halls: hallsCount,
           hallsList: halls,
         },
         message: Message.fetched,
@@ -40,4 +53,5 @@ class CountController{
     }
   }
 }
+
 export default CountController;

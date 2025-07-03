@@ -30,7 +30,7 @@ const CmsAboutPage: React.FC = () => {
           
           {/* History Section Link */}
           <div className="bg-[#e4e4f4] p-4 rounded-md hover:bg-[#d9d9e9] transition-colors">
-            <Link to="/admin/cms/home/home-about-us" className="flex items-center space-x-4">
+            <Link to="/admin/cms/aboutUs/history" className="flex items-center space-x-4">
               <MdOutlineInfo className="text-3xl text-[#019cec]" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">
@@ -45,7 +45,7 @@ const CmsAboutPage: React.FC = () => {
          
           {/* Quest & Values Section Link */}
           <div className="bg-[#e4e4f4] p-4 rounded-md hover:bg-[#d9d9e9] transition-colors">
-            <Link to="/admin/cms/home/places-sights" className="flex items-center space-x-4">
+            <Link to="/admin/cms/aboutUs/questValues" className="flex items-center space-x-4">
               <MdOutlineTravelExplore className="text-3xl text-[#019cec]" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">

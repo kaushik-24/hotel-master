@@ -11,10 +11,14 @@ const roomSchema = new Schema<IRoom>({
     trim: true
   },
   roomType: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'RoomType',
     required: true,
     unique: false
+  },
+  roomTypeName: {
+    type: String,
+    required: false
   },
   floor: {
     type: String,

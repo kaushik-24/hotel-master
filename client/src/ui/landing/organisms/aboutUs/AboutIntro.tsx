@@ -6,10 +6,10 @@ import RoomSlogan from "@ui/landing/atoms/RoomSlogan";
 
 interface AboutUsData {
   subtitle: string;
-  heading: string;
-  subheading: string;
-  description1: string;
-  image?: string; // Base64 encoded image
+  heading1: string;
+  heading2: string;
+  description: string;
+  aboutUsImage: File | string; // Base64 encoded image
 }
 
 const IntroAboutUs = () => {
@@ -50,17 +50,16 @@ const IntroAboutUs = () => {
     <div className="bg-[#f6e6d6] flex flex-col justify-center">
       <div>
         <RoomHeading
-          headingText={<>{aboutUsData.heading}</>}
+          headingText={<>{aboutUsData.heading1}</>}
           headingSize="text-[55px] md:text-[66px]"
         />
         <RoomSlogan slogan={aboutUsData.subtitle} />
-        <RoomDescription description={aboutUsData.description1} />
       </div>
 
       <div className="bg-[#ffeedc]">
         <div className="px-5 md:px-20 py-5 object-cover">
-          {aboutUsData.image ? (
-            <img src={`${import.meta.env.VITE_APP_BASE_URL}${aboutUsData.image}`} alt="About Us" />
+          {aboutUsData.aboutUsImage ? (
+            <img src={`${import.meta.env.VITE_APP_BASE_URL}${aboutUsData.aboutUsImage}`} alt="About Us" />
           ) : (
             <div className="text-center text-gray-500">No image available</div>
           )}
@@ -69,13 +68,13 @@ const IntroAboutUs = () => {
 
       <div className="flex flex-col bg-[#ffeedc]">
         <RoomHeading
-          headingText={<>{aboutUsData.subheading}</>}
+          headingText={<>{aboutUsData.heading2}</>}
           headingSize="text-[32px] md:text-[42px]"
         />
 
         <div className="flex justify-center items-center flex-col md:flex-row gap-y-5 md:gap-x-5 px-10 w-full my-10">
           <p className="text-[17px] font-poppins max-w-[445px]">
-            {aboutUsData.description1}
+            {aboutUsData.description}
           </p>
           
         </div>

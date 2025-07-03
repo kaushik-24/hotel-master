@@ -119,9 +119,9 @@ export interface IBookingInput {
     numberOfRoom: number;
     rooms: string;
     roomNames: string;
-    checkInDate?: Date;
-    checkOutDate?: Date;
-    roomPrice?: number;
-    totalPrice?: number;
+    checkInDate: string;
+    checkOutDate: string;
+    roomPrice: number;
+    totalPrice: number;
     idImage?: string;
 }

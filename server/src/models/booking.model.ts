@@ -34,11 +34,11 @@ const bookingSchema = new Schema<IBooking>({
         },
 
     checkInDate: {
-        type: Date,
+        type: String,
         required: false,
     },
     checkOutDate: {
-        type: Date,
+        type: String,
         required: false,
     },
     idImage: {

@@ -3,85 +3,140 @@ import axiosInstance from "@services/instance";
 import { useEffect, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 
-interface Room {
+interface RoomType {
   _id: string;
   name: string;
   price: number;
   roomImage: string;
-  totalrooms: string;
-  heading: string;
   shortdesc: string;
+  discount: number;
+  discountedPrice: number | 0;
+  availableRooms: number;
 }
 
 interface RoomSelectorProps {
   register: UseFormRegister<BookingFormData>;
-  onRoomSelect: (roomId: string, roomName: string, roomPrice: number) => void;
+  onRoomSelect: (roomTypeId: string, roomTypeName: string, roomPrice: number) => void;
 }
 
 const RoomSelector: React.FC<RoomSelectorProps> = ({ register, onRoomSelect }) => {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRooms = async () => {
+    const fetchRoomTypes = async () => {
+      setLoading(true);
       try {
         const response = await axiosInstance.get("/api/roomType");
-        const roomData = response.data?.data;
-        if (Array.isArray(roomData)) {
-          setRooms(roomData);
+        const { roomTypes } = response.data.data;
+        console.log("Room types response:", response.data.data); // Debug log
+        if (Array.isArray(roomTypes)) {
+          setRoomTypes(roomTypes);
+          setError(null);
         } else {
           console.error("Unexpected data format:", response.data);
-          setRooms([]);
+          setError("Failed to load room types: Unexpected data format");
+          setRoomTypes([]);
         }
-      } catch (error) {
-        console.error("Error fetching rooms:", error);
+      } catch (error: any) {
+        console.error("Error fetching room types:", error);
+        setError(error.response?.data?.message || "Failed to load room types");
+        setRoomTypes([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchRooms();
+    fetchRoomTypes();
   }, []);
 
   return (
     <div className="bg-[#ffeedc] container mx-auto p-2 sm:p-4 font-sans rounded-xl">
       <h1 className="text-lg sm:text-2xl font-bold text-[#5b3423] mb-4 text-center">
-        Choose Your Room
+        Choose Your Room Type
       </h1>
+      {error && (
+        <div className="text-center mb-4 text-red-600 font-semibold">
+          {error}
+        </div>
+      )}
+      {loading ? (
+        <div className="text-center mb-4 text-[#5b3423] font-semibold">
+          Loading room types...
+        </div>
+      ) : roomTypes.length === 0 ? (
+        <div className="text-center mb-4 text-[#5b3423] font-semibold">
+          No room types available.
+        </div>
+      ) : !roomTypes.some(rt => rt.discount > 0) ? (
+        <div className="text-center mb-4 text-[#5b3423] font-semibold">
+          No discounts available at this time.
+        </div>
+      ) : (
+        <div className="text-center mb-4 text-[#ff6b6b] font-semibold">
+          Special Offer: Up to 30% off on select room types!
+        </div>
+      )}
 
-      {/* Room Selection Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 justify-items-center mb-5">
-        {rooms.map((room) => (
-          <div
-            key={room._id}
-            className="max-w-[240px] w-full rounded-xl overflow-hidden shadow-sm shadow-[#5b3423] border-b-4 border-[#5b3423] m-2 bg-[#ffeedc] transform transition-all duration-300"
-          >
-            <div className="relative">
-              <img
-                className="w-full h-40 object-cover transition-transform duration-500 hover:scale-110"
-                src={`${import.meta.env.VITE_APP_BASE_URL}${room.roomImage}`}
-                alt={`Image of ${room.heading}`}
-              />
-              <div className="absolute top-0 right-0 bg-[#5b3423] text-[#ffeedc] text-xs font-semibold px-1.5 py-0.5 rounded-bl-md">
-                {room.totalrooms} Rooms
+      {/* room card */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mb-6">
+        {roomTypes.map((roomType) => {
+          // Truncate shortdesc to 100 characters with ellipsis
+        const truncateDesc = (desc: string, maxLength = 50) => {
+            if (desc.length <= maxLength) return desc;
+            return desc.substring(0, maxLength - 3) + '...';
+          };
+
+          return (
+            <div
+              key={roomType._id}
+              className="max-w-[260px] w-full rounded-2xl overflow-hidden shadow-md shadow-[#5b3423]/50 border-b-4 border-[#5b3423] m-3 bg-[#ffeedc] transform transition-all duration-300  hover:shadow-lg flex flex-col"
+            >
+              <div className="relative overflow-hidden">
+                <img
+                  className="w-full h-48 object-cover transition-transform duration-500 hover:scale-105"
+                  src={`${import.meta.env.VITE_APP_BASE_URL}${roomType.roomImage || '/default-image.jpg'}`}
+                  alt={`Image of ${roomType.name}`}
+                />
+                
+              </div>
+              <div className="p-4 flex flex-col min-h-[180px] flex-grow">
+                <h2 className="text-xl sm:text-2xl font-extrabold mb-2 text-[#5b3423] tracking-tight">
+                  {roomType.name}
+                </h2>
+                <div className="mb-3 text-base sm:text-lg font-semibold text-[#5b3423]">
+                  {roomType.discount > 0 ? (
+                    <div className="flex items-center gap-2 bg-[#f6e6d6] px-3 py-1 rounded-full ">
+
+
+                      <span className="line-through text-sm text-gray-600">रू {roomType.price}/night</span>
+                      <div className="">
+                      <span className="text-[#ff6b6b] font-bold">रू {roomType.discountedPrice.toFixed(2)}/night</span>
+                      <span className="text-xs text-[#ff6b6b] font-medium">  ({roomType.discount}% off)</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="bg-[#f6e6d6] px-3 py-1 rounded-full inline-block">
+                      रू {roomType.price}/night
+                    </span>
+                  )}
+                </div>
+                <ul className="grid gap-2 mb-4 text-gray-700 text-sm sm:text-base flex-grow">
+                  <li title={roomType.shortdesc}>{truncateDesc(roomType.shortdesc)}</li>
+                </ul>
+                <button
+                  type="button"
+                  className={`w-full bg-[#ffeedc] text-[#5b3423] font-semibold py-2 text-base border-2 border-[#5b3423] rounded-lg hover:bg-[#5b3423] hover:text-white  transition-colors duration-200 ${roomType.availableRooms === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => onRoomSelect(roomType._id, roomType.name, roomType.discountedPrice || roomType.price)}
+                  disabled={roomType.availableRooms === 0}
+                >
+                  {roomType.availableRooms > 0 ? "Book Now" : "Sorry Booked!!"}
+                </button>
               </div>
             </div>
-            <div className="p-3">
-              <h2 className="text-lg sm:text-xl font-extrabold mb-1.5 text-[#5b3423] tracking-tight">
-                {room.name}
-              </h2>
-              <p className="text-base sm:text-lg font-bold text-[#5b3423] mb-2 bg-[#f6e6d6] inline-block px-2 py-0.5 rounded-full">
-                रू {room.price}/night
-              </p>
-              <ul className="grid grid-cols-2 gap-1.5 mb-3 text-gray-700 text-xs sm:text-sm">
-                              </ul>
-              <button
-                type="button"
-                className="w-full bg-[#f6e6d6] text-[#5b3423] font-semibold py-1.5 text-sm rounded-lg hover:bg-[#5b3423] hover:text-[#ffeedc] transition-colors duration-200"
-                onClick={() => onRoomSelect(room._id, room.name, room.price)}
-              >
-                Book Now
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

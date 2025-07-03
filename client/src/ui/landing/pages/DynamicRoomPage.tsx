@@ -26,7 +26,7 @@ const DynamicRoomPage = () => {
     const fetchRoom = async () => {
       try {
         const response = await axiosInstance.get(`/api/roomType/slug/${slug}`);
-        setRoom(response.data.data);
+        setRoom(response.data.data.roomType);
       } catch (err) {
         setNotFound(true);
       }
@@ -50,7 +50,7 @@ const DynamicRoomPage = () => {
 
             <div className="bg-[#ffeedc] ">
                 <div className="px-5 md:px-20 py-5  ">
-                <div className="w-full h-64 md:h-[400px] overflow-hidden rounded-xl shadow-md border-2 border-[#5b3423]">    
+                <div className="w-full h-64 md:h-[450px] overflow-hidden rounded-xl shadow-md border-2 border-[#5b3423]">    
                     <img 
                     src={`${import.meta.env.VITE_APP_BASE_URL}${room.roomImage}`} 
                     alt="image of a room" 

@@ -1,11 +1,12 @@
 import axiosInstance from "@services/instance";
 import { useQuery } from "@tanstack/react-query";
 import { MdOutlineBedroomParent, MdOutlineBook, MdOutlineMeetingRoom, MdOutlineWeb } from "react-icons/md";
-import { DashboardStatsResponse, RoomsResponse, Stats } from "@interface/dashboardstats.interface" 
 
 interface Room {
-  roomNumber: number; // Changed to number
-  roomType: string;
+  roomNumber: number;
+  roomType: { _id: string; name: string };
+  roomTypeName: string;
+  isAvailable?: boolean; // Made optional to handle undefined
 }
 
 interface Hall {
@@ -17,50 +18,58 @@ interface HallGroup {
   [key: string]: number[];
 }
 
-
 interface RoomGroup {
-  [key: string]: number[]; // Changed to number[]
+  [key: string]: { roomNumber: number; isAvailable: boolean }[];
+}
+
+interface Stats {
+  rooms: number;
+  bookings: number;
+  pages: number;
+  roomsList: Room[];
+  halls: number;
+  hallsList: Hall[];
+}
+
+interface DashboardStatsResponse {
+  data: Stats;
 }
 
 const AdminDashboard = () => {
-    //total numbers of rooms, booking and pages
-    const fetchStats = () => axiosInstance
-    .get("/api/dashboardstats")
-    .then((res) => res.data);
-    ;
+  const fetchStats = () =>
+    axiosInstance.get("/api/dashboardstats").then((res) => res.data);
 
-    const { data, isLoading, error } = useQuery<DashboardStatsResponse>({
-      queryKey: ['dashboardStats'],
-      queryFn: fetchStats,
-      staleTime: 60000, // Cache for 1 minute
-      retry: 1, // Reduce retries for Render spin-down
-     
-});
+  const { data, isLoading, error } = useQuery<DashboardStatsResponse>({
+    queryKey: ['dashboardStats'],
+    queryFn: fetchStats,
+    staleTime: 60000, // Cache for 1 minute
+    retry: 1, // Reduce retries for Render spin-down
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
   const stats: Stats = error
-        ? {
-              rooms: 0, 
-              bookings: 0,
-              pages: 0,
-              roomsList: [], 
-              halls: 0,
-              hallsList: [],
-          }
-        : {
-              rooms: data?.data?.rooms ?? 0,
-              bookings: data?.data?.bookings ?? 0,
-              pages: data?.data?.pages ?? 0,
-              roomsList: data?.data?.roomsList as { roomNumber: number; roomType: string}[] ?? [],
-              halls: data?.data?.halls ?? 0,
-              hallsList: data?.data?.hallsList as { hallNumber: number; hallType: string}[] ?? [],
-          };
-    //fetching room informations
-    
-         return (
-            <>
-                <div className="bg-gray-100 p-4 font-sans">
+    ? {
+        rooms: 0,
+        bookings: 0,
+        pages: 0,
+        roomsList: [],
+        halls: 0,
+        hallsList: [],
+      }
+    : {
+        rooms: data?.data?.rooms ?? 0,
+        bookings: data?.data?.bookings ?? 0,
+        pages: data?.data?.pages ?? 0,
+        roomsList: (data?.data?.roomsList as Room[]) ?? [],
+        halls: data?.data?.halls ?? 0,
+        hallsList: (data?.data?.hallsList as Hall[]) ?? [],
+      };
+
+  console.log('Fetched stats.roomsList:', stats.roomsList); // Debug log
+
+  return (
+    <div className="bg-gray-100 p-4 font-sans">
       {/* Header */}
       <header className="mb-4">
         <h1 className="text-2xl font-bold text-gray-800">Hotel Dashboard</h1>
@@ -106,13 +115,14 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(
               stats.roomsList.reduce((acc: RoomGroup, room: Room) => {
-                if (!acc[room.roomType]) {
-                  acc[room.roomType] = [];
+                const typeName = room.roomTypeName || room.roomType?.name || 'Unknown';
+                if (!acc[typeName]) {
+                  acc[typeName] = [];
                 }
-                acc[room.roomType].push(room.roomNumber);
+                acc[typeName].push({ roomNumber: room.roomNumber, isAvailable: room.isAvailable ?? true });
                 return acc;
               }, {})
-            ).map(([roomType, roomNumbers]: [string, number[]]) => (
+            ).map(([roomType, rooms]: [string, { roomNumber: number; isAvailable: boolean }[]]) => (
               <div
                 key={roomType}
                 className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-102"
@@ -127,16 +137,23 @@ const AdminDashboard = () => {
                 <div className="mt-2">
                   <p className="text-xs text-gray-500 font-medium">Room Numbers</p>
                   <div className="flex flex-wrap gap-1 mt-1">
-                    {roomNumbers
-                      .sort((a, b) => a - b)
-                      .map((number) => (
-                        <span
-                          key={number}
-                          className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full border border-blue-300 hover:bg-blue-200 transition-colors duration-200"
-                        >
-                          {number}
-                        </span>
-                      ))}
+                    {rooms
+                      .sort((a, b) => a.roomNumber - b.roomNumber)
+                      .map(({ roomNumber, isAvailable }) => {
+                        console.log(`Room ${roomNumber} isAvailable:`, isAvailable, typeof isAvailable); // Debug log
+                        return (
+                          <span
+                            key={roomNumber}
+                            className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full border transition-colors duration-200 ${
+                              isAvailable
+                                ? 'bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200'
+                                : 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200'
+                            }`}
+                          >
+                            {roomNumber}
+                          </span>
+                        );
+                      })}
                   </div>
                 </div>
               </div>
@@ -198,9 +215,8 @@ const AdminDashboard = () => {
           </div>
         )}
       </div>
-    </div>               
-            </>
-            )
-}
+    </div>
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;
