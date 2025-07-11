@@ -4,7 +4,6 @@ import { useState } from "react";
 import { IoEarth } from "react-icons/io5";
 import { LuPaintbrush } from "react-icons/lu";
 import { MdDateRange } from "react-icons/md";
-import { TiThMenu } from "react-icons/ti";
 
 const Navbar = () => {
     const [today] = useState(

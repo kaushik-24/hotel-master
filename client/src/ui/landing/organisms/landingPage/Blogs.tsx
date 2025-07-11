@@ -41,39 +41,60 @@ const Blogs: React.FC = () => {
 
   const randomBlogs = shuffleBlog([...blogs]).slice(0, 3);
 
+   // Truncate content to ~80 characters for the excerpt
+    const getExcerpt = (text: string, maxLength: number = 80) => {
+      // Remove HTML tags if content is HTML
+      const plainText = text.replace(/<[^>]+>/g, '');
+      if (plainText.length <= maxLength) return plainText;
+      return plainText.substring(0, maxLength).trim() + '...';
+    };
+
   return (
-    <div className="bg-[#f6e6d6] py-6 flex flex-col justify-center items-center">
-      <h1 className="text-[40px] font-nanum text-[#5b3423] mb-4">Blogs</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="bg-[#ffeedc] py-12 flex flex-col justify-center items-center min-h-[600px]">
+      <h1 className="text-4xl md:text-5xl font-nanum text-[#4a2c1e] font-bold mb-8 tracking-tight">
+        Latest Blogs
+      </h1>
+      {error && (
+        <p className="text-red-600 font-poppins text-lg mb-6">{error}</p>
+      )}
       {loading ? (
-        <p className="text-[#5b3423]">Loading blogs...</p>
+        <p className="text-[#4a2c1e] font-poppins text-lg animate-pulse">
+          Loading blogs...
+        </p>
       ) : randomBlogs.length === 0 ? (
-        <p className="text-[#5b3423]">No blogs found.</p>
+        <p className="text-[#4a2c1e] font-poppins text-lg">
+          No blogs available at the moment.
+        </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 px-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-12 max-w-7xl">
           {randomBlogs.map((blog) => (
-            <div className="group bg-[#ffeedc] flex flex-col" key={blog._id}>
-              <div className="flex justify-center items-center overflow-hidden">
+            <div
+              key={blog._id}
+              className="group rounded-lg shadow-lg overflow-hidden flex flex-col h-[450px] transition-transform duration-300  hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="h-48 overflow-hidden">
                 <img
                   src={`${import.meta.env.VITE_APP_BASE_URL}${blog.image}`}
                   alt={blog.title}
-                  className="group-hover:opacity-90 object-contain transform transition-transform duration-300 ease-in-out group-hover:scale-110 w-full h-[150px]"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <div className="flex flex-col justify-start gap-y-2 px-4 py-4 max-w-[300px]">
-                <p className="text-xs font-nanum text-[#a3a3a3]">
-                  {new Date(blog.createdAt).toLocaleDateString()}
+              <div className="flex flex-col flex-grow p-6">
+                <p className="text-xs font-nanum text-gray-500 mb-2">
+                  {new Date(blog.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </p>
-                <h2 className="group-hover:cursor-pointer text-[15px] font-semibold font-nanum text-[#5b3423] py-1 tracking-wider">
+                <h2 className="text-xl font-nanum font-semibold text-[#4a2c1e] mb-3 tracking-wide line-clamp-2">
                   {blog.title}
                 </h2>
-                <p className="text-sm font-poppins text-black mb-3">
-                  {blog.content.substring(0, 80)}...
+                <p className="text-sm font-poppins text-gray-700 flex-grow line-clamp-3">
+                  {getExcerpt(blog.content)}
                 </p>
-                <Link to={`/blogs/${blog.title}`}>
-                  <button
-                    className="uppercase font-poppins tracking-widest border-2 border-[#5b3423] text-[11px] text-[#5b3423] px-2 py-1 hover:bg-[#5b3423] hover:text-[#ffeedc] max-w-[100px]"
-                  >
+                <Link to={`/blogs/${blog.title}`} className="mt-4">
+                  <button className="uppercase font-poppins text-xs font-medium text-[#4a2c1e] border-2 border-[#4a2c1e] px-4 py-2 rounded-md hover:bg-[#4a2c1e] hover:text-white transition-colors duration-300">
                     Read More
                   </button>
                 </Link>
@@ -82,11 +103,9 @@ const Blogs: React.FC = () => {
           ))}
         </div>
       )}
-      <Link to="/blogs">
-        <button
-          className="uppercase font-poppins tracking-widest text-[11px] text-[#ffeedc] px-2 py-2 bg-[#5b3423] hover:bg-[#713f25] mt-6"
-        >
-          View All
+      <Link to="/blogs" className="mt-10">
+        <button className="uppercase font-poppins text-sm font-medium text-white bg-[#4a2c1e] px-6 py-3 rounded-md hover:bg-[#5b3423] transition-colors duration-300">
+          View All Blogs
         </button>
       </Link>
     </div>

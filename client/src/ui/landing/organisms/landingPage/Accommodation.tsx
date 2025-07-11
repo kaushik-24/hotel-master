@@ -50,11 +50,17 @@ const Accommodation = () => {
   }
 
   return (
-    <div className="bg-[#ffeedc] py-10">
-      <div className="px-44 mb-10">
-        <h1 className="font-poppins text-[12px] md:text-[14px] text-[#5b3423] uppercase tracking-widest mb-8">Accommodation</h1>
-        <p className="max-w-[800px] font-nanum text-[44px] md:text-[66px] text-[#5b3423]">{accommodationData.heading}</p>
-      </div>
+    <div className="bg-[#ffeedc] py-10 accomodation-svg">
+      <div className="w-full relative  px-4 sm:px-6 lg:px-44 mb-10 overflow-hidden ">
+  <div className="relative z-10 ">
+    <h1 className="font-poppins text-[12px] sm:text-[14px] md:text-[16px] text-[#5b3423] uppercase tracking-widest mb-8">
+      Accommodation
+    </h1>
+    <p className="max-w-[800px] font-nanum text-[28px] sm:text-[36px] md:text-[44px] lg:text-[66px] text-[#5b3423]">
+      {accommodationData.heading}
+    </p>
+  </div>
+</div>
       <RoomsCarousel />
     </div>
   );

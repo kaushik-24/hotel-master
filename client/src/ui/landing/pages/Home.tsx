@@ -3,7 +3,7 @@ import Blogs from "../organisms/landingPage/Blogs"
 import FindYouAtVenus from "../organisms/landingPage/FindYouAtVenus"
 import Hero from "../organisms/landingPage/Hero"
 import PlacesandSights from "../organisms/landingPage/PlacesandSights"
-import Reviews from "../organisms/landingPage/Reviews"
+import Reviews from "./Reviews"
 
 const Home = () => {
     return (

@@ -23,7 +23,6 @@ export const adminSidebar = [
             { id: 42, label: 'Blogs', route: '/admin/cms/blogs', title: 'Blog page' },
             { id: 43, label: 'Gallery', route: '/admin/cms/gallery', title: 'Gallery Page' },
             { id: 44, label: 'Policy', route: '/admin/cms/policy', title: 'Polices Page' },
-            { id: 45, label: 'Reviews', route: '/admin/cms/reviews', title: 'Review Page' },
             { id: 46, label: 'Contact', route: '/admin/cms/contact', title: 'Contact Page' },
             { id: 47, label: 'About Us', route: '/admin/cms/aboutUs', title: 'AboutUs Page' },
         ]

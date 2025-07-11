@@ -13,7 +13,7 @@ const Menu: React.FC<MenuProps> = ({ onClose }) => {
                 <AiOutlineClose size={25} color="#ffeedc" />
             </button>
 
-            <div className="text-[#ffeedc] h-full w-screen flex flex-col md:flex-row ">
+            <div className="text-[#ffeedc] h-full w-full flex flex-col md:flex-row">
                 <div className="sm:bg-[#4f2f1f] md:w-[35%] h-full flex justify-center items-center px-10 py-5">
                     <MenuLeft onClose={onClose} />
                 </div>

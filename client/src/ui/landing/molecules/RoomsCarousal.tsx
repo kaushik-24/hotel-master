@@ -88,7 +88,7 @@ const RoomsCarousel: React.FC = () => {
           <img
             src={`${import.meta.env.VITE_APP_BASE_URL}${currentRoom.roomImage}`}
             alt={currentRoom.name}
-            className="w-96 md:w-full h-80 object-cover"
+            className="w-96 md:w-full h-80 object-cover rounded-lg shadow-lg shadow-[#5b3423]"
             onError={(e) => {
               e.currentTarget.src = '/fallback-image.jpg'; // Fallback image
             }}
@@ -110,12 +110,10 @@ const RoomsCarousel: React.FC = () => {
             ))}
           </ul>
           <Link to={`/rooms/${currentRoom.slug}`}>
-            <button
-              className="uppercase font-poppins tracking-widest border-2 border-[#5b3423] text-[12px] text-[#5b3423] px-3 py-3 
-              hover:bg-[#5b3423] hover:text-[#ffeedc]"
-            >
-              Read More
-            </button>
+            
+            <button className="uppercase font-poppins text-[12px] text-[#5b3423]  border-2 border-[#4f2f1f] px-4 py-2 rounded-md hover:bg-[#5b3423] hover:text-[#ffeedc] transition-all duration-300 hover:shadow-md hover:scale-105">
+       Read More 
+      </button>
           </Link>
         </div>
       </div>

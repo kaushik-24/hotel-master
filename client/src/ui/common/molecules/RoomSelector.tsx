@@ -52,7 +52,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ register, onRoomSelect }) =
   }, []);
 
   return (
-    <div className="bg-[#ffeedc] container mx-auto p-2 sm:p-4 font-sans rounded-xl">
+    <div className="bg-[#ffeedc] container mx-auto mt-[14vh] p-2 sm:p-4 font-sans rounded-xl">
       <h1 className="text-lg sm:text-2xl font-bold text-[#5b3423] mb-4 text-center">
         Choose Your Room Type
       </h1>

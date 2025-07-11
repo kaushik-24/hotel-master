@@ -31,41 +31,45 @@ const PlacesandSights = () => {
 
   if (loading) {
     return (
-      <div className="bg-[#5b3423] h-screen w-screen flex items-center justify-center">
-        <p className="text-[#ffeedc] text-xl font-poppins">Loading...</p>
+      <div className="bg-[#5b3423] min-h-screen w-full flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png')] opacity-10"></div>
+        <p className="text-[#ffeedc] text-2xl font-poppins font-medium animate-pulse z-10">Loading...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-[#5b3423] h-screen w-screen flex items-center justify-center">
-        <p className="text-[#ffeedc] text-xl font-poppins">{error}</p>
+      <div className="bg-[#5b3423] min-h-screen w-full flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png')] opacity-10"></div>
+        <p className="text-[#ffeedc] text-2xl font-poppins font-medium z-10">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#5b3423] flex flex-col justify-center items-center md:flex-row w-full">
-      <div>
+    <section className="bg-[#5b3423] w-full min-h-screen flex flex-col md:flex-row justify-center items-center py-12 px-4 relative overflow-hidden">
+      {/* Image Section */}
+      <div className="relative z-10 mb-8 md:mb-0 md:mr-8">
         <img
           src={placesData?.placesSightsImage ? `${import.meta.env.VITE_APP_BASE_URL}${placesData.placesSightsImage}` : image?.places}
           alt="Places and Sights"
-          className="w-96"
+          className="w-full max-w-[400px] md:w-[450px] h-auto rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300 object-cover"
         />
+        
       </div>
 
-      <div className="py-20 px-5">
-        
-        <p className="text-[#ffeedc] font-nanum text-[55px] max-w-[600px] leading-[1.2] mb-2">
+      {/* Text Section */}
+      <div className="relative z-10 max-w-[600px] py-12 px-5 md:px-8">
+        <h2 className="text-[#ffeedc] font-nanum text-4xl md:text-5xl lg:text-6xl leading-tight mb-4 tracking-tight">
           {placesData?.heading1 || "Discover the best attractions in Kathmandu with us!"}
-        </p>
-        <p className="max-w-[600px] font-nanum text-[19px] text-[#ffeedc]">
+        </h2>
+        <p className="text-[#ffeedc] font-nanum text-lg md:text-xl leading-relaxed opacity-90">
           {placesData?.description ||
             "Nestled in the heart of the valley, Hotel Shambala serves as the perfect base to explore the city. Whether you seek cultural immersion or serene nature escapes, our location offers a gateway to the rich tapestry of experiences awaiting you just beyond our doors."}
         </p>
       </div>
-    </div>
+    </section>
   );
 };
 

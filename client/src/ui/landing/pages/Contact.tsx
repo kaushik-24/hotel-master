@@ -1,4 +1,3 @@
-import { image } from "@config/constant/image"
 import RoomDescription from "../atoms/RoomDescription"
 import RoomHeading from "../atoms/RoomHeading"
 import RoomSlogan from "../atoms/RoomSlogan"
@@ -6,6 +5,7 @@ import ContactInfo from "../molecules/ContactInfo"
 import OurLocation from "../molecules/OurLocation"
 import { useEffect, useState } from "react"
 import axiosInstance from "@services/instance"
+import ReviewForm from "./ReviewForm"
 
 interface ContactData {
   contactImage: string;
@@ -44,6 +44,7 @@ const Contact = () => {
             <ContactInfo />
 
             <OurLocation />
+            <ReviewForm />
 
         </div>
     )

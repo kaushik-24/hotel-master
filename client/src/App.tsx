@@ -15,6 +15,7 @@ import AllHalls from "@ui/admin/pages/AllHalls"
 import AllPolicies from "@ui/admin/pages/AllPolicy"
 import AllRooms from "@ui/admin/pages/AllRooms"
 import AllRoomTypes from "@ui/admin/pages/AllRoomTypes"
+import AllReviews from "@ui/admin/pages/cms/AllReviews"
 import CmsAboutPage from "@ui/admin/pages/cms/CreateAboutUs"
 import AllBlogPosts from "@ui/admin/pages/cms/CreateBlogs"
 import ContactSection from "@ui/admin/pages/cms/CreateContact"
@@ -33,6 +34,8 @@ import SiteOptions from "@ui/admin/pages/SiteOptions"
 import UserProfile from "@ui/admin/pages/UserProfile"
 import PageNotFound from "@ui/common/pages/PageNotFound"
 import BookingInquiries from "@ui/landing/organisms/BookingInquiries"
+import Footer from "@ui/landing/organisms/Footer"
+import Navbar from "@ui/landing/organisms/Navbar"
 import RoomNavbar from "@ui/landing/organisms/RoomNavbar"
 import AboutUs from "@ui/landing/pages/AboutUs"
 import Blogs from "@ui/landing/pages/Blogs"
@@ -129,9 +132,10 @@ const router = createBrowserRouter([
     path: '/blogs',
     element: <>
       <ScrollToTop />
-      <RoomNavbar />
+      <Navbar />
       <Blogs />
       <BookingInquiries />
+      <Footer />
     </>,
   },
 
@@ -142,6 +146,7 @@ const router = createBrowserRouter([
     <RoomNavbar />
     <DynamicBlogPage />
     <BookingInquiries />
+    <Footer />
     </>
   },
   
@@ -222,6 +227,7 @@ const router = createBrowserRouter([
       { path: 'contact', element: <ContactSection /> },
       { path: 'aboutUs', element: <CmsAboutPage /> },
       { path: 'policy', element: <AllPolicies /> },
+      { path: 'reviews', element: <AllReviews /> },
       { path: 'policy/create', element: <CreatePolicy /> },
       { path: 'policy/edit/:policyId', element: <CreatePolicy /> },
 

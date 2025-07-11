@@ -3,14 +3,15 @@ import BookingInquiries from "../organisms/BookingInquiries"
 import Footer from "../organisms/Footer"
 import RoomNavbar from "../organisms/RoomNavbar"
 import Blogs from "../pages/Blogs"
+import Navbar from "../organisms/Navbar"
 
 const PageTemplate = () => {
     return (
         <div>
-            <RoomNavbar />
+            <Navbar />
             <Outlet />
             <BookingInquiries />
-            {/* <BookNow /> */}
+            <Footer />
 
         </div>
     )
