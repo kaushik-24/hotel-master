@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node ./src/server.ts",
+    "format": "npx prettier --write ./src/",
+    "format:check": "npx prettier --check ./src/",
+    "start:dev": "ts-node-dev ./src/server.ts",
+    "seed:admin": "ts-node-dev  ./src/seeder/admin.seed.ts seed"
   },
   "keywords": [],
   "author": "",

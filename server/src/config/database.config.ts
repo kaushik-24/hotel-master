@@ -1,29 +1,23 @@
-import mongoose from 'mongoose';
 import Room from '../models/room.model';
-import Print from '../utils/print';
+import mongoose from 'mongoose';
 
-interface Env {
-  DATABASE_HOST: string;
-  DB_NAME: string;
-}
+const uri = process.env.DATABASE_HOST || 'mongodb+srv://grg23kaushik:lPBUG4axqMy7ACfs@hoteldb.j7fmbsm.mongodb.net/?retryWrites=true&w=majority&appName=hoteldb'; // MongoDB URI
+const dbName = process.env.DB_NAME || 'hoteldb'; // Database name
 
-const connectDB = async (env: Env) => {
-  try {
-    await mongoose.connect(env.DATABASE_HOST, {
-      dbName: env.DB_NAME,
-      connectTimeoutMS: 30000,
-      socketTimeoutMS: 30000,
-      maxPoolSize: 10,
-    });
-    Print.info('Connected to MongoDB');
-    // Comment out unless needed
-    // await Room.collection.drop();
-    // Print.info('Room collection dropped');
-    return mongoose.connection;
-  } catch (error) {
-    Print.error('MongoDB connection error: ' + error.message);
-    throw error;
-  }
+const connectDB = async () => {
+    try {
+        await mongoose.connect(uri, {
+            dbName,                 // Database name
+            connectTimeoutMS: 30000,   // 30s connection timeout
+            socketTimeoutMS: 30000,    // 30s socket timeout
+            maxPoolSize: 10,            // Connection pool size (updated)
+        });
+         await Room.collection.drop();
+        console.log('Connected to MongoDB');
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        throw error;
+    }
 };
 
 export default connectDB;
