@@ -1,0 +1,9 @@
+name = "hotel-backend"
+account_id = "66d318b4e40fab2dea30eed81d70078d" # Find in Cloudflare dashboard under Workers & Pages
+compatibility_date = "2025-07-11"
+[vars]
+DB_NAME = "hoteldb"
+JWT_TOKEN_EXPIRE = "10h" # Adjust as needed
+ADMIN_PATH = "/admin" # Adjust as needed
+DEBUG_MODE = "true" # Adjust as needed
+CORS_ORIGIN = "https://hotel-master.pages.dev/" # Your frontend URL
