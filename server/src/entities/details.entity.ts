@@ -28,4 +28,4 @@ export class AuthDetails extends Base {
     @JoinColumn({ name: 'auth_id' })
     auth: Auth
 
-
+}
