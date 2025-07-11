@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx ts-node ./src/server.ts",
+    "build": "tsc",
+    "start": "node --max-old-space-size=256 ./dist/server.js",
     "format": "npx prettier --write ./src/",
     "format:check": "npx prettier --check ./src/",
     "start:dev": "ts-node-dev ./src/server.ts",
@@ -38,11 +39,9 @@
     "sanitize-html": "^2.17.0",
     "slugify": "^1.6.6",
     "ts-node": "^10.9.2",
-    "typeorm": "^0.3.20",
-    "wrangler": "^4.24.3"
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "@cloudflare/wrangler": "^1.21.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
