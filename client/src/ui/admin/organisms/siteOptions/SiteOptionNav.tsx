@@ -15,15 +15,7 @@ const SiteOptionNav = () => {
                         Header
                     </NavLink>
                 </li>
-                <li className={`p-2 ${location.search === "?tab=footer" ? "bg-[#6b3aa3] text-white rounded-md" : ""}`}>
-                    <NavLink
-                        to="/admin/options?tab=footer"
-                        className={({ isActive }) => (isActive ? "p-2" : "p-2")}
-                        end
-                    >
-                        Footer
-                    </NavLink>
-                </li>
+                
                 <li className={`p-2 ${location.search === "?tab=info" ? "bg-[#6b3aa3] text-white rounded-md" : ""}`}>
                     <NavLink
                         to="/admin/options?tab=info"

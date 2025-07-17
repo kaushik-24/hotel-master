@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import SiteFooter from "../organisms/siteOptions/SiteFooter";
 import SiteHeader from "../organisms/siteOptions/SiteHeader";
 import SiteInfoSection from "../organisms/siteOptions/SiteInfoSection";
 import SiteOptionNav from "../organisms/siteOptions/SiteOptionNav";
@@ -15,8 +14,6 @@ const SiteOptions = () => {
         switch (tab) {
             case "header":
                 return <SiteHeader />;
-            case "footer":
-                return <SiteFooter />;
             case "info":
                 return <SiteInfoSection />;
             case "social":
@@ -40,10 +37,6 @@ const SiteOptions = () => {
                     {renderTabContent()} {/* Render the content based on the selected tab */}
                 </div>
 
-            </div>
-
-            <div className="flex-1 h-20 p-5 rounded-md w-full ">
-                <button className="p-2 bg-[#6b3aa3] rounded-md text-white font-poppins text-[0.875rem]  ">Update</button>
             </div>
         </div>
     )

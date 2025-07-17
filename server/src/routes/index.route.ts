@@ -25,6 +25,7 @@ import aboutUs from './aboutUs.route';
 import history from './history.route';
 import questValues from './questValues.route';
 import review from './review.route';
+import hotelLogo from './hotelLogo.route';
 
 interface Route {
     path: string;
@@ -136,6 +137,10 @@ const routes: Route[] = [
     {
         path: "/reviews",
         route: review
+    },
+    {
+        path: "/hotelLogo",
+        route: hotelLogo
     },
 
 ];

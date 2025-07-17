@@ -2,12 +2,13 @@ import { bookingSchema } from "@config/schema/booking.schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BookingFormData } from "@interface/booking.interface";
 import axiosInstance from "@services/instance";
+import RoomSelector from "@ui/common/molecules/RoomSelector";
 import { toast } from "@ui/common/organisms/toast/ToastManage";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
-import AdminRoomSelector from "./RoomSelector";
+import RoomSelectorAdmin from "./roomSelectorAdmin";
 
-const OfflineBookingForm: React.FC = () => {
+const BookingForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTransition, setIsLoadingTransition] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string; price: number } | null>(null);
@@ -124,48 +125,48 @@ const OfflineBookingForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
+    <div className=" min-h-screen grid grid-rows-[auto_1fr_auto] gap-4">
       <div className="container mx-auto p-2 sm:p-4 min-h-[600px] flex items-start justify-center">
         {isLoadingTransition ? (
           <div className="flex items-center justify-center h-[400px]">
             <div className="w-12 h-12 border-b-2  border-t-2 rounded-full animate-spin"></div>
           </div>
         ) : selectedRoom ? (
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto  rounded-lg shadow-sm  p-3 sm:p-4">
-            <h3 className="text-base sm:text-lg font-bold  mb-3">
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-[240px] mx-auto  rounded-lg shadow-sm shadow-[#5b3423] p-3 sm:p-4">
+            <h3 className="text-base sm:text-lg font-bold text-[#5b3423] mb-3">
               Book {selectedRoom.name}
             </h3>
             <div className="space-y-3">
               <div>
-                <label htmlFor="name" className="block text-xs sm:text-sm">
+                <label htmlFor="name" className="block text-[#5b3423] text-xs sm:text-sm">
                   Full Name
                 </label>
                 <input
                   type="text"
                   id="name"
                   {...register("name")}
-                  className="w-full p-1.5 border  rounded-md text-xs sm:text-sm bg-[#ffeedc] ]"
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
                 )}
               </div>
               <div>
-                <label htmlFor="email" className="block text-xs sm:text-sm">
+                <label htmlFor="email" className="block text-[#5b3423] text-xs sm:text-sm">
                   Email
                 </label>
                 <input
                   type="email"
                   id="email"
                   {...register("email")}
-                  className="w-full p-1.5 border  rounded-md text-xs sm:text-sm bg-[#ffeedc] "
+                  className="w-full p-1.5 border border-[#5b3423] rounded-md text-xs sm:text-sm bg-[#ffeedc] text-[#5b3423]"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                 )}
               </div>
               <div>
-                <label htmlFor="idImage" className="block  text-xs sm:text-sm">
+                <label htmlFor="idImage" className="block text-[#5b3423] text-xs sm:text-sm">
                   ID Image
                 </label>
                 <input
@@ -256,12 +257,13 @@ const OfflineBookingForm: React.FC = () => {
             </div>
           </form>
         ) : (
-          <AdminRoomSelector  register={register} onRoomSelect={onRoomSelect} />
+          <RoomSelectorAdmin register={register} onRoomSelect={onRoomSelect} />
         )}
       </div>
+      
     </div>
   );
 };
 
-export default OfflineBookingForm;
+export default BookingForm;
 

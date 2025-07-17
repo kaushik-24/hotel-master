@@ -68,6 +68,13 @@ const slugify = (text: string): string => {
                             <p className="text-xs font-nanum text-[#a3a3a3] ">
                               {new Date(blogs.createdAt).toLocaleDateString()}
                             </p>
+                            <div className="h-48 overflow-hidden">
+                                <img
+                                    src={`${import.meta.env.VITE_APP_BASE_URL}${blogs.image}`}
+                                    alt={blogs.title}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                            </div>
                             <h1 className="group-hover:cursor-pointer text-[17px] font-semibold font-nanum  text-[#5b3423] py-2 tracking-wider ">{blogs?.title}</h1>
                             <p className="text-base font-poppins  text-black text-[14px] mb-5">{getExcerpt(`${blogs.content}`)}</p>
 
