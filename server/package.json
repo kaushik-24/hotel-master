@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node --max-old-space-size=256 ./dist/server.js",
+    "start": "node --max-old-space-size=256 ./dist/src/server.js",
     "format": "npx prettier --write ./src/",
     "format:check": "npx prettier --check ./src/",
     "start:dev": "ts-node-dev --transpile-only ./src/server.ts",

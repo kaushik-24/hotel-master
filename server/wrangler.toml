@@ -1,0 +1,8 @@
+name = "hotel-master-server"
+compatibility_date = "2026-01-12"
+main = "dist/src/server.js"
+node_compat = true
+
+[env.production]
+name = "hotel-master-server"
+
