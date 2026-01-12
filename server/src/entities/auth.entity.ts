@@ -34,7 +34,7 @@ export class Auth extends Base {
     })
     role: ROLE; // Matches IUser's role field, using ROLE enum
 
-    @OneToOne(() => AuthDetails, (details: AuthDetails) => details.auth, { cascade: true })
+    @OneToOne(() => AuthDetails, (details) => details.auth, { cascade: true })
     details: AuthDetails;
 
     @Column({ nullable: true })

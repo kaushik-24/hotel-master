@@ -2,7 +2,7 @@
 // The compiler will use this file to determine how to compile the project.
 {
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "es6",
     "typeRoots": [
       "src/types",
       "./node_modules/@types"
