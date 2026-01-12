@@ -1,4 +1,4 @@
-import { connectDB } from "../config/database.config"; // Correct path to database config
+import connectDB from "../config/database.config"; // Correct path to database config
 import { admins } from "../constant/admin"; // Admins data
 import { IUser } from "../interface/user.interface"; // IUser interface
 import User from "../models/auth.model"; // User model

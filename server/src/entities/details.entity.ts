@@ -21,7 +21,7 @@ export class AuthDetails extends Base {
     @Column({ name: 'phone_number', nullable: true })
     phoneNumber: string
 
-    @OneToOne(() => Auth, (auth) => auth.details, {
+    @OneToOne(() => Auth, (auth: Auth) => auth.details, {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
     })
