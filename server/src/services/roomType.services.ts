@@ -139,7 +139,7 @@ class RoomTypeService {
         ...data,
         slug,
         features: featuresArray,
-        roomImage: file ? `/Uploads/${file.filename}` : undefined,
+        roomImage: file ? `/uploads/${file.filename}` : undefined,
       });
       // Create initial discount (30% for no rooms)
       await Discount.create({
@@ -175,7 +175,7 @@ class RoomTypeService {
             fs.unlinkSync(oldImagePath);
           }
         }
-        updateData.roomImage = `/Uploads/${file.filename}`;
+        updateData.roomImage = `/uploads/${file.filename}`;
       }
       if (data.name) {
         updateData.slug = data.name.toLowerCase()
