@@ -71,7 +71,7 @@ class heroService {
     } catch (error: any) {
       // Clean up uploaded file if update fails
       if (file) {
-        const filePath = path.join(__dirname, "../../Uploads", file.filename);
+        const filePath = path.join(__dirname, "../../uploads", file.filename);
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
